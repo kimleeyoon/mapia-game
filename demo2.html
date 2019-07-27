@@ -1,0 +1,170 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<ui>
+<script type="text/javascript">
+
+	function parse(str) {	//변수에 변수를 포함하는 문자열을 넣기 위한 함수
+		var args = [].slice.call(arguments, 1)
+		var i = 0;
+
+		return str.replace(/%s/g, function() {
+			return args[i++];
+		});
+	}
+
+	//////*마피아 게임에서 사용되는 전역변수 선언구간*///////
+	
+	var playerNameList = {"이현주":"마피아", "윤종원":"시민", "최형규":"시민", "김현주":"시민", "신석경":"마피아", "김혜성":"의사", "강민우":"경찰"};
+	var initialPlayerNameList = JSON.parse(JSON.stringify(playerNameList));
+	//var playerNames = Object.playerNames(playerNameList);	//객체 접근을 위한 선언
+
+	var mapiaPick;	//마피아가 죽이기 위해 지목한 사람
+	var doctorPick;	//의사가 살리기 위해 지목한 사람
+	var policePick; //경찰이 조사하기 위해 지목한 사람
+	var mapiaVSdoctorResult = 0;	//마피아가 이겼는지 의사가 이겼는지를 알려주는 결과값
+	var idOfPolicePick = 0;	//경찰이 조사한 사람의 정체
+
+	/////////////////////////////////////////////////////////////////////////////////
+
+
+	//////*마피아 게임에서 player수에 따라 게임환경을 조성하는 구간*///////
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////////
+
+
+	//////*마피아 게임에서 밤에 시행되는 함수선언구간*///////
+
+	function savePlayer(playerName) {	//의사가 사람을 살리는 함수
+		//doctorPick = prompt('의사는 살릴 사람을 선택해주세요.');	//의사가 살릴 사람을 지목
+		if (playerName == mapiaPick){
+			mapiaVSdoctorResult = parse('의사가 플레이어를 살렸습니다. 의사가 구한 플레이어는 %s님 입니다.', playerName);
+		}
+		else if((playerNameList[playerName] == undefined)){
+			alert("잘못 입력하셨습니다. 다시 입력해주세요.");
+			mapiaVSdoctorResult = 0;
+		}
+		else if (playerName != mapiaPick){
+			mapiaVSdoctorResult = parse('의사가 플레이어를 살리지 못했습니다. 마피아가 죽인 플레이어는 %s님 입니다.', mapiaPick);
+			delete playerNameList[mapiaPick];
+		}
+	}
+
+	function assassinatePlayer(mapiaPick) {	//마피아가 사람을 암살하는 함수
+		//mapiaPick = prompt('마피아는 죽일 사람을 선택해주세요.');
+	}
+
+	function investigatePlayer(playerName) {	//경찰이 사람을 조사하는 함수
+		//policePick = prompt('경찰은 조사할 사람을 선택해주세요');
+
+		if(playerNameList[playerName] == '마피아'){
+			idOfPolicePick = '마피아';
+		}
+		else if(playerNameList[playerName] == '의사'){
+			idOfPolicePick = '의사';
+		}
+		else if(playerNameList[playerName] == '시민'){
+			idOfPolicePick = '시민';
+		}
+		else{
+			alert("잘못 입력하셨습니다. 다시 입력해주세요.");
+			idOfPolicePick = 0;
+		}
+	}
+	
+	function killPlayer(playerName) {	//아래 함수는 '민중'들이 찬반 투표를 통해 과반수 이상이 나온 사람을 사형대에 보낼 때 시행되는 함수
+	  //playerNameList.splice(playerNameList.indexOf(playerName),1);
+	  delete playerNameList[playerName];
+	  alert(playerName + "님이 죽었습니다. 생존자를 공개합니다.");
+
+	  for(var key in playerNameList){
+	  	document.write("player명 : "+key+"<br />");
+	  }
+	}
+
+	////////////////////////////////////////////////////////////////////////////////
+
+
+	alert("밤이 되었습니다. 모든 플레이어들은 고개를 숙여주세요.");
+	alert("지금부터 마피아는 고개를 들어 서로의 얼굴을 확인해주세요.");
+	alert("다시 고개를 숙여주십시오.");
+	alert("지금부터 의사는 고개를 들어 서로의 얼굴을 확인해주세요.");
+	alert("다시 고개를 숙여주십시오.");
+	alert("지금부터 경찰은 고개를 들어 서로의 얼굴을 확인해주세요.");
+	alert("다시 고개를 숙여주십시오.");
+	alert("첫째날 아침이 밝았습니다. 플레이어들은 모두 고개를 들어주시고 2분 동안 토의를 진행해주세요. 첫번째 아침은 아무도 사형대에 오르지 않습니다.")
+
+	var roop = Object.keys(playerNameList).length;
+	for(var i = 0 ; i < roop ; i++ ){
+
+		alert("해가 저물고 밤이 되었습니다. 플레이어들은 모두 고개를 숙여주세요.");
+		alert("지금부터 마피아는 고개를 들어 30초간 토의를 하시고 암살할 플레이어를 지목해주세요.");
+		mapiaPick = prompt('마피아는 죽일 사람을 선택해주세요.');
+		//assassinatePlayer(mapiaPick);
+
+		alert("다시 고개를 숙여주십시오.");
+		alert("지금부터 의사는 고개를 들어 30초간 토의를 하시고 살릴 플레이어를 지목해주세요.");
+		while(mapiaVSdoctorResult == 0){
+			doctorPick = prompt('의사는 살릴 사람을 선택해주세요.');	//의사가 살릴 사람을 지목
+			savePlayer(doctorPick);
+		}
+		
+
+		alert("다시 고개를 숙여주십시오.");
+		alert("지금부터 경찰은 고개를 들어 30초간 토의를 하시고 조사할 플레이어를 지목해주세요.");
+		while(idOfPolicePick == 0){
+			policePick = prompt('경찰은 조사할 사람을 선택해주세요');
+			investigatePlayer(policePick);
+		}
+		alert("[경찰에게만 보임] "+policePick+"님은 "+idOfPolicePick+"입니다.");
+
+		alert("다시 고개를 숙여주십시오.");
+		alert(i+1+"번째 아침이 밝았습니다.");
+		alert(mapiaVSdoctorResult);
+		alert("플레이어들은 모두 고개를 들어주시고 3분 동안 토의를 진행하여 사형대에 올릴 플레이어를 골라주십시오.");
+
+		var id = prompt('죽일 사람을 선택해주세요.');
+		killPlayer(id);
+
+		var count = 0;
+		idOfPolicePick = 0;				//다음날을 위한 초기화
+		mapiaVSdoctorResult = 0;		//다음날을 위한 초기화 
+
+		for(var key in playerNameList){
+			console.log(key);
+			if(playerNameList[key] === "마피아"){
+				count++;
+			}
+		}
+
+		if(count >= Object.keys(playerNameList).length/2){
+			alert("마피아가 승리하였습니다. 모든 player들의 정체를 공개합니다.");
+			for(key in playerNameList){
+				document.write("player명 : "+key+" 역할 : "+playerNameList[key]+"<br />");
+			}
+			break;
+		}
+
+		else if(count == 0){
+			alert("시민이 승리하였습니다.");
+			for(key in initialPlayerNameList){
+				document.write("player명 : "+key+" 역할 : "+initialPlayerNameList[key]+"<br />");
+			}
+			break;
+		}
+
+	}
+
+	alert("게임이 종료되었습니다. 게임을 다시 시작하시겠습니까?");
+	
+
+
+</script>
+</ui>
+</body>
+</html>
