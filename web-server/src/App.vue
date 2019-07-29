@@ -2,7 +2,7 @@
   <div id="app">
     <div class="container" v-if="isNotJoinedRoom">
       <div class="col-md-8 offset-md-2">
-        <h1 class="text-center mb-4">
+        <h1 class=" text-center mb-4">
           현주가 좋아하는
           <br />마피아 게임
         </h1>
@@ -34,7 +34,7 @@
           />
           <small id="roomIdHelp" class="form-text text-muted">NUGU가 알려준 방 ID를 입력하세요</small>
         </div>
-        <button type="button" class="btn btn-primary btn-lg" @click.prevent="roomConnect">접속</button>
+        <button type="button" class="btn btn-primary btn-lg" @click.prevent="roomConnect"><b>접속</b></button>
       </div>
       <p>{{ temp }}</p>
     </div>
@@ -146,7 +146,6 @@ export default {
       this.temp += `${data.name}가 ${data.room}번 방에 들어왔습니다.`;
       this.members = data.member;
       this.roomSize = data.size;
-      // you can also do this.messages.push(data)
     });
     this.socket.on("WRONG_ROOM", data => {
       this.temp += `${this.roomID}는 존재하지 않는 방입니다.`;
@@ -168,7 +167,8 @@ export default {
 
 <style>
 #app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  /* font-family: "Avenir", Helvetica, Arial, sans-serif; */
+  font-family: '나눔고딕', 'Malgun Gothic', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
