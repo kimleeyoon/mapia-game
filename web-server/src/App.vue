@@ -36,10 +36,9 @@
         </div>
         <button type="button" class="btn btn-primary btn-lg" @click.prevent="roomConnect">접속</button>
       </div>
-      <p>{{ roomID }}</p>
       <p>{{ temp }}</p>
     </div>
-    <div class="container" v-else>
+    <div class="container" v-else-if="!isStartGame">
       방에 접속하셨습니다!
       <div>
         <h1 class="display-4">사람들 기다리는 중인가 뭐시기</h1>
@@ -53,12 +52,23 @@
         >{{member.name}}</li>
       </ul>
       <br />
-      <button
-        type="button"
-        class="btn btn-primary btn-lg"
-        @click="isNotJoinedRoom = !isNotJoinedRoom"
-      >나가기</button>
     </div>
+    <div class="container" v-if="isStartGame">
+      게임 시작!
+      <ul class="list-group">
+        <li
+          class="list-group-item"
+          v-for="member in members"
+          v-bind:key="member.name"
+        >{{member.name}}</li>
+      </ul>
+    </div>
+    <button
+      type="button"
+      class="btn btn-primary btn-lg"
+      @click="isNotJoinedRoom = !isNotJoinedRoom"
+      v-if="!isNotJoinedRoom"
+    >나가기</button>
   </div>
 </template>
 
@@ -103,6 +113,7 @@ export default {
       temp: "",
       warnNoName: false,
       isNotJoinedRoom: true,
+      isStartGame: false,
       members: []
     };
   },
@@ -142,10 +153,15 @@ export default {
     });
     this.socket.on("ENTER_ROOM", data => {
       this.isNotJoinedRoom = !this.isNotJoinedRoom;
+      this.isStartGame = false;
+      this.temp = "";
     });
     this.socket.on("FULL_OF_ROOM", data => {
-      this.temp += `${this.roomID}는 자리가 없어여어엉`
-    })
+      this.temp += `${this.roomID}번 방은 자리가 없어여어엉`;
+    });
+    this.socket.on("START_GAME", data => {
+      this.isStartGame = true;
+    });
   }
 };
 </script>
