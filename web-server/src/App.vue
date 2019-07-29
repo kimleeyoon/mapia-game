@@ -2,7 +2,7 @@
   <div id="app">
     <div class="container" v-if="isNotJoinedRoom">
       <div class="col-md-8 offset-md-2">
-        <h1 class=" text-center mb-4">
+        <h1 class="text-center mb-4">
           현주가 좋아하는
           <br />마피아 게임
         </h1>
@@ -18,6 +18,7 @@
             aria-describedby="nameHelp"
             placeholder="Enter Name"
             v-model="name"
+            @keyup.enter.prevent="roomConnect"
           />
           <small id="nameHelp" class="form-text text-muted">게임 내에서 사용할 이름을 입력하세요</small>
         </div>
@@ -31,10 +32,13 @@
             aria-describedby="roomIdHelp"
             placeholder="Enter RoomID"
             v-model="roomID"
+            @keyup.enter.prevent="roomConnect"
           />
           <small id="roomIdHelp" class="form-text text-muted">NUGU가 알려준 방 ID를 입력하세요</small>
         </div>
-        <button type="button" class="btn btn-primary btn-lg" @click.prevent="roomConnect"><b>접속</b></button>
+        <button type="button" class="btn btn-primary btn-lg" @click.prevent="roomConnect">
+          <b>접속</b>
+        </button>
       </div>
       <p>{{ temp }}</p>
     </div>
@@ -44,23 +48,29 @@
         <h1 class="display-4">사람들 기다리는 중인가 뭐시기</h1>
         <h6>{{members.length}} / {{roomSize}}</h6>
       </div>
-      <ul class="list-group">
+      <!-- <ul class="list-group">
         <li
           class="list-group-item"
           v-for="member in members"
           v-bind:key="member.name"
-        >{{member.name}}</li>
-      </ul>
+        ><button class="list-group-item">{{member.name}}</button></li>
+      </ul>-->
+      <div class="list-group">
+        <button
+          type="button"
+          class="list-group-item list-group-item-action"
+          v-for="member in members"
+          v-bind:key="member.name"
+        >{{member.name}}</button>
+      </div>
       <br />
     </div>
     <div class="container" v-if="isStartGame">
       게임 시작!
       <ul class="list-group">
-        <li
-          class="list-group-item"
-          v-for="member in members"
-          v-bind:key="member.name"
-        >{{member.name}}</li>
+        <li class="list-group-item" v-for="member in members" v-bind:key="member.name">
+          <button class="list-group-item">{{member.name}}</button>
+        </li>
       </ul>
     </div>
     <button
@@ -168,7 +178,7 @@ export default {
 <style>
 #app {
   /* font-family: "Avenir", Helvetica, Arial, sans-serif; */
-  font-family: '나눔고딕', 'Malgun Gothic', sans-serif;
+  font-family: "나눔고딕", "Malgun Gothic", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
