@@ -44,10 +44,10 @@ io.on('connection', (socket) => {
             io.to(socket.id).emit("WRONG_ROOM");
         } else {
             let curRoom = room.find(o => o.id == data.room);
-            // console.log(curRoom);
-            if(curRoom.size >= curRoom.member.length){
+            console.log(curRoom);
+            if (curRoom.size <= curRoom.member.length) {
                 io.to(socket.id).emit("FULL_OF_ROOM");
-            }else{
+            } else {
                 curRoom.member.push(new Member(data.name, socket.id));
                 socket.join(`${data.room}`, () => {
                     console.log(`${data.name}이 방(${data.room})에 들어옴`);
@@ -58,6 +58,9 @@ io.on('connection', (socket) => {
                 io.to(socket.id).emit("ENTER_ROOM", {
                     none: "여기에는 무슨 말을 써야할까요?"
                 });
+                if (curRoom.size === curRoom.member.length) {
+                    io.to(`${data.room}`).emit('START_GAME');
+                }
             }
         }
     });
