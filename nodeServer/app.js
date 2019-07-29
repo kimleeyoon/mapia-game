@@ -21,10 +21,9 @@ server.listen(3000, () => {
 });
 
 
-// app.get('/', (req, res) => {
-//     // res.sendFile(__dirname + './public/index.html');
-//     console.log("Someone connected to server without namespace");
-// });
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + './public/dist/index.html');
+});
 
 // io.on('connection', function (socket) {
 //     console.log(socket.id)
