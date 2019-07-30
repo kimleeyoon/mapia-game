@@ -15,10 +15,30 @@
 		});
 	}
 
+	var playerNameList = [ ];
+	var roleArray = [["마피아", "시민", "시민"], ["마피아", "시민", "시민", "시민"], ["마피아", "마피아", "시민", "시민", "경찰"], ["마피아", "마피아", "시민", "시민", "의사", "경찰"], ["마피아", "마피아", "시민", "시민", "시민", "의사", "경찰"], ["마피아", "마피아", "시민", "시민", "시민", "의사", "경찰", "경찰"], ["마피아", "마피아", "마피아", "시민", "시민", "시민", "의사", "경찰", "경찰"], ["마피아", "마피아", "마피아", "시민", "시민", "시민", "의사", "의사", "경찰", "경찰"]];
+		//가능 플레이어수는 min 3, max 10
+		//역할 분배 시 인원이 5명 이상일 경우 의사와 경찰의 합친 수는 같되 그 둘의 개수는 랜덤으로 후에 바꿔도 좋음. 예를 들어 6명이 플레이 할 시 의사 1명, 경찰 1명이 아닌 맞의, 맞경일수도 있다는 말.
+
+	var afterList = {};
+
+	//shuffle(roleArray[numOfPlayer - 3]).map((role, index) => afterList[playerNameList[index]] = role);
+	//console.log(afterList);
+
+	function shuffle(a) {
+    	for (let i = a.length - 1; i > 0; i--) {
+        	const j = Math.floor(Math.random() * (i + 1));
+        	[a[i], a[j]] = [a[j], a[i]];
+        }
+    return a;
+	}
+
 	//////*마피아 게임에서 사용되는 전역변수 선언구간*///////
 	
-	var playerNameList = {"이현주":"마피아", "윤종원":"시민", "최형규":"시민", "김현주":"시민", "신석경":"마피아", "김혜성":"의사", "강민우":"경찰"};
-	var initialPlayerNameList = JSON.parse(JSON.stringify(playerNameList));
+	var numOfPlayer;
+	var checkRange = 0;	//입력한 플레이어의 명수값이 숫자가 아닌 다른값인지, 혹은 min과 max값을 벗어났는지 확인하는 변수
+	//var playerNameList = {"이현주":"마피아", "윤종원":"시민", "최형규":"시민", "김현주":"시민", "신석경":"마피아", "김혜성":"의사", "강민우":"경찰"};
+	//var initialPlayerNameList = JSON.parse(JSON.stringify(playerNameList));
 	//var playerNames = Object.playerNames(playerNameList);	//객체 접근을 위한 선언
 
 	var mapiaPick;	//마피아가 죽이기 위해 지목한 사람
@@ -26,32 +46,52 @@
 	var policePick; //경찰이 조사하기 위해 지목한 사람
 	var mapiaVSdoctorResult = 0;	//마피아가 이겼는지 의사가 이겼는지를 알려주는 결과값
 	var idOfPolicePick = 0;	//경찰이 조사한 사람의 정체
+	var doctorAlive = 0;	//살아있는 의사가 있는지 없는지 조사하는 변수
+	var policeAlive = 0;	//살아있는 경찰이 있는지 없는지 조사하는 변수
 
 	/////////////////////////////////////////////////////////////////////////////////
 
 
 	//////*마피아 게임에서 player수에 따라 게임환경을 조성하는 구간*///////
 
+	function takePlayerName (playernum, playername) {	//입력한 플레이어 명수만큼 이름을 등록하는 함수
+		for(var i = 0 ; i < playernum ; i++ ) {
+			playername[i] = prompt(i+1+'번 플레이어의 이름을 입력해주세요.');
+		}
+	}
 
-
+	function allocatePlayerRole (playernum, afterlist) {
+		shuffle(roleArray[numOfPlayer - 3]).map((role, index) => afterlist[playerNameList[index]] = role);
+		//console.log(afterlist);
+	}
 
 	////////////////////////////////////////////////////////////////////////////////
 
 
 	//////*마피아 게임에서 밤에 시행되는 함수선언구간*///////
 
+	function takePlayerNum (playerNum) {	//게임 플레이어 명 수를 입력받고 적절한 값인지 판별하는 함수
+		if (playerNum == NaN){
+			checkRange = 0;
+		} else if (playerNum < 3 || 10 < playerNum){
+			checkRange = 0;
+		} else {
+			checkRange = 1;
+		}
+	}
+
 	function savePlayer(playerName) {	//의사가 사람을 살리는 함수
 		//doctorPick = prompt('의사는 살릴 사람을 선택해주세요.');	//의사가 살릴 사람을 지목
 		if (playerName == mapiaPick){
 			mapiaVSdoctorResult = parse('의사가 플레이어를 살렸습니다. 의사가 구한 플레이어는 %s님 입니다.', playerName);
 		}
-		else if((playerNameList[playerName] == undefined)){
+		else if((afterList[playerName] == undefined)){
 			alert("잘못 입력하셨습니다. 다시 입력해주세요.");
 			mapiaVSdoctorResult = 0;
 		}
 		else if (playerName != mapiaPick){
 			mapiaVSdoctorResult = parse('의사가 플레이어를 살리지 못했습니다. 마피아가 죽인 플레이어는 %s님 입니다.', mapiaPick);
-			delete playerNameList[mapiaPick];
+			delete afterList[mapiaPick];
 		}
 	}
 
@@ -62,13 +102,13 @@
 	function investigatePlayer(playerName) {	//경찰이 사람을 조사하는 함수
 		//policePick = prompt('경찰은 조사할 사람을 선택해주세요');
 
-		if(playerNameList[playerName] == '마피아'){
+		if(afterList[playerName] == '마피아'){
 			idOfPolicePick = '마피아';
 		}
-		else if(playerNameList[playerName] == '의사'){
+		else if(afterList[playerName] == '의사'){
 			idOfPolicePick = '의사';
 		}
-		else if(playerNameList[playerName] == '시민'){
+		else if(afterList[playerName] == '시민'){
 			idOfPolicePick = '시민';
 		}
 		else{
@@ -79,17 +119,42 @@
 	
 	function killPlayer(playerName) {	//아래 함수는 '민중'들이 찬반 투표를 통해 과반수 이상이 나온 사람을 사형대에 보낼 때 시행되는 함수
 	  //playerNameList.splice(playerNameList.indexOf(playerName),1);
-	  delete playerNameList[playerName];
+	  delete afterList[playerName];
 	  alert(playerName + "님이 죽었습니다. 생존자를 공개합니다.");
 
-	  for(var key in playerNameList){
+	  for(var key in afterList){
 	  	document.write("player명 : "+key+"<br />");
 	  }
 	}
 
-	////////////////////////////////////////////////////////////////////////////////
+	/////////////////**특수직업군 중 생존한 자가 있는지 없는지 판별하는 함수 구간**///////////////////////////
 
+	function isThereAnyDoctor(doctorIsAlive){
+		for(key in afterList){
+				if(afterList[key] == '의사'){
+					doctorIsAlive = 1;
+					break;
+			}
+		}
+	}
 
+	////////////////////////////////////**Game Zone**////////////////////////////////////////////
+
+	while(checkRange == 0){
+			numOfPlayer = prompt('플레이를 할 플레이어의 명수를 숫자로 입력해주세요. (최소 3명, 최대 10명)');
+			takePlayerNum(numOfPlayer);
+		}
+
+	//역할 할당 코드 삽입하기 
+	takePlayerName(numOfPlayer, playerNameList);
+	allocatePlayerRole(numOfPlayer, afterList);
+	for(let prop in afterList){
+		alert(`${prop} : ${afterList[prop]}`);
+	}
+
+	var initialPlayerNameList = JSON.parse(JSON.stringify(afterList));
+
+	alert("지금부터 역할배정을 시작하겠습니다.");
 	alert("밤이 되었습니다. 모든 플레이어들은 고개를 숙여주세요.");
 	alert("지금부터 마피아는 고개를 들어 서로의 얼굴을 확인해주세요.");
 	alert("다시 고개를 숙여주십시오.");
@@ -99,7 +164,7 @@
 	alert("다시 고개를 숙여주십시오.");
 	alert("첫째날 아침이 밝았습니다. 플레이어들은 모두 고개를 들어주시고 2분 동안 토의를 진행해주세요. 첫번째 아침은 아무도 사형대에 오르지 않습니다.")
 
-	var roop = Object.keys(playerNameList).length;
+	var roop = Object.keys(afterList).length;
 	for(var i = 0 ; i < roop ; i++ ){
 
 		alert("해가 저물고 밤이 되었습니다. 플레이어들은 모두 고개를 숙여주세요.");
@@ -124,7 +189,7 @@
 		alert("[경찰에게만 보임] "+policePick+"님은 "+idOfPolicePick+"입니다.");
 
 		alert("다시 고개를 숙여주십시오.");
-		alert(i+1+"번째 아침이 밝았습니다.");
+		alert(i+2+"번째 아침이 밝았습니다.");
 		alert(mapiaVSdoctorResult);
 		alert("플레이어들은 모두 고개를 들어주시고 3분 동안 토의를 진행하여 사형대에 올릴 플레이어를 골라주십시오.");
 
@@ -135,17 +200,17 @@
 		idOfPolicePick = 0;				//다음날을 위한 초기화
 		mapiaVSdoctorResult = 0;		//다음날을 위한 초기화 
 
-		for(var key in playerNameList){
+		for(var key in afterList){
 			console.log(key);
-			if(playerNameList[key] === "마피아"){
+			if(afterList[key] === "마피아"){
 				count++;
 			}
 		}
 
-		if(count >= Object.keys(playerNameList).length/2){
+		if(count >= Object.keys(afterList).length/2){
 			alert("마피아가 승리하였습니다. 모든 player들의 정체를 공개합니다.");
-			for(key in playerNameList){
-				document.write("player명 : "+key+" 역할 : "+playerNameList[key]+"<br />");
+			for(key in afterList){
+				document.write("player명 : "+key+" 역할 : "+afterList[key]+"<br />");
 			}
 			break;
 		}
