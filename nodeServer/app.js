@@ -21,9 +21,9 @@ server.listen(3000, () => {
 });
 
 
-app.get('/', (req, res) => {
-    res.sendFile(__dirname + './public/dist/index.html');
-});
+// app.get('/', (req, res) => {
+//     res.sendFile(__dirname + '/public/dist/index.html');
+// });
 
 // io.on('connection', function (socket) {
 //     console.log(socket.id)
@@ -33,9 +33,9 @@ app.get('/', (req, res) => {
 let room = [];
 
 io.on('connection', (socket) => {
-    // console.log("Someone Connected");
+    console.log("Someone Connected");
     socket.on('disconnect', () => {
-        // console.log('user disconnected');
+        console.log('user disconnected');
     });
     socket.on('ROOM_CONNECT', (data) => {
         if (!room.some(x => x.id == data.room)) {

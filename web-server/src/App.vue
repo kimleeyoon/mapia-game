@@ -4,7 +4,7 @@
       <div class="col-md-8 offset-md-2">
         <h1 class="text-center mb-4">
           현주가 좋아하는
-          <br />마피아 게임
+          <br />마피아 게임!
         </h1>
         <!-- <input type="text" class="form-control" v-model="roomID" />
         <input type="text" class="form-control" v-model="name" />-->
@@ -78,7 +78,7 @@
       class="btn btn-primary btn-lg"
       @click="isNotJoinedRoom = !isNotJoinedRoom"
       v-if="!isNotJoinedRoom"
-    >나가기</button>
+    >나가기!</button>
   </div>
 </template>
 
@@ -117,7 +117,7 @@ export default {
   data() {
     return {
       roomID: "",
-      socket: io("192.168.0.13:3000"),
+      socket: io("10.210.24.10:3000"),
       name: "",
       roomSize: 0,
       temp: "",
@@ -134,7 +134,7 @@ export default {
         return;
       }
       this.warnNoName = false;
-      this.room = io("192.168.0.13:3000");
+      this.room = io("10.210.24.10:3000");
       e.preventDefault();
       this.socket.emit("ROOM_CONNECT", {
         name: this.name,
@@ -157,18 +157,18 @@ export default {
       this.members = data.member;
       this.roomSize = data.size;
     });
-    this.socket.on("WRONG_ROOM", data => {
+    this.socket.on("WRONG_ROOM", () => {
       this.temp += `${this.roomID}는 존재하지 않는 방입니다.`;
     });
-    this.socket.on("ENTER_ROOM", data => {
+    this.socket.on("ENTER_ROOM", () => {
       this.isNotJoinedRoom = !this.isNotJoinedRoom;
       this.isStartGame = false;
       this.temp = "";
     });
-    this.socket.on("FULL_OF_ROOM", data => {
+    this.socket.on("FULL_OF_ROOM", () => {
       this.temp += `${this.roomID}번 방은 자리가 없어여어엉`;
     });
-    this.socket.on("START_GAME", data => {
+    this.socket.on("START_GAME", () => {
       this.isStartGame = true;
     });
   }
