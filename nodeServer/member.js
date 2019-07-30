@@ -1,8 +1,9 @@
 class Member {
-    constructor(name, socket){
+    constructor(name, socketId, socket){
         this.name = name;
-        this.socket = socket;
+        this.socket = socketId;
         this.role = ''
+        this.socketOn = socket;
     }
 }
 
