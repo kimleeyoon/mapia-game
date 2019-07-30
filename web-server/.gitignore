@@ -1,5 +1,8 @@
 .DS_Store
 node_modules
+*/tempCodeRunnerFile.*
+tempCodeRunnerFile.*
+
 /dist
 
 # local env files
@@ -19,3 +22,4 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw?
+

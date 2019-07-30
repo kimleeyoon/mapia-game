@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <style>
+        * {font-family :'나눔고딕', 'Malgun Gothic', sans-serif;}
+        #startHead {
+            width: 150px;
+            margin: 0 auto;
+            margin-top: 150px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        let namespace;
+        let text = "";
+        function connectNamespace(nsp) {
+            namespace = io('/namespace' + nsp);
+            console.log('/namespace' + nsp);
+            // news라는 이벤트를 받을 시 콘솔에 data.hello를 출력
+            namespace.on('announce', (data) => {
+                console.log("announce 이벤트 발생");
+                console.log(data);
+                text += `${data}\n`;
+                document.getElementById("alert").value = text;
+            });
+        }
+
+        function input() {
+            let input = document.getElementById("name").value;
+            connectNamespace(input);
+        }
+
+        function sendMessage() {
+            let value = document.getElementById("message").value;
+            console.log(`${value} 전송`);
+            namespace.emit('message', value);
+        }
+    new Vue({
+        el: '#startHead',
+        data: {
+
+        },
+        methods: {
+            roomConnect() {
+                
+            }
+        },
+    })
+    </script>
+</head>
+
+<body>
+    <div id="startHead">
+        <table v-if="beforeStart">
+            <tr>
+                    <h1>게임 이름</h1>
+            </tr>
+            <tr>
+                <td><label for="id">ID</label></td>
+                <td><input type="text" id="id" name="id"></td>
+            </tr>
+        </table>
+        <button v-on:click="roomConnect">접속</button>
+    </div>
+    <input type="text" id="name" value="1">
+    <button onclick='input()'>서버접속</button>
+    <br>
+    <input type="text" id="message">
+    <button onclick='sendMessage()'>전송</button>
+    <textarea name="" id="alert" cols="30" rows="10"></textarea>
+    <script src="vue.js"></script>
+</body>
+
+</html>
