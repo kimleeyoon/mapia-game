@@ -32,9 +32,9 @@ server.listen(3000, () => {
 let room = [];
 
 io.on('connection', (socket) => {
-    console.log("Someone Connected");
+    // console.log("Someone Connected");
     socket.on('disconnect', () => {
-        console.log('user disconnected');
+        // console.log('user disconnected');
     });
     socket.on('ROOM_CONNECT', (data) => {
         if (!room.some(x => x.id == data.room)) {

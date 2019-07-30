@@ -67,11 +67,14 @@
     </div>
     <div class="container" v-if="isStartGame">
       게임 시작!
-      <ul class="list-group">
-        <li class="list-group-item" v-for="member in members" v-bind:key="member.name">
-          <button class="list-group-item">{{member.name}}</button>
-        </li>
-      </ul>
+      <div class="list-group">
+        <button
+          type="button"
+          class="list-group-item list-group-item-action"
+          v-for="member in members"
+          v-bind:key="member.name"
+        >{{member.name}}</button>
+      </div>
     </div>
     <button
       type="button"
@@ -147,6 +150,10 @@ export default {
         user: this.user,
         message: this.message
       });
+    },
+    exitGame() {
+      this.isNotJoinedRoom = !this.isNotJoinedRoom;
+      this.isStartGame = !this.isStartGame;
     }
   },
   components: {},
