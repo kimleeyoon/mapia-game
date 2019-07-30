@@ -7,8 +7,7 @@ const path = require('path');
 const Room = require('./room');
 const Member = require('./member')
 
-app.use(static(path.join(__dirname, 'public')));
-console.log(path.join(__dirname, 'public'));
+app.use(static(path.join(__dirname, 'public/dist')));
 
 const server = http.Server(app);
 const io = require('socket.io')(server);
