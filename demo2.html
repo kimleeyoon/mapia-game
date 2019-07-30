@@ -46,8 +46,9 @@
 	var policePick; //경찰이 조사하기 위해 지목한 사람
 	var mapiaVSdoctorResult = 0;	//마피아가 이겼는지 의사가 이겼는지를 알려주는 결과값
 	var idOfPolicePick = 0;	//경찰이 조사한 사람의 정체
-	var doctorAlive = 0;	//살아있는 의사가 있는지 없는지 조사하는 변수
-	var policeAlive = 0;	//살아있는 경찰이 있는지 없는지 조사하는 변수
+	var idOfMapiaPick = 0;	//마피아가 암살한 사함의 정체
+	var doctorAlive = 1;	//살아있는 의사가 있는지 없는지 조사하는 변수
+	var policeAlive = 1;	//살아있는 경찰이 있는지 없는지 조사하는 변수
 
 	/////////////////////////////////////////////////////////////////////////////////
 
@@ -85,18 +86,37 @@
 		if (playerName == mapiaPick){
 			mapiaVSdoctorResult = parse('의사가 플레이어를 살렸습니다. 의사가 구한 플레이어는 %s님 입니다.', playerName);
 		}
-		else if((afterList[playerName] == undefined)){
-			alert("잘못 입력하셨습니다. 다시 입력해주세요.");
-			mapiaVSdoctorResult = 0;
+		else if(doctorAlive == 0) {
+			mapiaVSdoctorResult = parse('의사가 플레이어를 살리지 못했습니다. 마피아가 죽인 플레이어는 %s님 입니다.', mapiaPick);
 		}
 		else if (playerName != mapiaPick){
 			mapiaVSdoctorResult = parse('의사가 플레이어를 살리지 못했습니다. 마피아가 죽인 플레이어는 %s님 입니다.', mapiaPick);
 			delete afterList[mapiaPick];
 		}
+		else if (doctorPick == 0){
+			mapiaVSdoctorResult = parse('의사가 플레이어를 살리지 못했습니다. 마피아가 죽인 플레이어는 %s님 입니다.', mapiaPick);
+		}
+		else if((afterList[playerName] == undefined)){
+			alert("잘못 입력하셨습니다. 다시 입력해주세요.");
+			mapiaVSdoctorResult = 0;
+		}
 	}
 
-	function assassinatePlayer(mapiaPick) {	//마피아가 사람을 암살하는 함수
+	function assassinatePlayer(playerName) {	//마피아가 사람을 암살하는 함수
 		//mapiaPick = prompt('마피아는 죽일 사람을 선택해주세요.');
+		if(afterList[playerName] == '경찰'){
+			idOfMapiaPick = 1;
+		}
+		else if(afterList[playerName] == '의사'){
+			idOfMapiaPick = 1;
+		}
+		else if(afterList[playerName] == '시민'){
+			idOfMapiaPick = 1;
+		}
+		else{
+			alert("잘못 입력하셨습니다. 다시 입력해주세요.");
+			idOfMapiaPick = 0;
+		}
 	}
 
 	function investigatePlayer(playerName) {	//경찰이 사람을 조사하는 함수
@@ -138,6 +158,15 @@
 		}
 	}
 
+	function isThereAnyPolice(policeIsAlive){
+		for(key in afterList){
+				if(afterList[key] == '경찰'){
+					policeIsAlive = 1;
+					break;
+			}
+		}
+	}
+
 	////////////////////////////////////**Game Zone**////////////////////////////////////////////
 
 	while(checkRange == 0){
@@ -167,26 +196,36 @@
 	var roop = Object.keys(afterList).length;
 	for(var i = 0 ; i < roop ; i++ ){
 
+		
+
 		alert("해가 저물고 밤이 되었습니다. 플레이어들은 모두 고개를 숙여주세요.");
 		alert("지금부터 마피아는 고개를 들어 30초간 토의를 하시고 암살할 플레이어를 지목해주세요.");
-		mapiaPick = prompt('마피아는 죽일 사람을 선택해주세요.');
-		//assassinatePlayer(mapiaPick);
+		while(idOfMapiaPick == 0){
+			mapiaPick = prompt('마피아는 죽일 사람을 선택해주세요.');
+			assassinatePlayer(mapiaPick);
+		}
 
 		alert("다시 고개를 숙여주십시오.");
 		alert("지금부터 의사는 고개를 들어 30초간 토의를 하시고 살릴 플레이어를 지목해주세요.");
-		while(mapiaVSdoctorResult == 0){
-			doctorPick = prompt('의사는 살릴 사람을 선택해주세요.');	//의사가 살릴 사람을 지목
-			savePlayer(doctorPick);
+		doctorPick = 0;
+		isThereAnyDoctor(doctorAlive);
+		if(doctorAlive == 0){
+			while(mapiaVSdoctorResult == 0){
+				doctorPick = prompt('의사는 살릴 사람을 선택해주세요.');	//의사가 살릴 사람을 지목
+			}
 		}
-		
+		savePlayer(doctorPick);
 
 		alert("다시 고개를 숙여주십시오.");
 		alert("지금부터 경찰은 고개를 들어 30초간 토의를 하시고 조사할 플레이어를 지목해주세요.");
-		while(idOfPolicePick == 0){
-			policePick = prompt('경찰은 조사할 사람을 선택해주세요');
-			investigatePlayer(policePick);
+		isThereAnyPolice(policeAlive);
+		if(policeAlive == 0){
+			while(idOfPolicePick == 0){
+				policePick = prompt('경찰은 조사할 사람을 선택해주세요');
+				investigatePlayer(policePick);
+				alert("[경찰에게만 보임] "+policePick+"님은 "+idOfPolicePick+"입니다.");
+			}
 		}
-		alert("[경찰에게만 보임] "+policePick+"님은 "+idOfPolicePick+"입니다.");
 
 		alert("다시 고개를 숙여주십시오.");
 		alert(i+2+"번째 아침이 밝았습니다.");
@@ -209,8 +248,8 @@
 
 		if(count >= Object.keys(afterList).length/2){
 			alert("마피아가 승리하였습니다. 모든 player들의 정체를 공개합니다.");
-			for(key in afterList){
-				document.write("player명 : "+key+" 역할 : "+afterList[key]+"<br />");
+			for(key in initialPlayerNameList){
+				document.write("player명 : "+key+" 역할 : "+initialPlayerNameList[key]+"<br />");
 			}
 			break;
 		}
