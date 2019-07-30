@@ -117,7 +117,7 @@ export default {
   data() {
     return {
       roomID: "",
-      socket: io("10.210.24.10:3000"),
+      socket: io("localhost:3000"),
       name: "",
       roomSize: 0,
       temp: "",
@@ -134,7 +134,7 @@ export default {
         return;
       }
       this.warnNoName = false;
-      this.room = io("10.210.24.10:3000");
+      this.room = io("localhost:3000");
       e.preventDefault();
       this.socket.emit("ROOM_CONNECT", {
         name: this.name,
