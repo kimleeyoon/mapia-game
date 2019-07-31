@@ -195,7 +195,11 @@ function grun(g, member, io, room) {
                         }
                         setTimeout(iterate, 0, x.value);
                     }else if(x.value.do ==="DEATH_UPDATE"){
-
+                        for (let tempMember of x.value.nameList) {
+                            let tempSocket = member.find(o => o.name == tempMember.name);
+                            io.to(tempSocket.socket).emit("UPDATE_LIST", x.value.nameList);
+                        }
+                        setTimeout(iterate, 0, x.value);
                     } else if (x.value.do === "Assassinate") {
                         let num = x.value.nameList.length; // 마피아 수
                         decide.reset();

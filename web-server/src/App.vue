@@ -77,6 +77,17 @@
           v-bind:key="member.name"
           disabled
         >{{member.name}}</button>
+        <ul class="list-group">
+          <template v-for="member in deadMember">
+            <!-- <li
+              class="list-group-item d-flex justify-content-between align-items-center"
+              v-bind:key="member.name"
+            >
+              <a href="#" class="list-group-item list-group-item-dark">{{member.name}}</a>
+            </li> -->
+            <li class="list-group-item list-group-item-dark align-items-center" v-bind:key="member.name">{{member.name}}</li>
+          </template>
+        </ul>
       </div>
       <div class="progress" v-if="isNowSelect || isDeciding">
         <div
@@ -102,6 +113,15 @@
             <span class="badge badge-primary badge-pill">{{badge[member.name]}}</span>
           </li>
         </template>
+        <template v-for="member in deadMember">
+          <!-- <li
+            class="list-group-item d-flex justify-content-between align-items-center"
+            v-bind:key="member.name"
+          >
+            <a href="#" class="list-group-item list-group-item-dark">{{member.name}}</a>
+          </li> -->
+          <li class="list-group-item list-group-item-dark align-items-center" v-bind:key="member.name">{{member.name}}</li>
+        </template>
       </ul>
       <ul class="list-group" v-else-if="isDeciding">
         <template v-for="member in members">
@@ -117,6 +137,15 @@
             >{{member.name}}</button>
             <span class="badge badge-primary badge-pill">{{badge[member.name]}}</span>
           </li>
+        </template>
+        <template v-for="member in deadMember">
+          <!-- <li
+            class="list-group-item d-flex justify-content-between align-items-center"
+            v-bind:key="member.name"
+          >
+            <a href="#" class="list-group-item list-group-item-dark">{{member.name}}</a>
+          </li> -->
+          <li class="list-group-item list-group-item-dark align-items-center" v-bind:key="member.name">{{member.name}}</li>
         </template>
       </ul>
       <div class="list-group" v-if="false">
@@ -159,7 +188,9 @@ export default {
       warnNoName: false,
       isNotJoinedRoom: true,
       isStartGame: false,
+      memberObject: [],
       members: [],
+      deadMember : [],
       tempAnnounce: "메시지",
       role: "",
       isNowSelect: false,
@@ -302,6 +333,12 @@ export default {
       if(this.isVoting){
         this.badge[data]++;
       }
+    });
+    this.socket.on("UPDATE_LIST", data => {
+      // this.tempAnnounce += `${data}\n`;
+      this.memberObject = data;
+      this.members = this.memberObject.filter(o => o.isAlive === true).map(o => o);
+      this.deadMember = this.memberObject.filter(o => o.isAlive === false).map(o => o);
     });
   }
 };
