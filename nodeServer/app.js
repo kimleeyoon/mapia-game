@@ -17,7 +17,7 @@ const io = require('socket.io')(server);
 server.listen(3000, () => {
     console.log('Server Open 3000');
     createRoom(room, 4);
-    createRoom(room, 2);
+    createRoom(room, 6);
     createRoom(room, 5);
 });
 
@@ -40,7 +40,7 @@ class Countdown extends EventEmitter {
         const countdown = this;
         const timeoutIds = [];
         return new Promise(function (resolve, reject) {
-            for (let i = countdown.seconds; i >= 0; i--) {
+            for (let i = countdown.seconds; i >= 0; i -= 0.5) {
                 timeoutIds.push(setTimeout(function () {
                     if (decide.isEnd()) {
                         console.log("카운트다운 종료");
@@ -107,30 +107,36 @@ io.on('connection', (socket) => {
         // console.log('user disconnected');
     });
     socket.on('ROLE_FEEDBACK', (data) => {
-        // curRoom.member[data.name].role = data.role;
+        // console.log(`${data.name}의 역할 할당`);
+        // if(curRoom.member[data.name]){
+        //     curRoom.member[data.name].role = data.role;
+        // }
+        curRoom.member[curRoom.member.findIndex(o => o.name == data.name)].role  =   data.role;
+
         // console.log(curRoom.member);
-        let k = Object.keys(curRoom.member).filter(o => o === data.name);
-        console.log(k);
-        console.log(curRoom.member[k]);
+        // console.log("역할 할당 완료!");
         // curRoom.member[k].role = data.role;
         // Object.keys(curRoom.member).forEach(o => console.log(o));
-        console.log("Asdfadsfsdf");
     });
     socket.on("DECIDE", data => {
-        // count++;
-        // decides.append(data);
-        // console.log("DECIDE 옴!!!!");
-        // console.log(decides);
-        // console.log(`num : ${num} count = ${count}`);
+
         console.log("DECIDE 옴!!!!");
         decide.add(data.message);
         console.log(`Data 온 직업 : ${data.fromRole}`);
         console.log(curRoom.member);
-        let otherPlayer = Object.keys(curRoom.member).filter(o => o.role === data.fromRole); // 같은 직업
-        console.log(otherPlayer);
+        Object.keys(curRoom.member).forEach(o => console.log(o));
+
+        let otherPlayer = curRoom.member.filter(o => o.role === data.fromRole);
+        // console.log("다른 플레이어");
+        // console.log(otherPlayer);
         otherPlayer.forEach((o) => {
-            console.log(o.name);
+            // console.log(`${o}한테 전송`);
+
             io.to(o.socket).emit("DECIDE_BADGE", data.message);
+        });
+        curRoom.member.forEach((o) => {
+            // console.log("투표 결과 전송용");
+            io.to(o.socket).emit("VOTE_BADGE", data.message);
         });
     });
     socket.on('ROOM_CONNECT', (data) => {
@@ -139,7 +145,7 @@ io.on('connection', (socket) => {
             io.to(socket.id).emit("WRONG_ROOM");
         } else {
             curRoom = room.find(o => o.id == data.room);
-            // console.log(curRoom);
+
             if (curRoom.size <= curRoom.member.length) {
                 io.to(socket.id).emit("FULL_OF_ROOM");
             } else {
@@ -154,7 +160,9 @@ io.on('connection', (socket) => {
                     none: "여기에는 무슨 말을 써야할까요?"
                 });
                 if (curRoom.size === curRoom.member.length) {
-                    io.to(`${data.room}`).emit('START_GAME');
+                    data.member = curRoom.member;
+                    data.size = curRoom.size;
+                    io.to(`${data.room}`).emit('START_GAME', data);
                     console.log("게임 시작");
                     grun(system, curRoom.member, io, `${data.room}`);
 
@@ -179,11 +187,15 @@ function grun(g, member, io, room) {
                         io.to(member.find(o => o.name == x.value.name).socket).emit("ROLE_ALERT", `${x.value.role}`);
                         setTimeout(iterate, 0, x.value);
                     } else if (x.value.do === "ResultOfInvestigation") {
-                        io.to(member.find(o => o.name == x.value.name).socket).emit("RESULT_OF_INVESTIGATION", {
-                            name: `${x.value.name}`,
-                            role: `${x.value.role}`
-                        });
+                        for (let name of x.value.nameList) {
+                            io.to(member.find(o => o.name == name).socket).emit("RESULT_OF_INVESTIGATION", {
+                                name: `${x.value.name}`,
+                                role: `${x.value.role}`
+                            });
+                        }
                         setTimeout(iterate, 0, x.value);
+                    }else if(x.value.do ==="DEATH_UPDATE"){
+
                     } else if (x.value.do === "Assassinate") {
                         let num = x.value.nameList.length; // 마피아 수
                         decide.reset();
@@ -208,7 +220,7 @@ function grun(g, member, io, room) {
                             .catch(() => {
                                 console.log("마피아 타임아웃");
                                 io.to(room).emit("END_DECIDE");
-                                setTimeout(iterate, 0, [])
+                                setTimeout(iterate, 0, decide.decides)
                             });
 
                     } else if (x.value.do === "Treatment") {
@@ -234,7 +246,7 @@ function grun(g, member, io, room) {
                             .catch(() => {
                                 console.log("의사 타임아웃");
                                 io.to(room).emit("END_DECIDE");
-                                setTimeout(iterate, 0, [])
+                                setTimeout(iterate, 0, decide.decides)
                             });
                     } else if (x.value.do === "Investigation") {
                         let num = x.value.nameList.length; // 경찰 수
@@ -266,14 +278,34 @@ function grun(g, member, io, room) {
                             .catch(() => {
                                 console.log("경찰 타임아웃");
                                 io.to(room).emit("END_DECIDE");
-                                setTimeout(iterate, 0, [])
+                                setTimeout(iterate, 0, decide.decides)
                             });
-                        // c.go()
-                        //     .then(() => {
-                        //         console.log("카운트 안 resolve");
-                        //         console.log(decide.decides);
-                        //     })
-                        //     .catch(() => console.log("에러"));
+
+                    } else  if(x.value.do === "Vote"){
+                        let num = x.value.nameList.length; // 사람 수
+                        decide.reset();
+                        decide.setNum(num)
+                        const c = new Countdown(30);
+                        c.on('tick', (total, i) => {
+                            for (let name of x.value.nameList) {
+                                let tempSocket = member.find(o => o.name == name);
+                                io.to(tempSocket.socket).emit("TICK", total, i);
+                            }
+                        })
+                        for (let name of x.value.nameList) {
+                            let tempSocket = member.find(o => o.name == name);
+                            io.to(tempSocket.socket).emit("VOTE");
+                        }
+                        c.go()
+                            .then(() => {
+                                io.to(room).emit("END_DECIDE");
+                                setTimeout(iterate, 0, decide.decides)
+                            })
+                            .catch(() => {
+                                console.log("투표 타임아웃");
+                                io.to(room).emit("END_DECIDE");
+                                setTimeout(iterate, 0, decide.decides)
+                            });
                     }
                 } else {
                     io.to(room).emit("ALERT", {

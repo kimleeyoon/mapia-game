@@ -69,7 +69,7 @@
       게임 시작!
       <br />
       당신의 역할 : {{role}}
-      <div class="list-group" v-if="!isNowSelect">
+      <div class="list-group" v-if="!isNowSelect && !isDeciding">
         <button
           type="button"
           class="list-group-item list-group-item-action"
@@ -78,7 +78,7 @@
           disabled
         >{{member.name}}</button>
       </div>
-      <div class="progress" v-if="isNowSelect">
+      <div class="progress" v-if="isNowSelect || isDeciding">
         <div
           class="progress-bar progress-bar-striped progress-bar-animated"
           role="progressbar"
@@ -94,12 +94,32 @@
             class="list-group-item d-flex justify-content-between align-items-center"
             v-bind:key="member.name"
           >
-            <button type="button" @click.prevent="decide($event, member.name)">{{member.name}}</button>
-            <span class="badge badge-primary badge-pill" v-for="n in badge" v-bind:key="n">{{n}}</span>
+            <button
+              type="button"
+              class="list-group-item list-group-item-action"
+              @click.prevent="decide($event, member.name)"
+            >{{member.name}}</button>
+            <span class="badge badge-primary badge-pill">{{badge[member.name]}}</span>
           </li>
         </template>
       </ul>
-      <div class="list-group" v-if="isNowSelect&&false">
+      <ul class="list-group" v-else-if="isDeciding">
+        <template v-for="member in members">
+          <li
+            class="list-group-item d-flex justify-content-between align-items-center"
+            v-bind:key="member.name"
+          >
+            <button
+              type="button"
+              class="list-group-item list-group-item-action"
+              @click.prevent="decide($event, member.name)"
+              disabled
+            >{{member.name}}</button>
+            <span class="badge badge-primary badge-pill">{{badge[member.name]}}</span>
+          </li>
+        </template>
+      </ul>
+      <div class="list-group" v-if="false">
         <button
           type="button"
           class="list-group-item list-group-item-action"
@@ -109,7 +129,7 @@
         >
           {{member.name}}
           <span v-if="isDeciding">
-            <span class="badge badge-primary badge-pill" >{{badge[member.name]}}</span>
+            <span class="badge badge-primary badge-pill">{{badge[member.name]}}</span>
           </span>
         </button>
       </div>
@@ -146,7 +166,8 @@ export default {
       time: 0,
       barStyle: "",
       badge: {},
-      isDeciding: false
+      isDeciding: false,
+      isVoting: false
     };
   },
   methods: {
@@ -205,17 +226,23 @@ export default {
     this.socket.on("FULL_OF_ROOM", () => {
       this.temp += `${this.roomID}번 방은 자리가 없어여어엉`;
     });
-    this.socket.on("START_GAME", () => {
+    this.socket.on("START_GAME", data => {
       this.isStartGame = true;
+      this.members = data.member;
+      this.roomSize = data.size;
       // for (let i = 0; i < this.roomSize; i++) {
       //   this.badge[i] = 0;
       // }
       // Object.keys(this.badge).forEach((o, i, ob) => ob[o] = 0);
-      Object.keys(this.members).forEach((o, i, ob) => this.badge[ob[o].name] = 0);
+      // Object.keys(this.members).forEach((o, i, ob) => this.badge[ob[o].name] = 0);
+      this.members.forEach(o => {
+        this.badge[o.name] = 0;
+        // this.tempAnnounce += `${o.name}\n`;
+      });
     });
     this.socket.on("ROLE_ALERT", data => {
       this.role = data;
-      this.socket.emit("ROLE_FEEDBACK", {name : this,name ,role : data});
+      this.socket.emit("ROLE_FEEDBACK", { name: this.name, role: data });
     });
     this.socket.on("ALERT", data => {
       this.tempAnnounce += `${data.message}\n`;
@@ -235,6 +262,12 @@ export default {
       this.isNowSelect = true;
       this.isDeciding = true;
     });
+    this.socket.on("VOTE", () => {
+      this.tempAnnounce += "제발 투표하세요!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1\n";
+      this.isNowSelect = true;
+      this.isDeciding = true;
+      this.isVoting = true;
+    });
     this.socket.on("TICK", (total, cur) => {
       this.time = total;
       this.barStyle = `width: ${(cur / total) * 100}%`;
@@ -250,14 +283,23 @@ export default {
       // for (let i = 0; i < this.roomSize; i++) {
       //   this.badge[i] = 0;
       // }
-      Object.keys(this.badge).forEach((o, i, ob) => ob[o] = 0);
+      Object.keys(this.badge).forEach((o)=> (this.badge[o] = 0));
       this.isDeciding = false;
+      this.isVoting = false;
+      this.isNowSelect =false;
     });
 
     this.socket.on("DECIDE_BADGE", data => {
-      this.tempAnnounce += "다른 사람 선택하하하아아아마암1\n";
-      this.tempAnnounce += "온 데이터 선택하하하아아아마암1\n" + data.message;
-      this.badge[data.message]++;
+      // this.tempAnnounce += "다른 사람 선택하하하아아아마암1\n";
+      // this.tempAnnounce += "온 데이터 선택하하하아아아마암1\n" + data;
+      this.badge[data]++;
+    });
+    this.socket.on("VOTE_BADGE", data => {
+      // this.tempAnnounce += "다른 사람 선택하하하아아아마암1\n";
+      // this.tempAnnounce += "온 데이터 선택하하하아아아마암1\n" + data;
+      if(this.isVoting){
+        this.badge[data]++;
+      }
     });
   }
 };
