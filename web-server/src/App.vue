@@ -292,7 +292,9 @@ export default {
     this.socket.on("DECIDE_BADGE", data => {
       // this.tempAnnounce += "다른 사람 선택하하하아아아마암1\n";
       // this.tempAnnounce += "온 데이터 선택하하하아아아마암1\n" + data;
-      this.badge[data]++;
+      if(!this.isVoting ){
+        this.badge[data]++;
+      }
     });
     this.socket.on("VOTE_BADGE", data => {
       // this.tempAnnounce += "다른 사람 선택하하하아아아마암1\n";
