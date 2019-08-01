@@ -234,29 +234,38 @@ function ptimeout(delay) {
 ////////////////////////////////////**Game Zone**////////////////////////////////////////////
 
 class Members {
-    constructor(member){
+    constructor(member) {
         this.allMemberNameList = member.map(o => o.name);
         this.memberObj = this.allMemberNameList.map((o) => {
             return {
                 name: o,
-                role : '',
+                role: '',
                 isAlive: true
             }
         });
     }
-    getLiveList(){
+    getLiveList() {
         return this.memberObj.filter(o => o.isAlive === true).map(o => o.name);
     }
-    setLive(name, value){
+    setLive(name, value) {
         this.memberObj.find(k => k.name === name).isAlive = !!value;
     }
-    setRole(name, role){
+    setRole(name, role) {
         this.memberObj.find(k => k.name === name).role = role;
     }
-    getAfterList(){
+    getAfterList() {
         let temp = {};
-        for(let k of this.memberObj){
+        for (let k of this.memberObj) {
             temp[k.name] = k.role
+        }
+        return temp;
+    }
+    getLiveAfterList(){
+        let temp = {};
+        for (let k of this.memberObj) {
+            if(k.isAlive){
+                temp[k.name] = k.role
+            }
         }
         return temp;
     }
@@ -377,8 +386,7 @@ function* mainGame(member) {
             let max = 0;
             // console.log("Max 찾기");
             const maxF = Object.keys(frequency).map((o, index, object) => {
-                if (object[o] < max) {
-                } else {
+                if (object[o] < max) {} else {
                     max = object[o];
                     return o;
                 }
@@ -411,7 +419,7 @@ function* mainGame(member) {
                     nameList: Object.keys(afterList).filter(o => afterList[o] == "의사")
                 };
                 // console.log(tempDoctorPick);
-    
+
                 // console.log("Doctor 투표 해결하기");
                 const frequency = tempDoctorPick.reduce((a, x) => {
                     if (!a[x]) a[x] = 0;
@@ -422,8 +430,7 @@ function* mainGame(member) {
                 let max = 0;
                 // console.log("Max 찾기");
                 const maxF = Object.keys(frequency).map((o, index, object) => {
-                    if (object[o] < max) {
-                    } else {
+                    if (object[o] < max) {} else {
                         max = object[o];
                         return o;
                     }
@@ -437,7 +444,7 @@ function* mainGame(member) {
                 }
 
                 // doctorPick = prompt('의사는 살릴 사람을 선택해주세요.'); //의사가 살릴 사람을 지목
-                mapiaVSdoctorResult = savePlayer(mapiaPick, doctorPick, doctorAlive, afterList,memberClass.memberObj);
+                mapiaVSdoctorResult = savePlayer(mapiaPick, doctorPick, doctorAlive, afterList, memberClass.memberObj);
                 // function savePlayer(mapiaPick, doctorPick, doctorAlive, afterList) { 
             }
         }
@@ -462,7 +469,7 @@ function* mainGame(member) {
                 };
                 // console.log("경찰 조건 보냄");
                 // console.log(tempPolicePick);
-    
+
                 // console.log("Mapia 투표 해결하기");
                 const frequency = tempPolicePick.reduce((a, x) => {
                     if (!a[x]) a[x] = 0;
@@ -473,8 +480,7 @@ function* mainGame(member) {
                 let max = 0;
                 // console.log("Max 찾기");
                 const maxF = Object.keys(frequency).map((o, index, object) => {
-                    if (object[o] < max) {
-                    } else {
+                    if (object[o] < max) {} else {
                         max = object[o];
                         return o;
                     }
@@ -511,9 +517,9 @@ function* mainGame(member) {
         yield `${mapiaVSdoctorResult}`;
 
         // TODO: 마피아가 사람 안죽인 경우는 어떻게 할거이이이ㅣ이이이이이이이이이ㅣ이이이이이ㅣ잉ㅁ
-        if(mapiaVSdoctorResult.length < 20){ // 사람 살림
+        if (mapiaVSdoctorResult.length < 20) { // 사람 살림
 
-        }else{ // 사람 죽음
+        } else { // 사람 죽음
 
         }
         // TODO: 사람 죽은거 엄데이트 해서 보내줘야 함
@@ -554,7 +560,7 @@ function* mainGame(member) {
         let tempId = [];
         tempId = yield {
             do: "Vote",
-            nameList: Object.keys(afterList)
+            nameList: memberClass.getLiveList()
         };
         // console.log(tempId);
 
@@ -568,8 +574,7 @@ function* mainGame(member) {
         let max = 0;
         // console.log("Max 찾기");
         const maxF = Object.keys(frequency).map((o, index, object) => {
-            if (object[o] < max) {
-            } else {
+            if (object[o] < max) {} else {
                 max = object[o];
                 return o;
             }
@@ -586,10 +591,18 @@ function* mainGame(member) {
         // TODO: 투표로 사람 못죽이는 부분 해결해야하ㅏ아ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ
         afterList = killPlayer(id, afterList, memberClass.memberObj);
         yield `${id}가 투표로 죽었습니다.`
+
+        memberClass.setLive(id, false);
+
         // TODO: 사람 죽은거 처리해서 업데이트 해야함
         idOfPolicePick = 0; //다음날을 위한 초기화
         mapiaVSdoctorResult = "Error"; //다음날을 위한 초기화 
         count = 0;
+
+        yield {
+            do: "DEATH_UPDATE",
+            nameList: memberClass.memberObj
+        };
 
         for (let key in afterList) {
             // console.log(key);

@@ -201,105 +201,99 @@ function grun(g, member, io, room) {
                         }
                         setTimeout(iterate, 0, x.value);
                     } else if (x.value.do === "Assassinate") {
-                        let num = x.value.nameList.length; // 마피아 수
-                        decide.reset();
-                        decide.setNum(num)
-                        const c = new Countdown(30);
-                        c.on('tick', (total, i) => {
-                            for (let name of x.value.nameList) {
-                                let tempSocket = member.find(o => o.name == name);
-                                io.to(tempSocket.socket).emit("TICK", total, i);
-                            }
-                        })
-                        console.log("마피아 카운트 다운 시작");
-                        for (let name of x.value.nameList) {
-                            let tempSocket = member.find(o => o.name == name);
-                            io.to(tempSocket.socket).emit("ASSASSINATE");
-                        }
+                        // let num = x.value.nameList.length; // 마피아 수
+                        // decide.reset();
+                        // decide.setNum(num)
+                        // const c = new Countdown(30);
+                        // c.on('tick', (total, i) => {
+                        //     for (let name of x.value.nameList) {
+                        //         let tempSocket = member.find(o => o.name == name);
+                        //         io.to(tempSocket.socket).emit("TICK", total, i);
+                        //     }
+                        // })
+                        // for (let name of x.value.nameList) {
+                        //     let tempSocket = member.find(o => o.name == name);
+                        //     io.to(tempSocket.socket).emit("ASSASSINATE");
+                        // }
+                        const c = sendSocket(io,member, x, decide)
                         c.go()
                             .then(() => {
                                 io.to(room).emit("END_DECIDE");
                                 setTimeout(iterate, 0, decide.decides)
                             })
                             .catch(() => {
-                                console.log("마피아 타임아웃");
                                 io.to(room).emit("END_DECIDE");
                                 setTimeout(iterate, 0, decide.decides)
                             });
 
                     } else if (x.value.do === "Treatment") {
-                        let num = x.value.nameList.length; // 의사 수
-                        decide.reset();
-                        decide.setNum(num)
-                        const c = new Countdown(30);
-                        c.on('tick', (total, i) => {
-                            for (let name of x.value.nameList) {
-                                let tempSocket = member.find(o => o.name == name);
-                                io.to(tempSocket.socket).emit("TICK", total, i);
-                            }
-                        })
-                        for (let name of x.value.nameList) {
-                            let tempSocket = member.find(o => o.name == name);
-                            io.to(tempSocket.socket).emit("TREATMENT");
-                        }
+
+                        // let num = x.value.nameList.length; // 의사 수
+                        // decide.reset();
+                        // decide.setNum(num)
+                        // const c = new Countdown(30);
+                        // c.on('tick', (total, i) => {
+                        //     for (let name of x.value.nameList) {
+                        //         let tempSocket = member.find(o => o.name == name);
+                        //         io.to(tempSocket.socket).emit("TICK", total, i);
+                        //     }
+                        // })
+                        // for (let name of x.value.nameList) {
+                        //     let tempSocket = member.find(o => o.name == name);
+                        //     io.to(tempSocket.socket).emit("TREATMENT");
+                        // }
+                        const c = sendSocket(io, member,x, decide)
                         c.go()
                             .then(() => {
                                 io.to(room).emit("END_DECIDE");
                                 setTimeout(iterate, 0, decide.decides)
                             })
                             .catch(() => {
-                                console.log("의사 타임아웃");
                                 io.to(room).emit("END_DECIDE");
                                 setTimeout(iterate, 0, decide.decides)
                             });
                     } else if (x.value.do === "Investigation") {
-                        let num = x.value.nameList.length; // 경찰 수
-                        console.log("경찰 조사 app 들어옴");
-                        decide.reset();
-                        decide.setNum(num)
-                        console.log(decide.decides);
-                        console.log(decide.isEnd());
-                        const c = new Countdown(30);
-                        c.on('tick', (total, i) => {
-                            for (let name of x.value.nameList) {
-                                let tempSocket = member.find(o => o.name == name);
-                                io.to(tempSocket.socket).emit("TICK", total, i);
-                            }
-                        })
-                        console.log("카운트다운 시작");
-                        for (let name of x.value.nameList) {
-                            console.log("경찰 for문 안");
-                            console.log(`name : ${name}`);
-                            let tempSocket = member.find(o => o.name == name);
-                            io.to(tempSocket.socket).emit("INVESTIGATION");
-                            console.log("경찰한테 소켓 보냄");
-                        }
+                        // let num = x.value.nameList.length; // 경찰 수
+                        // decide.reset();
+                        // decide.setNum(num)
+                        // const c = new Countdown(30);
+                        // c.on('tick', (total, i) => {
+                        //     for (let name of x.value.nameList) {
+                        //         let tempSocket = member.find(o => o.name == name);
+                        //         io.to(tempSocket.socket).emit("TICK", total, i);
+                        //     }
+                        // })
+                        // for (let name of x.value.nameList) {
+                        //     let tempSocket = member.find(o => o.name == name);
+                        //     io.to(tempSocket.socket).emit("INVESTIGATION");
+                        // }
+                        const c = sendSocket(io,member, x, decide)
                         c.go()
                             .then(() => {
                                 io.to(room).emit("END_DECIDE");
                                 setTimeout(iterate, 0, decide.decides)
                             })
                             .catch(() => {
-                                console.log("경찰 타임아웃");
                                 io.to(room).emit("END_DECIDE");
                                 setTimeout(iterate, 0, decide.decides)
                             });
 
                     } else  if(x.value.do === "Vote"){
-                        let num = x.value.nameList.length; // 사람 수
-                        decide.reset();
-                        decide.setNum(num)
-                        const c = new Countdown(30);
-                        c.on('tick', (total, i) => {
-                            for (let name of x.value.nameList) {
-                                let tempSocket = member.find(o => o.name == name);
-                                io.to(tempSocket.socket).emit("TICK", total, i);
-                            }
-                        })
-                        for (let name of x.value.nameList) {
-                            let tempSocket = member.find(o => o.name == name);
-                            io.to(tempSocket.socket).emit("VOTE");
-                        }
+                        // let num = x.value.nameList.length; // 사람 수
+                        // decide.reset();
+                        // decide.setNum(num)
+                        // const c = new Countdown(30);
+                        // c.on('tick', (total, i) => {
+                        //     for (let name of x.value.nameList) {
+                        //         let tempSocket = member.find(o => o.name == name);
+                        //         io.to(tempSocket.socket).emit("TICK", total, i);
+                        //     }
+                        // })
+                        // for (let name of x.value.nameList) {
+                        //     let tempSocket = member.find(o => o.name == name);
+                        //     io.to(tempSocket.socket).emit("VOTE");
+                        // }
+                        const c = sendSocket(io, member, x, decide)
                         c.go()
                             .then(() => {
                                 io.to(room).emit("END_DECIDE");
@@ -321,6 +315,24 @@ function grun(g, member, io, room) {
             }
         }
     })();
+}
+
+function sendSocket(io, member, x, decide){
+    let num = x.value.nameList.length; // 보낼 사람 수
+    decide.reset();
+    decide.setNum(num)
+    const c = new Countdown(30);
+    c.on('tick', (total, i) => {
+        for (let name of x.value.nameList) {
+            let tempSocket = member.find(o => o.name == name);
+            io.to(tempSocket.socket).emit("TICK", total, i);
+        }
+    })
+    for (let name of x.value.nameList) {
+        let tempSocket = member.find(o => o.name == name);
+        io.to(tempSocket.socket).emit(x.value.do.toUpperCase());
+    }
+    return c;
 }
 
 function createRoom(room, size) {

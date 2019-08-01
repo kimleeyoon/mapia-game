@@ -230,7 +230,7 @@ export default {
     },
     decide(e, message) {
       e.preventDefault();
-      this.tempAnnounce += `${message}\n`;
+      // this.tempAnnounce += `${message}\n`;
       this.socket.emit("DECIDE", {
         message: `${message}`,
         fromRole: `${this.role}`
@@ -261,14 +261,8 @@ export default {
       this.isStartGame = true;
       this.members = data.member;
       this.roomSize = data.size;
-      // for (let i = 0; i < this.roomSize; i++) {
-      //   this.badge[i] = 0;
-      // }
-      // Object.keys(this.badge).forEach((o, i, ob) => ob[o] = 0);
-      // Object.keys(this.members).forEach((o, i, ob) => this.badge[ob[o].name] = 0);
       this.members.forEach(o => {
         this.badge[o.name] = 0;
-        // this.tempAnnounce += `${o.name}\n`;
       });
     });
     this.socket.on("ROLE_ALERT", data => {
@@ -311,9 +305,7 @@ export default {
       this.isNowSelect = true;
     });
     this.socket.on("END_DECIDE", () => {
-      // for (let i = 0; i < this.roomSize; i++) {
-      //   this.badge[i] = 0;
-      // }
+      this.tempAnnounce += "END_DICIDEEEEEE"
       Object.keys(this.badge).forEach((o)=> (this.badge[o] = 0));
       this.isDeciding = false;
       this.isVoting = false;
@@ -321,21 +313,16 @@ export default {
     });
 
     this.socket.on("DECIDE_BADGE", data => {
-      // this.tempAnnounce += "다른 사람 선택하하하아아아마암1\n";
-      // this.tempAnnounce += "온 데이터 선택하하하아아아마암1\n" + data;
       if(!this.isVoting ){
         this.badge[data]++;
       }
     });
     this.socket.on("VOTE_BADGE", data => {
-      // this.tempAnnounce += "다른 사람 선택하하하아아아마암1\n";
-      // this.tempAnnounce += "온 데이터 선택하하하아아아마암1\n" + data;
       if(this.isVoting){
         this.badge[data]++;
       }
     });
     this.socket.on("UPDATE_LIST", data => {
-      // this.tempAnnounce += `${data}\n`;
       this.memberObject = data;
       this.members = this.memberObject.filter(o => o.isAlive === true).map(o => o);
       this.deadMember = this.memberObject.filter(o => o.isAlive === false).map(o => o);
