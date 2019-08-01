@@ -325,7 +325,10 @@ export default {
     this.socket.on("UPDATE_LIST", data => {
       this.memberObject = data;
       this.members = this.memberObject.filter(o => o.isAlive === true).map(o => o);
-      this.deadMember = this.memberObject.filter(o => o.isAlive === false).map(o => o);
+      this.deadMember = this.memberObject.filter(o => o.isAlive === false).map(o => {
+        o.name += "  ";
+        return o;
+        });
     });
   }
 };

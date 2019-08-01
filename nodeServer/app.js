@@ -1,24 +1,25 @@
-const app = require(`express`)();
-const http = require('http');
+const app = require(`express`)(); // 익스프레스 프레임워크
+const http = require('http'); // http
 // const server = require('http').Server(app);
-const static = require('serve-static');
-const path = require('path');
-const EventEmitter = require('events').EventEmitter;
+const static = require('serve-static'); // 서버 경로 재지정 해주는 
+const path = require('path'); // OS Path 조정 시 사용
+const EventEmitter = require('events').EventEmitter; // 이벤트 on, listener
 
-const Room = require('./room');
-const Member = require('./member')
-const system = require('./logic');
+const Room = require('./room'); // 방 class
+const Member = require('./member') // 멤버 class
+const system = require('./logic'); // 로직 프로그램
 
-app.use(static(path.join(__dirname, 'public/dist')));
+app.use(static(path.join(__dirname, 'public/dist'))); // public/dist 폴더를 클라이언트가 루트경로로 접근하도록 해줌
 
-const server = http.Server(app);
-const io = require('socket.io')(server);
+const server = http.Server(app); // 익스프레스 사용해서 서버 생성 및 할당
+const io = require('socket.io')(server); // socket.io 서버 생성
 
-server.listen(3000, () => {
+server.listen(3000, () => { // 3000포트에서 서버 열음
     console.log('Server Open 3000');
     createRoom(room, 4);
     createRoom(room, 6);
     createRoom(room, 5);
+    // 3개의 방 생성
 });
 
 
@@ -30,177 +31,183 @@ server.listen(3000, () => {
 //     console.log(socket.id)
 //     console.log("Someone connected to server without namespace");
 // });
-class Countdown extends EventEmitter {
-    constructor(seconds, decide) {
+class Countdown extends EventEmitter { // 제한시간 초과시 프라미스 실패내기위한 클래스
+    constructor(seconds) {
         super();
-        this.seconds = seconds;
-        this.decide = decide;
+        this.seconds = seconds; // 제한 시간
     }
-    go() {
+    go(decide) {
         const countdown = this;
         const timeoutIds = [];
         return new Promise(function (resolve, reject) {
             for (let i = countdown.seconds; i >= 0; i -= 0.5) {
                 timeoutIds.push(setTimeout(function () {
-                    if (decide.isEnd()) {
-                        console.log("카운트다운 종료");
-                        timeoutIds.forEach(clearTimeout);
-                        resolve();
+                    if (decide.isEnd()) { // 사람들로부터 투표 다 받았으면
+                        timeoutIds.forEach(clearTimeout); // 지정된 setTimeout 초기화
+                        resolve(); // Promise Resolve
                     }
 
-                    // if(i === 13){
-                    // 	timeoutIds.forEach(clearTimeout);
-                    // 	return reject(new Error("Oh my god!"));
-                    // }
-
-                    countdown.emit('tick', countdown.seconds, i);
-                    if (i === 0) reject();
+                    countdown.emit('tick', countdown.seconds, i); // 클라이언트 Progress바 표시를 위해 이벤트 발생
+                    if (i === 0) reject(); // 시간 다 지나면 Promise Reject
                 }, (countdown.seconds - i) * 1000));
             }
         });
     }
 }
 
-class dMessage {
-    constructor() {
-        this.count = 0;
-        this.decides = [];
-        this.num = 0;
+class dMessage { // decide 관리를 위한 class
+    constructor(id) {
+        this.count = 0; // 요청온 카운트
+        this.decides = []; // 사람들 결정 저장
+        this.num = 0; // 총 받아야하는 결정 수
+        this.id = id; // 어떤 방의 decide인지를 위한 id
     }
-    add(data) {
-        this.count++;
+    add(data) { // 사용자로부터 요청이 오면
+        this.count++; 
         this.decides.push(data);
+        // count 증가 후 decides에 응답 온 결정 추가
 
         console.log(this.decides);
         console.log(`num : ${this.num} count = ${this.count}`);
     }
     setNum(n) {
-        this.num = n;
+        this.num = n; //  받아야하는 결정 수 설정
     }
-    reset() {
+    reset() { // 초기화 함수
         this.count = 0;
         this.decides = [];
         this.num = 0;
     }
-    isEnd() {
+    isEnd() { // 결정 다 받았는지 확인하는 함수
         return this.num <= this.count;
     }
 }
 
 let room = [];
-// 방별 객체로 수정해야 함 아래
-let decide = new dMessage();
-// let decideMessageFunction = (function() {
-//     let count = 0;
-//     let decides = [];
-//     return function(){
 
-//     };
-// })();
+let decides = [];
 
 
+io.on('connection', (socket) => { // 사용자 접속 오면
 
-io.on('connection', (socket) => {
-    // console.log("Someone Connected");
-    let curRoom;
-    socket.on('disconnect', () => {
-        // console.log('user disconnected');
+    let curRoom; // 소켓이 접속중인 방
+    let curDecide; // 소켓이 접속중인 방을 관리할 decide
+    socket.on('disconnect', () => { // 접속 끊기면
+
     });
-    socket.on('ROLE_FEEDBACK', (data) => {
-        // console.log(`${data.name}의 역할 할당`);
-        // if(curRoom.member[data.name]){
-        //     curRoom.member[data.name].role = data.role;
-        // }
-        curRoom.member[curRoom.member.findIndex(o => o.name == data.name)].role  =   data.role;
+    socket.on('ROLE_FEEDBACK', (data) => { // 사용자가 역할 할당받고 다시 서버에 보내준거 받는 프로토콜
 
+        curRoom.member[curRoom.member.findIndex(o => o.name == data.name)].role = data.role; // curRoom 멤버에서 해당 멤버 찾아서 역할 저장
+
+    });
+    socket.on("DECIDE", data => { // 사용자가 결정하면
+
+        // console.log("DECIDE 옴!!!!");
+
+
+        curDecide.add(data.message); // curDecide에 온 결정 추가
+
+
+        // console.log(`Data 온 직업 : ${data.fromRole}`);
         // console.log(curRoom.member);
-        // console.log("역할 할당 완료!");
-        // curRoom.member[k].role = data.role;
         // Object.keys(curRoom.member).forEach(o => console.log(o));
-    });
-    socket.on("DECIDE", data => {
 
-        console.log("DECIDE 옴!!!!");
-        decide.add(data.message);
-        console.log(`Data 온 직업 : ${data.fromRole}`);
-        console.log(curRoom.member);
-        Object.keys(curRoom.member).forEach(o => console.log(o));
+        // let otherPlayer = curRoom.member.filter(o => o.role === data.fromRole); // 같은 역할을 가진 다른 플레이어들
 
-        let otherPlayer = curRoom.member.filter(o => o.role === data.fromRole);
+
         // console.log("다른 플레이어");
         // console.log(otherPlayer);
-        otherPlayer.forEach((o) => {
+
+
+        curRoom.member.filter(o => o.role === data.fromRole).forEach((o) => { // 같은 역할을 가진 다른 플레이어들에게 결정 공유
             // console.log(`${o}한테 전송`);
 
             io.to(o.socket).emit("DECIDE_BADGE", data.message);
         });
-        curRoom.member.forEach((o) => {
+
+        curRoom.member.forEach((o) => { // 투표하는 경우 모든 플레이어에게 투표 결과 공유
             // console.log("투표 결과 전송용");
             io.to(o.socket).emit("VOTE_BADGE", data.message);
         });
     });
-    socket.on('ROOM_CONNECT', (data) => {
-        if (!room.some(x => x.id == data.room)) {
+
+    socket.on('ROOM_CONNECT', (data) => { // 사용자가 방에 들어오면
+        if (!room.some(x => x.id == data.room)) { // 없는 방이라면
             console.log(`사용자가 없는 방에 접속 시도 : ${data.room}`);
             io.to(socket.id).emit("WRONG_ROOM");
-        } else {
-            curRoom = room.find(o => o.id == data.room);
+        } else { // 맞는 방이라면
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            curRoom = room.find(o => o.id == data.room); // 사용자가 접속중인 현재 방
+            curDecide = decides.find(o => `${o.id}` === `${data.room}`); // 사용자가 접속중인 방의 decide
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-            if (curRoom.size <= curRoom.member.length) {
+            if (curRoom.size <= curRoom.member.length) { // 방 꽉차면
                 io.to(socket.id).emit("FULL_OF_ROOM");
-            } else {
-                curRoom.member.push(new Member(data.name, socket.id, socket.on));
-                socket.join(`${data.room}`, () => {
+            } else { // 방 비어있으면
+                curRoom.member.push(new Member(data.name, socket.id, socket.on)); // 해당 방에 접속한 멤버 추가
+                socket.join(`${data.room}`, () => { // 해당 방에 유저를 추가
                     console.log(`${data.name}이 방(${data.room})에 들어옴`);
-                    data.member = curRoom.member;
+                    data.member = curRoom.member; 
                     data.size = curRoom.size;
+                    // 해당 방에 접속중인 멤버와 사람 수 설정 후 방에 있는 모든 사용자에게 유저가 접속했음을 알림
                     io.to(`${data.room}`).emit('ROOM_CONNECT', data);
                 });
-                io.to(socket.id).emit("ENTER_ROOM", {
+
+                io.to(socket.id).emit("ENTER_ROOM", { // 사용자가 방에 접속하는데 성공했음을 알림
                     none: "여기에는 무슨 말을 써야할까요?"
                 });
-                if (curRoom.size === curRoom.member.length) {
+
+                if (curRoom.size === curRoom.member.length) { // 방에 사람 다 들어왔다면
                     data.member = curRoom.member;
                     data.size = curRoom.size;
                     io.to(`${data.room}`).emit('START_GAME', data);
                     console.log("게임 시작");
-                    grun(system, curRoom.member, io, `${data.room}`);
+                    // 해당 방 정보 재설정 후 게임이 시작함을 방에 있는 모든 유저들에게 알림
 
+                    grun(system, curRoom.member, io, `${data.room}`, curDecide);
+                    // 게임 메인 프로토콜 실행
                 }
             }
         }
     });
 });
 
-function grun(g, member, io, room) {
-    const it = g(member);
+function grun(g, member, io, room, curDecide) {
+    // 게임 메인 로직을 실행하기위한 제너레이터 실행 함수
+    // 마피아 게임은 이 위에서 돌아감
+
+    const it = g(member); // 제너레이터로부터 이터레이터를 얻음
+
     (function iterate(val) {
         const x = it.next(val);
-        if (!x.done) {
-            if (x.value instanceof Promise) {
-                x.value.then(iterate).catch(err => it.throw(err));
-            } else {
-                // console.log("Iterator 안에서 프라미스 아닌거");
-                // console.log(room);
-                if (x.value instanceof Object) {
-                    if (x.value.do === "AnnounceRole") {
+        if (!x.done) { // 제너레이터 아직 안끝났다면
+            if (x.value instanceof Promise) { // 프라미스 종류라면
+                x.value.then(iterate).catch(err => it.throw(err)); // 프라미스 완료되면 다음 yield 실행
+            } else { // 프라미스가 아니라면
+
+                if (x.value instanceof Object) { // Object가 메시지로 왔다며
+                    if (x.value.do === "AnnounceRole") {  // 역할 공지라면
                         io.to(member.find(o => o.name == x.value.name).socket).emit("ROLE_ALERT", `${x.value.role}`);
                         setTimeout(iterate, 0, x.value);
-                    } else if (x.value.do === "ResultOfInvestigation") {
+                        // 모든 사용자에게 역할 공지하고 다음 명령 실행
+                    } else if (x.value.do === "ResultOfInvestigation") { // 경찰 조사 결과 전송
                         for (let name of x.value.nameList) {
                             io.to(member.find(o => o.name == name).socket).emit("RESULT_OF_INVESTIGATION", {
                                 name: `${x.value.name}`,
                                 role: `${x.value.role}`
                             });
-                        }
+                        } // 경찰 찾아서 조사 결과 전송
                         setTimeout(iterate, 0, x.value);
-                    }else if(x.value.do ==="DEATH_UPDATE"){
+                    }else if(x.value.do ==="DEATH_UPDATE"){ // 죽은 사람 업데이트
                         for (let tempMember of x.value.nameList) {
                             let tempSocket = member.find(o => o.name == tempMember.name);
                             io.to(tempSocket.socket).emit("UPDATE_LIST", x.value.nameList);
                         }
+                        // 방에 있는 모든 유저에게 살아있는 사람들 목록 전송
                         setTimeout(iterate, 0, x.value);
-                    } else if (x.value.do === "Assassinate") {
+                    } else if (x.value.do === "Assassinate") { // 암살 명령 오면
+
+
                         // let num = x.value.nameList.length; // 마피아 수
                         // decide.reset();
                         // decide.setNum(num)
@@ -215,18 +222,21 @@ function grun(g, member, io, room) {
                         //     let tempSocket = member.find(o => o.name == name);
                         //     io.to(tempSocket.socket).emit("ASSASSINATE");
                         // }
-                        const c = sendSocket(io,member, x, decide)
-                        c.go()
-                            .then(() => {
+
+
+                        const c = sendSocket(io,member, x, curDecide) // 해당 명령 보낸 후 Countdown 리턴 받음
+                        c.go(curDecide)
+                            .then(() => { // 사용자 결정 다 받으면
                                 io.to(room).emit("END_DECIDE");
-                                setTimeout(iterate, 0, decide.decides)
+                                setTimeout(iterate, 0, curDecide.decides)
                             })
-                            .catch(() => {
+                            .catch(() => { // 시간 초과
                                 io.to(room).emit("END_DECIDE");
-                                setTimeout(iterate, 0, decide.decides)
+                                setTimeout(iterate, 0, curDecide.decides)
                             });
 
-                    } else if (x.value.do === "Treatment") {
+                    } else if (x.value.do === "Treatment") { // 의사 명령
+
 
                         // let num = x.value.nameList.length; // 의사 수
                         // decide.reset();
@@ -242,17 +252,21 @@ function grun(g, member, io, room) {
                         //     let tempSocket = member.find(o => o.name == name);
                         //     io.to(tempSocket.socket).emit("TREATMENT");
                         // }
-                        const c = sendSocket(io, member,x, decide)
-                        c.go()
-                            .then(() => {
+
+
+                        const c = sendSocket(io, member,x, curDecide) // 해당 명령 보낸 후 Countdown 리턴 받음
+                        c.go(curDecide)
+                            .then(() => { // 결정 다 받으면
                                 io.to(room).emit("END_DECIDE");
-                                setTimeout(iterate, 0, decide.decides)
+                                setTimeout(iterate, 0, curDecide.decides)
                             })
-                            .catch(() => {
+                            .catch(() => { // 시간 초과
                                 io.to(room).emit("END_DECIDE");
-                                setTimeout(iterate, 0, decide.decides)
+                                setTimeout(iterate, 0, curDecide.decides)
                             });
-                    } else if (x.value.do === "Investigation") {
+                    } else if (x.value.do === "Investigation") { // 경찰 조사 
+
+
                         // let num = x.value.nameList.length; // 경찰 수
                         // decide.reset();
                         // decide.setNum(num)
@@ -267,18 +281,22 @@ function grun(g, member, io, room) {
                         //     let tempSocket = member.find(o => o.name == name);
                         //     io.to(tempSocket.socket).emit("INVESTIGATION");
                         // }
-                        const c = sendSocket(io,member, x, decide)
-                        c.go()
-                            .then(() => {
+
+
+                        const c = sendSocket(io,member, x, curDecide) // // 해당 명령 보낸 후 Countdown 리턴 받음
+                        c.go(curDecide)
+                            .then(() => { // 결정 다 받으면
                                 io.to(room).emit("END_DECIDE");
-                                setTimeout(iterate, 0, decide.decides)
+                                setTimeout(iterate, 0, curDecide.decides)
                             })
                             .catch(() => {
                                 io.to(room).emit("END_DECIDE");
-                                setTimeout(iterate, 0, decide.decides)
+                                setTimeout(iterate, 0, curDecide.decides)
                             });
 
-                    } else  if(x.value.do === "Vote"){
+                    } else  if(x.value.do === "Vote"){ // 투표 받으면
+
+
                         // let num = x.value.nameList.length; // 사람 수
                         // decide.reset();
                         // decide.setNum(num)
@@ -293,19 +311,21 @@ function grun(g, member, io, room) {
                         //     let tempSocket = member.find(o => o.name == name);
                         //     io.to(tempSocket.socket).emit("VOTE");
                         // }
-                        const c = sendSocket(io, member, x, decide)
-                        c.go()
-                            .then(() => {
+
+
+                        const c = sendSocket(io, member, x, curDecide) // 해당 명령 보낸 후 Countdown 리턴 받음
+                        c.go(curDecide)
+                            .then(() => { // 다 받으면
                                 io.to(room).emit("END_DECIDE");
-                                setTimeout(iterate, 0, decide.decides)
+                                setTimeout(iterate, 0, curDecide.decides)
                             })
-                            .catch(() => {
+                            .catch(() => { // 시간 다됨
                                 console.log("투표 타임아웃");
                                 io.to(room).emit("END_DECIDE");
-                                setTimeout(iterate, 0, decide.decides)
+                                setTimeout(iterate, 0, curDecide.decides)
                             });
                     }
-                } else {
+                } else { // 단순한 메시지 전송용
                     io.to(room).emit("ALERT", {
                         message: x.value
                     });
@@ -317,12 +337,14 @@ function grun(g, member, io, room) {
     })();
 }
 
-function sendSocket(io, member, x, decide){
+function sendSocket(io, member, x, decide){ // 사용자에게 결정 받는 소켓 전송 함수
+
     let num = x.value.nameList.length; // 보낼 사람 수
     decide.reset();
     decide.setNum(num)
+    // 결정 초기화ㅏ
     const c = new Countdown(30);
-    c.on('tick', (total, i) => {
+    c.on('tick', (total, i) => { // 작업 진행 바 조절을 위한 tick 이벤트 발생
         for (let name of x.value.nameList) {
             let tempSocket = member.find(o => o.name == name);
             io.to(tempSocket.socket).emit("TICK", total, i);
@@ -332,17 +354,24 @@ function sendSocket(io, member, x, decide){
         let tempSocket = member.find(o => o.name == name);
         io.to(tempSocket.socket).emit(x.value.do.toUpperCase());
     }
-    return c;
+    // 사람들한테 소켓 전송
+    return c; // Countdown 반환
 }
 
-function createRoom(room, size) {
+function createRoom(rooms, size) { // 특정 사이즈의 방 생성
     let id = -1;
     do {
         id = Math.floor(Math.random() * (9999 - 1000)) + 1000;
     } while (room.some(x => x.id === id));
-    room.push(new Room(id, size));
-    console.log(`Id : ${id}`);
-    createSocket(room, room.length - 1);
+    // 중복되지 않는 id 할당
+    rooms.push(new Room(id, size));
+    decides.push(new dMessage(id));
+    // rooms와 decide에 할당
+
+    console.log(`${rooms[rooms.length - 1].id} room 생성`);
+    console.log(rooms);
+
+    // createSocket(rooms, rooms.length - 1); 
 }
 
 function createSocket(rooms, index) {
