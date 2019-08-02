@@ -91,11 +91,12 @@ function savePlayer(mapiaPick, doctorPick, doctorAlive, afterList, memberClass) 
     //doctorPick = prompt('의사는 살릴 사람을 선택해주세요.');   //의사가 살릴 사람을 지목
     let mapiaVSdoctorResult = "None";
 
-    console.log(`Docotor Pick : ${doctorPick}`);
+    console.log(`Doctor Pick : ${doctorPick}`);
+    console.log(`Mapia Pick : ${mapiaPick}`);
 
-    if(mapiaPick == "None"){ // 마피아가 사람을 죽이지 않는 경우
+    if(mapiaPick == "None" || !mapiaPick){ // 마피아가 사람을 죽이지 않는 경우
         mapiaVSdoctorResult = "NoneKill";
-    }else if(!doctorPick || doctorAlive){ // 의사가 아무도 치료하지 않는 경우
+    }else if(!doctorPick || doctorAlive || doctorPick == "None"){ // 의사가 아무도 치료하지 않는 경우
         mapiaVSdoctorResult = parse('의사가 플레이어를 살리지 못했습니다. 마피아가 죽인 플레이어는 %s님 입니다.', mapiaPick);
         memberClass.find(o => o.name === mapiaPick).isAlive = false;
         delete afterList[mapiaPick];
@@ -154,7 +155,9 @@ function assassinatePlayer(playerName, afterList) { //마피아가 사람을 암
 function investigatePlayer(playerName, afterList) { //경찰이 사람을 조사하는 함수
     //policePick = prompt('경찰은 조사할 사람을 선택해주세요');
     let idOfPolicePick = 0;
-    if (afterList[playerName] == '경찰') {
+    if(playerName == "None"){
+        idOfPolicePick = "None";
+    }else if (afterList[playerName] == '경찰') {
         idOfPolicePick = '경찰';
     } else if (afterList[playerName] == '마피아') {
         idOfPolicePick = '마피아';
@@ -223,28 +226,6 @@ function ptimeout(delay) {
     });
 }
 
-// function fCallPromise(message, toName, toDo){
-//     return new Promise((resolve, reject) => {
-
-//     });
-// }
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// function *callPrompt(message, toName, toDo){
-//     let temp = yield { name : toName, msg : message, do : toDo};
-//     return temp;
-// }
-//////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-// yield {name : prop, role : afterList[prop]};
-
-// function pAlert(str){
-
-// }
 ////////////////////////////////////**Game Zone**////////////////////////////////////////////
 
 class Members {
@@ -286,7 +267,6 @@ class Members {
 }
 
 function handelDecide(tempPick, forceData){
-
     let pick;
 
     const frequency = tempPick.reduce((a, x) => {
@@ -294,7 +274,6 @@ function handelDecide(tempPick, forceData){
         a[x]++;
         return a;
     }, {});
-
     let max = 0;
 
     const maxF = Object.keys(frequency).map((o, index, object) => {
@@ -303,7 +282,11 @@ function handelDecide(tempPick, forceData){
             return o;
         }
     });
-    if(forceData){
+    console.log(`MaxF : ${tempPick.count}`);
+    if(!maxF){
+        console.log("항목없음");
+        pick = "None";
+    }else if(forceData){
         if (maxF.length == 1) {
             pick = maxF[0];
         } else {
@@ -373,8 +356,6 @@ function* mainGame(member) {
     //     console.log(playerNameList[i] + ' ');
     // }
 
-
-
     afterList = allocatePlayerRole(roleArray, nameList, memberClass); // 사용자 역할 할당 함수
 
 
@@ -421,7 +402,7 @@ function* mainGame(member) {
         idOfMapiaPick = 0;
         let tempMapiaPick = [];
 
-        while (idOfMapiaPick == 0) {
+        // while (idOfMapiaPick == 0) {
             tempMapiaPick = yield {
                 do: "Assassinate",
                 nameList: Object.keys(memberClass.getLiveAfterList()).filter(o => afterList[o] == "마피아")
@@ -429,83 +410,36 @@ function* mainGame(member) {
 
             mapiaPick = handelDecide(tempMapiaPick, true);
 
-            // const frequency = tempMapiaPick.reduce((a, x) => {
-            //     if (!a[x]) a[x] = 0;
-            //     a[x]++;
-            //     return a;
-            // }, {});
-
-            // let max = 0;
-
-            // const maxF = Object.keys(frequency).map((o, index, object) => {
-            //     if (object[o] < max) {} else {
-            //         max = object[o];
-            //         return o;
-            //     }
-            // });
-
-            // if (maxF.length == 1) {
-            //     mapiaPick = maxF[0];
-            // } else {
-            //     mapiaPick = shuffle(maxF)[0];
+            // idOfMapiaPick = assassinatePlayer(mapiaPick, afterList);
+            // if(idOfMapiaPick == "None"){
+            //     mapiaPick = "None";
             // }
-            // mapiaPick = prompt('마피아는 죽일 사람을 선택해주세요.');
-
-            idOfMapiaPick = assassinatePlayer(mapiaPick, afterList);
-            if(idOfMapiaPick == "None"){
-                mapiaPick = "None";
-            }
-        }
+        // }
 
         // alert("다시 고개를 숙여주십시오.");
         yield "다시 고개를 숙여주십시오.";
         // alert("지금부터 의사는 고개를 들어 30초간 토의를 하시고 살릴 플레이어를 지목해주세요.");
         yield "지금부터 의사는 고개를 들어 30초간 토의를 하시고 살릴 플레이어를 지목해주세요.";
-        doctorPick = 0;
+        doctorPick = "None";
         let tempDoctorPick = [];
 
         doctorAlive = isThereAnyDoctor(afterList);
         if (doctorAlive == 0) {
-            while (mapiaVSdoctorResult == "Error" || mapiaVSdoctorResult == "None") {
-
+            // while (mapiaVSdoctorResult == "Error" || mapiaVSdoctorResult == "None") {
                 tempDoctorPick = yield {
                     do: "Treatment",
                     nameList: Object.keys(memberClass.getLiveAfterList()).filter(o => afterList[o] == "의사")
                 };
-                // console.log(tempDoctorPick);
 
                 doctorPick = handelDecide(tempDoctorPick, true);
 
-                // // console.log("Doctor 투표 해결하기");
-                // const frequency = tempDoctorPick.reduce((a, x) => {
-                //     if (!a[x]) a[x] = 0;
-                //     a[x]++;
-                //     return a;
-                // }, {});
-                // // console.log(frequency);
-                // let max = 0;
-                // // console.log("Max 찾기");
-                // const maxF = Object.keys(frequency).map((o, index, object) => {
-                //     if (object[o] < max) {} else {
-                //         max = object[o];
-                //         return o;
-                //     }
-                // });
-                // // console.log(maxF);
-                // // console.log("maxF 호출 완료");
-                // if (maxF.length == 1) {
-                //     doctorPick = maxF[0];
-                // } else {
-                //     doctorPick = shuffle(maxF)[0];
-                // }
-
-                // doctorPick = prompt('의사는 살릴 사람을 선택해주세요.'); //의사가 살릴 사람을 지목
-                mapiaVSdoctorResult = savePlayer(mapiaPick, doctorPick, doctorAlive, afterList, memberClass.memberObj);
-                // function savePlayer(mapiaPick, doctorPick, doctorAlive, afterList) { 
-            }
+                // mapiaVSdoctorResult = savePlayer(mapiaPick, doctorPick, doctorAlive, afterList, memberClass.memberObj);
+            // }
         }
 
-        mapiaVSdoctorResult = savePlayer(mapiaPick, doctorPick, doctorAlive, afterList, memberClass.memberObj);
+        ///////////////////////////// 경찰이 암살 당하는 경우 미리 죽어서 조사 못하는 현상 해결을 위해 아래로 내림
+        // mapiaVSdoctorResult = savePlayer(mapiaPick, doctorPick, doctorAlive, afterList, memberClass.memberObj);
+        ///////////////////////////////////
 
         // alert("다시 고개를 숙여주십시오.");
         yield "다시 고개를 숙여주십시오.";
@@ -515,48 +449,16 @@ function* mainGame(member) {
         let tempPolicePick = [];
         policeAlive = isThereAnyPolice(afterList);
         if (policeAlive == 0) {
-            // console.log("경찰 조건 분기 1");
-            while (idOfPolicePick == 0) {
-                // console.log("경찰 조건 분기 2");
+            // while (idOfPolicePick == 0) {
                 tempPolicePick = yield {
                     do: "Investigation",
                     nameList: Object.keys(memberClass.getLiveAfterList()).filter(o => afterList[o] == "경찰")
                 };
-                // console.log("경찰 조건 보냄");
-                // console.log(tempPolicePick);
 
                 policePick = handelDecide(tempPolicePick, true);
 
-                // // console.log("Mapia 투표 해결하기");
-                // const frequency = tempPolicePick.reduce((a, x) => {
-                //     if (!a[x]) a[x] = 0;
-                //     a[x]++;
-                //     return a;
-                // }, {});
-                // // console.log(frequency);
-                // let max = 0;
-                // // console.log("Max 찾기");
-                // const maxF = Object.keys(frequency).map((o, index, object) => {
-                //     if (object[o] < max) {} else {
-                //         max = object[o];
-                //         return o;
-                //     }
-                // });
-                // // console.log(maxF);
-                // // console.log("maxF 호출 완료");
-                // if (maxF.length == 1) {
-                //     policePick = maxF[0];
-                // } else {
-                //     policePick = shuffle(maxF)[0];
-                // }
-
-                // policePick = prompt('경찰은 조사할 사람을 선택해주세요');
-
-
                 idOfPolicePick = investigatePlayer(policePick, afterList);
-                // console.log(`idOfPolicPick  : ${idOfPolicePick}`);
-                if (idOfPolicePick != 0) {
-                    // alert("[경찰에게만 보임] " + policePick + "님은 " + idOfPolicePick + "입니다.");
+                if (idOfPolicePick != "None") { // 경찰이 조사를 하면
 
                     idOfPolicePick = idOfPolicePick == "마피아" ? "마피아" : "시민";
                     yield {
@@ -566,8 +468,12 @@ function* mainGame(member) {
                         do: "ResultOfInvestigation"
                     };
                 }
-            }
+            // }
         }
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////////
+        mapiaVSdoctorResult = savePlayer(mapiaPick, doctorPick, doctorAlive, afterList, memberClass.memberObj);
+        //////////////////////////////////////////////////////////////////////////////////////////////////////
 
         // alert("다시 고개를 숙여주십시오.");
         yield "다시 고개를 숙여주십시오.";
@@ -587,7 +493,6 @@ function* mainGame(member) {
         let count = 0;
 
         for (var key in memberClass.getLiveAfterList()) {
-            // console.log(key);
             if (memberClass.getLiveAfterList()[key] === "마피아") {
                 count++;
             }
@@ -618,33 +523,10 @@ function* mainGame(member) {
             do: "Vote",
             nameList: memberClass.getLiveList()
         };
-        // console.log(tempId);
+        
 
         id = handelDecide(tempId, false);
 
-        // // console.log("Doctor 투표 해결하기");
-        // const frequency = tempId.reduce((a, x) => {
-        //     if (!a[x]) a[x] = 0;
-        //     a[x]++;
-        //     return a;
-        // }, {});
-        // // console.log(frequency);
-        // let max = 0;
-        // // console.log("Max 찾기");
-        // const maxF = Object.keys(frequency).map((o, index, object) => {
-        //     if (object[o] < max) {} else {
-        //         max = object[o];
-        //         return o;
-        //     }
-        // });
-        // // console.log(maxF);
-        // // console.log("maxF 호출 완료");
-        // if (maxF.length == 1) {
-        //     id = maxF[0];
-        // } else {
-        //     id = shuffle(maxF)[0];
-        // }
-        // // var id = prompt('죽일 사람을 선택해주세요.');
         console.log(`id : ${id}`);
         if(id == "None"){ // 사람이 안죽는 경우
             // yield ``;
@@ -653,8 +535,6 @@ function* mainGame(member) {
             yield `${id}가 투표로 죽었습니다.`
             memberClass.setLive(id, false);
         }
-
-
 
         idOfPolicePick = 0; //다음날을 위한 초기화
         mapiaVSdoctorResult = "Error"; //다음날을 위한 초기화 

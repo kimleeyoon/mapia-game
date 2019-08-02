@@ -43,11 +43,13 @@
       <p>{{ temp }}</p>
     </div>
     <div class="container" v-else-if="!isStartGame">
-      방에 접속하셨습니다!
+      <h1 class="display-4"><b>방에 접속하셨습니다!</b></h1>
       <div>
-        <h1 class="display-4">사람들 기다리는 중인가 뭐시기</h1>
-        <h6>{{members.length}} / {{roomSize}}</h6>
+        <div class="blink">사람들 기다리는 중인가 뭐시기</div><br><br>
+        {{members.length}} / <b>{{roomSize}}</b><br>
       </div>
+      <br>
+      <br>
       <!-- <ul class="list-group">
         <li
           class="list-group-item"
@@ -107,7 +109,7 @@
           >
             <button
               type="button"
-              class="list-group-item list-group-item-action"
+              class="list-group-item list-group-item-action list-group-item-primary"
               @click.prevent="decide($event, member.name)"
             >{{member.name}}</button>
             <span class="badge badge-primary badge-pill">{{badge[member.name]}}</span>
@@ -181,7 +183,7 @@ export default {
   data() {
     return {
       roomID: "",
-      socket: io(),
+      socket: io("192.168.0.13:3000"),
       name: "",
       roomSize: 0,
       temp: "",
@@ -210,7 +212,7 @@ export default {
       }
 
       this.warnNoName = false;
-      this.room = io();
+      this.room = io("192.168.0.13:3000");
       e.preventDefault();
       this.socket.emit("ROOM_CONNECT", {
         name: this.name,
@@ -273,22 +275,22 @@ export default {
       this.tempAnnounce += `${data.message}\n`;
     });
     this.socket.on("ASSASSINATE", () => {
-      this.tempAnnounce += "암살 명령 받음!!!!!!!!!!!!!!!!!!!!!!!!!!!!1\n";
+      // this.tempAnnounce += "암살 명령 받음!!!!!!!!!!!!!!!!!!!!!!!!!!!!1\n";
       this.isNowSelect = true;
       this.isDeciding = true;
     });
     this.socket.on("INVESTIGATION", () => {
-      this.tempAnnounce += "경찰 명령 받음!!!!!!!!!!!!!!!!!!!!!!!!!!!!1\n";
+      // this.tempAnnounce += "경찰 명령 받음!!!!!!!!!!!!!!!!!!!!!!!!!!!!1\n";
       this.isNowSelect = true;
       this.isDeciding = true;
     });
     this.socket.on("TREATMENT", () => {
-      this.tempAnnounce += "의사 명령 받음!!!!!!!!!!!!!!!!!!!!!!!!!!!!1\n";
+      // this.tempAnnounce += "의사 명령 받음!!!!!!!!!!!!!!!!!!!!!!!!!!!!1\n";
       this.isNowSelect = true;
       this.isDeciding = true;
     });
     this.socket.on("VOTE", () => {
-      this.tempAnnounce += "제발 투표하세요!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1\n";
+      // this.tempAnnounce += "제발 투표하세요!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1\n";
       this.isNowSelect = true;
       this.isDeciding = true;
       this.isVoting = true;
@@ -299,17 +301,17 @@ export default {
       // "width: 75%"
     });
     this.socket.on("RESULT_OF_INVESTIGATION", data => {
-      this.tempAnnounce +=
-        "경찰 결과 왔다 받아라~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+      // this.tempAnnounce +=
+      //   "경찰 결과 왔다 받아라~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
       if(data.role == "시민"){
         this.tempAnnounce += data.name + "님은" + "마피아가 아닙니다.\n"
       }else{
         this.tempAnnounce += data.name + "님은 " + data.role + "입니다.\n";
       }
-      this.isNowSelect = true;
+      // this.isNowSelect = true;
     });
     this.socket.on("END_DECIDE", () => {
-      this.tempAnnounce += "END_DICIDEEEEEE"
+      // this.tempAnnounce += "END_DICIDEEEEEE"
       Object.keys(this.badge).forEach((o)=> (this.badge[o] = 0));
       this.isDeciding = false;
       this.isVoting = false;
@@ -348,4 +350,60 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
+.blink {
+    -webkit-animation: fadeOut 1.5s 1s infinite linear alternate;
+    -moz-animation: fadeOut 1.5s 1s infinite linear alternate;
+    -ms-animation: fadeOut 1.5s 1s infinite linear alternate;
+    -o-animation: fadeOut 1.5s 1s infinite linear alternate;
+    animation: fadeOut 1.5s 1s infinite linear alternate;
+}
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@-webkit-keyframes fadeOut {   
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@-moz-keyframes fadeOut { 
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@-ms-keyframes fadeOut {   
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  } 
+}
+@-o-keyframes fadeOut {   
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes fadeOut {   
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  } 
+}
+
 </style>

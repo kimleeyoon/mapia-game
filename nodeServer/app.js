@@ -102,31 +102,13 @@ io.on('connection', (socket) => { // 사용자 접속 오면
     });
     socket.on("DECIDE", data => { // 사용자가 결정하면
 
-        // console.log("DECIDE 옴!!!!");
-
-
         curDecide.add(data.message); // curDecide에 온 결정 추가
 
-
-        // console.log(`Data 온 직업 : ${data.fromRole}`);
-        // console.log(curRoom.member);
-        // Object.keys(curRoom.member).forEach(o => console.log(o));
-
-        // let otherPlayer = curRoom.member.filter(o => o.role === data.fromRole); // 같은 역할을 가진 다른 플레이어들
-
-
-        // console.log("다른 플레이어");
-        // console.log(otherPlayer);
-
-
         curRoom.member.filter(o => o.role === data.fromRole).forEach((o) => { // 같은 역할을 가진 다른 플레이어들에게 결정 공유
-            // console.log(`${o}한테 전송`);
-
             io.to(o.socket).emit("DECIDE_BADGE", data.message);
         });
 
         curRoom.member.forEach((o) => { // 투표하는 경우 모든 플레이어에게 투표 결과 공유
-            // console.log("투표 결과 전송용");
             io.to(o.socket).emit("VOTE_BADGE", data.message);
         });
     });
@@ -207,23 +189,6 @@ function grun(g, member, io, room, curDecide) {
                         setTimeout(iterate, 0, x.value);
                     } else if (x.value.do === "Assassinate") { // 암살 명령 오면
 
-
-                        // let num = x.value.nameList.length; // 마피아 수
-                        // decide.reset();
-                        // decide.setNum(num)
-                        // const c = new Countdown(30);
-                        // c.on('tick', (total, i) => {
-                        //     for (let name of x.value.nameList) {
-                        //         let tempSocket = member.find(o => o.name == name);
-                        //         io.to(tempSocket.socket).emit("TICK", total, i);
-                        //     }
-                        // })
-                        // for (let name of x.value.nameList) {
-                        //     let tempSocket = member.find(o => o.name == name);
-                        //     io.to(tempSocket.socket).emit("ASSASSINATE");
-                        // }
-
-
                         const c = sendSocket(io,member, x, curDecide) // 해당 명령 보낸 후 Countdown 리턴 받음
                         c.go(curDecide)
                             .then(() => { // 사용자 결정 다 받으면
@@ -237,23 +202,6 @@ function grun(g, member, io, room, curDecide) {
 
                     } else if (x.value.do === "Treatment") { // 의사 명령
 
-
-                        // let num = x.value.nameList.length; // 의사 수
-                        // decide.reset();
-                        // decide.setNum(num)
-                        // const c = new Countdown(30);
-                        // c.on('tick', (total, i) => {
-                        //     for (let name of x.value.nameList) {
-                        //         let tempSocket = member.find(o => o.name == name);
-                        //         io.to(tempSocket.socket).emit("TICK", total, i);
-                        //     }
-                        // })
-                        // for (let name of x.value.nameList) {
-                        //     let tempSocket = member.find(o => o.name == name);
-                        //     io.to(tempSocket.socket).emit("TREATMENT");
-                        // }
-
-
                         const c = sendSocket(io, member,x, curDecide) // 해당 명령 보낸 후 Countdown 리턴 받음
                         c.go(curDecide)
                             .then(() => { // 결정 다 받으면
@@ -265,23 +213,6 @@ function grun(g, member, io, room, curDecide) {
                                 setTimeout(iterate, 0, curDecide.decides)
                             });
                     } else if (x.value.do === "Investigation") { // 경찰 조사 
-
-
-                        // let num = x.value.nameList.length; // 경찰 수
-                        // decide.reset();
-                        // decide.setNum(num)
-                        // const c = new Countdown(30);
-                        // c.on('tick', (total, i) => {
-                        //     for (let name of x.value.nameList) {
-                        //         let tempSocket = member.find(o => o.name == name);
-                        //         io.to(tempSocket.socket).emit("TICK", total, i);
-                        //     }
-                        // })
-                        // for (let name of x.value.nameList) {
-                        //     let tempSocket = member.find(o => o.name == name);
-                        //     io.to(tempSocket.socket).emit("INVESTIGATION");
-                        // }
-
 
                         const c = sendSocket(io,member, x, curDecide) // // 해당 명령 보낸 후 Countdown 리턴 받음
                         c.go(curDecide)
@@ -295,23 +226,6 @@ function grun(g, member, io, room, curDecide) {
                             });
 
                     } else  if(x.value.do === "Vote"){ // 투표 받으면
-
-
-                        // let num = x.value.nameList.length; // 사람 수
-                        // decide.reset();
-                        // decide.setNum(num)
-                        // const c = new Countdown(30);
-                        // c.on('tick', (total, i) => {
-                        //     for (let name of x.value.nameList) {
-                        //         let tempSocket = member.find(o => o.name == name);
-                        //         io.to(tempSocket.socket).emit("TICK", total, i);
-                        //     }
-                        // })
-                        // for (let name of x.value.nameList) {
-                        //     let tempSocket = member.find(o => o.name == name);
-                        //     io.to(tempSocket.socket).emit("VOTE");
-                        // }
-
 
                         const c = sendSocket(io, member, x, curDecide) // 해당 명령 보낸 후 Countdown 리턴 받음
                         c.go(curDecide)
@@ -342,8 +256,8 @@ function sendSocket(io, member, x, decide){ // 사용자에게 결정 받는 소
     let num = x.value.nameList.length; // 보낼 사람 수
     decide.reset();
     decide.setNum(num)
-    // 결정 초기화ㅏ
-    const c = new Countdown(10);
+    // 결정 초기화
+    const c = new Countdown(30);
     c.on('tick', (total, i) => { // 작업 진행 바 조절을 위한 tick 이벤트 발생
         for (let name of x.value.nameList) {
             let tempSocket = member.find(o => o.name == name);
