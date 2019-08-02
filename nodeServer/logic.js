@@ -89,28 +89,43 @@ function takePlayerNum(playerNum) { //게임 플레이어 명 수를 입력받�
 
 function savePlayer(mapiaPick, doctorPick, doctorAlive, afterList, memberClass) { //의사가 사람을 살리는 함수
     //doctorPick = prompt('의사는 살릴 사람을 선택해주세요.');   //의사가 살릴 사람을 지목
-    // TODO: 마피아가 죽이는 사람 없는 경우 처리하기
     let mapiaVSdoctorResult = "None";
 
-    // FIXME: 미파아와 의사가 둘다 아무것도 입력 안해서 아래 if 조직 통과하는 부분 수정해야 함
-    // TODO: 여기 로직 이해가 안돼요
-    if (doctorPick == mapiaPick) {
-        mapiaVSdoctorResult = parse('의사가 플레이어를 살렸습니다.');
-    } else if (doctorAlive == 0) {
-        mapiaVSdoctorResult = parse('의사가 플레이어를 살리지 못했습니다. 마피아가 죽인 플레이어는 %s님 입니다.', mapiaPick);
-        memberClass.find(o => o.name === mapiaPick).isAlive = false;
-    } else if (doctorPick != mapiaPick) {
+    console.log(`Docotor Pick : ${doctorPick}`);
+
+    if(mapiaPick == "None"){ // 마피아가 사람을 죽이지 않는 경우
+        mapiaVSdoctorResult = "NoneKill";
+    }else if(!doctorPick || doctorAlive){ // 의사가 아무도 치료하지 않는 경우
         mapiaVSdoctorResult = parse('의사가 플레이어를 살리지 못했습니다. 마피아가 죽인 플레이어는 %s님 입니다.', mapiaPick);
         memberClass.find(o => o.name === mapiaPick).isAlive = false;
         delete afterList[mapiaPick];
-    } else if (doctorPick == 0) {
+    }else if(mapiaPick == doctorPick){ // 의사가 플레이어를 살린 경우
+        mapiaVSdoctorResult = parse('의사가 플레이어를 살렸습니다.');
+    }else { // 의사가 틀린 경우
         mapiaVSdoctorResult = parse('의사가 플레이어를 살리지 못했습니다. 마피아가 죽인 플레이어는 %s님 입니다.', mapiaPick);
         memberClass.find(o => o.name === mapiaPick).isAlive = false;
-    } else if ((afterList[doctorPick] == undefined)) {
-        // alert("잘못 입력하셨습니다. 다시 입력해주세요.");
-        mapiaVSdoctorResult = "Error";
+        delete afterList[mapiaPick];
     }
     return mapiaVSdoctorResult;
+
+
+    // if (doctorPick == mapiaPick) { 
+    //     mapiaVSdoctorResult = parse('의사가 플레이어를 살렸습니다.');
+    // } else if (doctorAlive == 0) {
+    //     mapiaVSdoctorResult = parse('의사가 플레이어를 살리지 못했습니다. 마피아가 죽인 플레이어는 %s님 입니다.', mapiaPick);
+    //     memberClass.find(o => o.name === mapiaPick).isAlive = false;
+    // } else if (doctorPick != mapiaPick) {
+    //     mapiaVSdoctorResult = parse('의사가 플레이어를 살리지 못했습니다. 마피아가 죽인 플레이어는 %s님 입니다.', mapiaPick);
+    //     memberClass.find(o => o.name === mapiaPick).isAlive = false;
+    //     delete afterList[mapiaPick];
+    // } else if (doctorPick == 0) {
+    //     mapiaVSdoctorResult = parse('의사가 플레이어를 살리지 못했습니다. 마피아가 죽인 플레이어는 %s님 입니다.', mapiaPick);
+    //     memberClass.find(o => o.name === mapiaPick).isAlive = false;
+    // } else if ((afterList[doctorPick] == undefined)) {
+    //     // alert("잘못 입력하셨습니다. 다시 입력해주세요.");
+    //     mapiaVSdoctorResult = "Error";
+    // }
+    // return mapiaVSdoctorResult;
 }
 
 function assassinatePlayer(playerName, afterList) { //마피아가 사람을 암살하는 함수
@@ -120,9 +135,6 @@ function assassinatePlayer(playerName, afterList) { //마피아가 사람을 암
     console.log("사람 목록");
     console.log(afterList);
 
-    // TODO: 마피아 팀킬 불가능???????????????????????????????????????????????????????
-    // FIXME:  마피아가 아무것도 입력하지 않은 경우에 undefined 처리하는 로직 만들어야 함
-
     let idOfMapiaPick = 0;
     if (afterList[playerName] == '경찰') {
         idOfMapiaPick = '경찰';
@@ -130,9 +142,11 @@ function assassinatePlayer(playerName, afterList) { //마피아가 사람을 암
         idOfMapiaPick = '경찰';
     } else if (afterList[playerName] == '시민') {
         idOfMapiaPick = '경찰';
-    } else {
-        alert("잘못 입력하셨습니다. 다시 입력해주세요.");
-        idOfMapiaPick = 0;
+    } else if(afterList[playerName] == '마피아'){
+        idOfMapiaPick = '마피아';
+    }else {
+        // alert("잘못 입력하셨습니다. 다시 입력해주세요.");
+        idOfMapiaPick = "None";
     }
     return idOfMapiaPick;
 }
@@ -140,23 +154,23 @@ function assassinatePlayer(playerName, afterList) { //마피아가 사람을 암
 function investigatePlayer(playerName, afterList) { //경찰이 사람을 조사하는 함수
     //policePick = prompt('경찰은 조사할 사람을 선택해주세요');
     let idOfPolicePick = 0;
-    // TODO: 경찰 셀프 조사 불가능?????????????????????????????????????????????
-    // FIXME:  경찰이 아무것도 입력하지 않은 경우에 undefined 처리하는 로직 만들어야 함
-    if (afterList[playerName] == '마피아') {
+    if (afterList[playerName] == '경찰') {
+        idOfPolicePick = '경찰';
+    } else if (afterList[playerName] == '마피아') {
         idOfPolicePick = '마피아';
     } else if (afterList[playerName] == '의사') {
         idOfPolicePick = '의사';
     } else if (afterList[playerName] == '시민') {
         idOfPolicePick = '시민';
     } else {
-        alert("잘못 입력하셨습니다. 다시 입력해주세요.");
-        idOfPolicePick = 0;
+        // alert("잘못 입력하셨습니다. 다시 입력해주세요.");
+        idOfPolicePick = "None";
     }
     return idOfPolicePick;
 }
 
 function killPlayer(playerName, afterList, memberClass) { //아래 함수는 '민중'들이 찬반 투표를 통해 과반수 이상이 나온 사람을 사형대에 보낼 때 시
-    // TODO: 투표로 죽이는 사람 없는 경우에????
+
     //playerNameList.splice(playerNameList.indexOf(playerName),1);
 
     memberClass.find(o => o.name === playerName).isAlive = false;
@@ -296,11 +310,10 @@ function handelDecide(tempPick, forceData){
             pick = shuffle(maxF)[0];
         }
     }else{
-        // TODO: 데이터 없는 경우로 출력하도록 바꿔야 함
         if (maxF.length == 1) {
             pick = maxF[0];
         } else {
-            pick = shuffle(maxF)[0];
+            pick = "None";
         }
     }
     return pick;
@@ -439,6 +452,9 @@ function* mainGame(member) {
             // mapiaPick = prompt('마피아는 죽일 사람을 선택해주세요.');
 
             idOfMapiaPick = assassinatePlayer(mapiaPick, afterList);
+            if(idOfMapiaPick == "None"){
+                mapiaPick = "None";
+            }
         }
 
         // alert("다시 고개를 숙여주십시오.");
@@ -489,7 +505,6 @@ function* mainGame(member) {
             }
         }
 
-        // TODO: 마피아가 사람 안죽이는 경우 고려해야함
         mapiaVSdoctorResult = savePlayer(mapiaPick, doctorPick, doctorAlive, afterList, memberClass.memberObj);
 
         // alert("다시 고개를 숙여주십시오.");
@@ -542,6 +557,8 @@ function* mainGame(member) {
                 // console.log(`idOfPolicPick  : ${idOfPolicePick}`);
                 if (idOfPolicePick != 0) {
                     // alert("[경찰에게만 보임] " + policePick + "님은 " + idOfPolicePick + "입니다.");
+
+                    idOfPolicePick = idOfPolicePick == "마피아" ? "마피아" : "시민";
                     yield {
                         name: policePick,
                         nameList: Object.keys(afterList).filter(o => afterList[o] == "경찰"),
@@ -556,15 +573,12 @@ function* mainGame(member) {
         yield "다시 고개를 숙여주십시오.";
 
         // alert(mapiaVSdoctorResult);
-        yield `${mapiaVSdoctorResult}`;
-
-        // TODO: 마피아가 사람 안죽인 경우는 어떻게 할거이이이ㅣ이이이이이이이이이ㅣ이이이이이ㅣ잉ㅁ
-        if (mapiaVSdoctorResult.length < 20) { // 사람 살림
-
+        
+        if (mapiaVSdoctorResult == "NoneKill") { // 마피아가 사람을 죽이지 않음
         } else { // 사람 죽음
-
+            yield `${mapiaVSdoctorResult}`;
         }
-        // TODO: 사람 죽은거 엄데이트 해서 보내줘야 함
+
         yield {
             do: "DEATH_UPDATE",
             nameList: memberClass.memberObj
@@ -631,15 +645,17 @@ function* mainGame(member) {
         //     id = shuffle(maxF)[0];
         // }
         // // var id = prompt('죽일 사람을 선택해주세요.');
+        console.log(`id : ${id}`);
+        if(id == "None"){ // 사람이 안죽는 경우
+            // yield ``;
+        }else{ // 사람이 죽는 경우
+            afterList = killPlayer(id, afterList, memberClass.memberObj);
+            yield `${id}가 투표로 죽었습니다.`
+            memberClass.setLive(id, false);
+        }
 
-        // TODO: 투표로 사람 못죽이는 부분 해결해야하ㅏ아ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ
-        // FIXME: 굳이 Afterlist 안써도 될 것 같은데에ㅔ
-        afterList = killPlayer(id, afterList, memberClass.memberObj);
-        yield `${id}가 투표로 죽었습니다.`
 
-        memberClass.setLive(id, false);
 
-        // TODO: 사람 죽은거 처리해서 업데이트 해야함
         idOfPolicePick = 0; //다음날을 위한 초기화
         mapiaVSdoctorResult = "Error"; //다음날을 위한 초기화 
         count = 0;

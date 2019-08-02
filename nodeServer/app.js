@@ -343,7 +343,7 @@ function sendSocket(io, member, x, decide){ // 사용자에게 결정 받는 소
     decide.reset();
     decide.setNum(num)
     // 결정 초기화ㅏ
-    const c = new Countdown(30);
+    const c = new Countdown(10);
     c.on('tick', (total, i) => { // 작업 진행 바 조절을 위한 tick 이벤트 발생
         for (let name of x.value.nameList) {
             let tempSocket = member.find(o => o.name == name);

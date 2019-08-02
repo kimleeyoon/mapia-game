@@ -181,7 +181,7 @@ export default {
   data() {
     return {
       roomID: "",
-      socket: io("192.168.0.13:3000"),
+      socket: io("172.30.1.58:3000"),
       name: "",
       roomSize: 0,
       temp: "",
@@ -210,7 +210,7 @@ export default {
       }
 
       this.warnNoName = false;
-      this.room = io("192.168.0.13:3000");
+      this.room = io("1172.30.1.58:3000");
       e.preventDefault();
       this.socket.emit("ROOM_CONNECT", {
         name: this.name,
@@ -301,7 +301,11 @@ export default {
     this.socket.on("RESULT_OF_INVESTIGATION", data => {
       this.tempAnnounce +=
         "경찰 결과 왔다 받아라~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
-      this.tempAnnounce += data.name + "님은 " + data.role + "입니다.\n";
+      if(data.role == "시민"){
+        this.tempAnnounce += data.name + "님은" + "마피아가 아닙니다.\n"
+      }else{
+        this.tempAnnounce += data.name + "님은 " + data.role + "입니다.\n";
+      }
       this.isNowSelect = true;
     });
     this.socket.on("END_DECIDE", () => {
