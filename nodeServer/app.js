@@ -1,15 +1,29 @@
-const app = require(`express`)(); // 익스프레스 프레임워크
+const express = require(`express`); // 익스프레스 프레임워크
 const http = require('http'); // http
 // const server = require('http').Server(app);
 const static = require('serve-static'); // 서버 경로 재지정 해주는 
 const path = require('path'); // OS Path 조정 시 사용
+let bodyParser = require('body-parser');
 const EventEmitter = require('events').EventEmitter; // 이벤트 on, listener
 
 const Room = require('./room'); // 방 class
 const Member = require('./member') // 멤버 class
 const system = require('./logic'); // 로직 프로그램
 
+let nugu = require('./main');
+
+const app = express();
+let router = express.Router();
+
 app.use(static(path.join(__dirname, 'public/dist'))); // public/dist 폴더를 클라이언트가 루트경로로 접근하도록 해줌
+
+app.use(bodyParser.urlencoded({
+    extended: false
+}));
+app.use(bodyParser.json());
+app.use((err, req, res, next) => next());
+
+router.route('/nugu/testAction').post(nugu);
 
 const server = http.Server(app); // 익스프레스 사용해서 서버 생성 및 할당
 const io = require('socket.io')(server); // socket.io 서버 생성
