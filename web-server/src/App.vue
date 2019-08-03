@@ -164,7 +164,7 @@
           </span>
         </button>
       </div>
-      <p style="white-space:pre">{{tempAnnounce}}</p>
+      <p class="announce" style="overflow:scroll;height:300px; padding:10px; white-space:pre">{{tempAnnounce}}</p>
     </div>
     <button
       type="button"

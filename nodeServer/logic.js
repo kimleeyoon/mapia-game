@@ -463,7 +463,7 @@ function* mainGame(member) {
                     idOfPolicePick = idOfPolicePick == "마피아" ? "마피아" : "시민";
                     yield {
                         name: policePick,
-                        nameList: Object.keys(afterList).filter(o => afterList[o] == "경찰"),
+                        nameList: Object.keys(memberClass.getLiveAfterList()).filter(o => memberClass.getAfterList()[o] == "경찰"),
                         role: idOfPolicePick,
                         do: "ResultOfInvestigation"
                     };
