@@ -23,7 +23,7 @@ class Request {
                     // const throwResult = throwDice(diceCount);
                     response.setOutputParameters({
                         numOfPlayer: playerNum,
-                        pin: 0000
+                        pin: "0000",
                     }, sendData);
                     break;
                 }
