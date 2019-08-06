@@ -20,7 +20,6 @@ class Request {
                     if (isNaN(playerNum)) {
                         playerNum = 4;
                     }
-
                     // const throwResult = throwDice(diceCount);
 
                     let pin = f(playerNum).then((pin) => pin).catch((error) => console.log("방 생설 실패"));
@@ -32,26 +31,63 @@ class Request {
                     break;
                 }
             }
-        }
 
-        // getData(parameters.cityName.value)
-        // .then((data) => {
-        //     console.log("reqObject"); 
-        //     let afterData = {
-        //         weather : {},
-        //         aqi : {},
-        //         regionCode : {},
-        //         koreaWeather : {},
-        //         location : {}
-        //     };
-        //     [afterData.weather, afterData.aqi, afterData.regionCode, afterData.koreaWeather, afterData.location] = data; // 수정해야함
-        //     console.log(afterData);
-        //     response.setParameters(afterData, sendData);
-        // })
-        // .catch(() => {
-        //     console.log("getData Promise Error");
-        //     response.setParameters(null, sendData);
-        // });
+            case "StartAndCheckRoleAction": {
+              const number_one = '1';
+              response.setOutputParameters({
+                  number1: number_one,
+              }, sendData);
+              break;
+            }
+
+            case "BowHeadAction": {
+              const number_one = '1';
+              response.setOutputParameters({
+                  number1: number_one,
+              }, sendData);
+              break;
+            }
+
+            case "CheckMapiaAction": {
+              const number_one = '1';
+              response.setOutputParameters({
+                  number1: number_one,
+              }, sendData);
+              break;
+            }
+
+            case "CheckDoctorAction": {
+              const number_one = '1';
+              response.setOutputParameters({
+                  number1: number_one,
+              }, sendData);
+              break;
+            }
+
+            case "CheckPoliceAction": {
+              const number_one = '1';
+              response.setOutputParameters({
+                  number1: number_one,
+              }, sendData);
+              break;
+            }
+
+            case "DebateAction": {
+              const number_one = '1';
+              response.setOutputParameters({
+                  number1: number_one,
+              }, sendData);
+              break;
+            }
+
+            case "NightComeAction": {
+              const number_one = '1';
+              response.setOutputParameters({
+                  number1: number_one,
+              }, sendData);
+              break;
+            }
+        }
     }
 }
 
@@ -66,6 +102,8 @@ class Response {
         this.output = {
             numOfPlayer: result.numOfPlayer,
             pinNum: result.pinNum,
+            roomExist: result.roomExist,
+            number1: result.number1,
         }
         sendData();
     }
