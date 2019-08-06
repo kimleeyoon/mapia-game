@@ -10,7 +10,7 @@ const Room = require('./room'); // 방 class
 const Member = require('./member') // 멤버 class
 const system = require('./logic'); // 로직 프로그램
 
-let nugu = require('./main');
+let nugu = require('./main'); // 스피커 서버에서 실행할 프로그램 받아오는 것 -> index.js
 
 const app = express();
 let router = express.Router();
@@ -29,9 +29,8 @@ router.route('/speaker/nugu').post((req, res) => {
 router.route('/speaker/nugu/TakePlayerNumAction').post((req, res) => {
     console.log("asdfdasfasfdsafdsaf");
 });
-router.route('/speaker/nugu').get((req, res) => {
-    console.log("asdfdasfasfdsafdsafGGGGGGGG");
-});
+
+router.route('/speaker/nugu/TakePlayerNumAction').post(nugu);
 
 const server = http.Server(app); // 익스프레스 사용해서 서버 생성 및 할당
 const io = require('socket.io')(server); // socket.io 서버 생성
