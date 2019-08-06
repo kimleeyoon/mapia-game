@@ -19,35 +19,71 @@ class Request {
                     if (isNaN(playerNum)) {
                         playerNum = 4;
                     }
-
                     // const throwResult = throwDice(diceCount);
                     response.setOutputParameters({
                         numOfPlayer: playerNum,
-                        pin: "0000",
+                        pinNum: "0000",
                     }, sendData);
                     break;
                 }
             }
-        }
 
-        // getData(parameters.cityName.value)
-        // .then((data) => {
-        //     console.log("reqObject"); 
-        //     let afterData = {
-        //         weather : {},
-        //         aqi : {},
-        //         regionCode : {},
-        //         koreaWeather : {},
-        //         location : {}
-        //     };
-        //     [afterData.weather, afterData.aqi, afterData.regionCode, afterData.koreaWeather, afterData.location] = data; // 수정해야함
-        //     console.log(afterData);
-        //     response.setParameters(afterData, sendData);
-        // })
-        // .catch(() => {
-        //     console.log("getData Promise Error");
-        //     response.setParameters(null, sendData);
-        // });
+            case "StartAndCheckRoleAction": {
+              const number_one = '1';
+              response.setOutputParameters({
+                  number1: number_one,
+              }, sendData);
+              break;
+            }
+
+            case "BowHeadAction": {
+              const number_one = '1';
+              response.setOutputParameters({
+                  number1: number_one,
+              }, sendData);
+              break;
+            }
+
+            case "CheckMapiaAction": {
+              const number_one = '1';
+              response.setOutputParameters({
+                  number1: number_one,
+              }, sendData);
+              break;
+            }
+
+            case "CheckDoctorAction": {
+              const number_one = '1';
+              response.setOutputParameters({
+                  number1: number_one,
+              }, sendData);
+              break;
+            }
+
+            case "CheckPoliceAction": {
+              const number_one = '1';
+              response.setOutputParameters({
+                  number1: number_one,
+              }, sendData);
+              break;
+            }
+
+            case "DebateAction": {
+              const number_one = '1';
+              response.setOutputParameters({
+                  number1: number_one,
+              }, sendData);
+              break;
+            }
+
+            case "NightComeAction": {
+              const number_one = '1';
+              response.setOutputParameters({
+                  number1: number_one,
+              }, sendData);
+              break;
+            }
+        }
     }
 }
 
@@ -60,8 +96,10 @@ class Response {
     }
     setParameters(result, sendData) {
         this.output = {
-            numOfPlayer: result.num,
-            pin: result.pin,
+            numOfPlayer: result.numOfPlayer,
+            pinNum: result.pinNum,
+            roomExist: result.roomExist,
+            number1: result.number1,
         }
         sendData();
     }
