@@ -23,7 +23,7 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 app.use((err, req, res, next) => next());
 
-router.route('/nugu').post(nugu);
+router.post('/nugu', nugu);
 
 const server = http.Server(app); // 익스프레스 사용해서 서버 생성 및 할당
 const io = require('socket.io')(server); // socket.io 서버 생성
@@ -77,7 +77,7 @@ class dMessage { // decide 관리를 위한 class
         this.id = id; // 어떤 방의 decide인지를 위한 id
     }
     add(data) { // 사용자로부터 요청이 오면
-        this.count++; 
+        this.count++;
         this.decides.push(data);
         // count 증가 후 decides에 응답 온 결정 추가
 
@@ -143,7 +143,7 @@ io.on('connection', (socket) => { // 사용자 접속 오면
                 curRoom.member.push(new Member(data.name, socket.id, socket.on)); // 해당 방에 접속한 멤버 추가
                 socket.join(`${data.room}`, () => { // 해당 방에 유저를 추가
                     console.log(`${data.name}이 방(${data.room})에 들어옴`);
-                    data.member = curRoom.member; 
+                    data.member = curRoom.member;
                     data.size = curRoom.size;
                     // 해당 방에 접속중인 멤버와 사람 수 설정 후 방에 있는 모든 사용자에게 유저가 접속했음을 알림
                     io.to(`${data.room}`).emit('ROOM_CONNECT', data);
@@ -182,7 +182,7 @@ function grun(g, member, io, room, curDecide) {
             } else { // 프라미스가 아니라면
 
                 if (x.value instanceof Object) { // Object가 메시지로 왔다며
-                    if (x.value.do === "AnnounceRole") {  // 역할 공지라면
+                    if (x.value.do === "AnnounceRole") { // 역할 공지라면
                         io.to(member.find(o => o.name == x.value.name).socket).emit("ROLE_ALERT", `${x.value.role}`);
                         setTimeout(iterate, 0, x.value);
                         // 모든 사용자에게 역할 공지하고 다음 명령 실행
@@ -194,7 +194,7 @@ function grun(g, member, io, room, curDecide) {
                             });
                         } // 경찰 찾아서 조사 결과 전송
                         setTimeout(iterate, 0, x.value);
-                    }else if(x.value.do ==="DEATH_UPDATE"){ // 죽은 사람 업데이트
+                    } else if (x.value.do === "DEATH_UPDATE") { // 죽은 사람 업데이트
                         for (let tempMember of x.value.nameList) {
                             let tempSocket = member.find(o => o.name == tempMember.name);
                             io.to(tempSocket.socket).emit("UPDATE_LIST", x.value.nameList);
@@ -203,7 +203,7 @@ function grun(g, member, io, room, curDecide) {
                         setTimeout(iterate, 0, x.value);
                     } else if (x.value.do === "Assassinate") { // 암살 명령 오면
 
-                        const c = sendSocket(io,member, x, curDecide) // 해당 명령 보낸 후 Countdown 리턴 받음
+                        const c = sendSocket(io, member, x, curDecide) // 해당 명령 보낸 후 Countdown 리턴 받음
                         c.go(curDecide)
                             .then(() => { // 사용자 결정 다 받으면
                                 io.to(room).emit("END_DECIDE");
@@ -216,7 +216,7 @@ function grun(g, member, io, room, curDecide) {
 
                     } else if (x.value.do === "Treatment") { // 의사 명령
 
-                        const c = sendSocket(io, member,x, curDecide) // 해당 명령 보낸 후 Countdown 리턴 받음
+                        const c = sendSocket(io, member, x, curDecide) // 해당 명령 보낸 후 Countdown 리턴 받음
                         c.go(curDecide)
                             .then(() => { // 결정 다 받으면
                                 io.to(room).emit("END_DECIDE");
@@ -228,7 +228,7 @@ function grun(g, member, io, room, curDecide) {
                             });
                     } else if (x.value.do === "Investigation") { // 경찰 조사 
 
-                        const c = sendSocket(io,member, x, curDecide) // // 해당 명령 보낸 후 Countdown 리턴 받음
+                        const c = sendSocket(io, member, x, curDecide) // // 해당 명령 보낸 후 Countdown 리턴 받음
                         c.go(curDecide)
                             .then(() => { // 결정 다 받으면
                                 io.to(room).emit("END_DECIDE");
@@ -239,7 +239,7 @@ function grun(g, member, io, room, curDecide) {
                                 setTimeout(iterate, 0, curDecide.decides)
                             });
 
-                    } else  if(x.value.do === "Vote"){ // 투표 받으면
+                    } else if (x.value.do === "Vote") { // 투표 받으면
 
                         const c = sendSocket(io, member, x, curDecide) // 해당 명령 보낸 후 Countdown 리턴 받음
                         c.go(curDecide)
@@ -265,7 +265,7 @@ function grun(g, member, io, room, curDecide) {
     })();
 }
 
-function sendSocket(io, member, x, decide){ // 사용자에게 결정 받는 소켓 전송 함수
+function sendSocket(io, member, x, decide) { // 사용자에게 결정 받는 소켓 전송 함수
 
     let num = x.value.nameList.length; // 보낼 사람 수
     decide.reset();
