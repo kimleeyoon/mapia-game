@@ -15,7 +15,7 @@ let nugu = require('./main');
 const app = express();
 let router = express.Router();
 
-app.use(static(path.join(__dirname, 'public/dist'))); // public/dist 폴더를 클라이언트가 루트경로로 접근하도록 해줌
+app.use('/web', static(path.join(__dirname, 'public/dist'))); // public/dist 폴더를 클라이언트가 루트경로로 접근하도록 해줌
 
 app.use(bodyParser.urlencoded({
     extended: false
@@ -23,7 +23,7 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 app.use((err, req, res, next) => next());
 
-router.post('/nugu', nugu);
+router.post('/speaker/nugu', nugu);
 
 const server = http.Server(app); // 익스프레스 사용해서 서버 생성 및 할당
 const io = require('socket.io')(server); // socket.io 서버 생성
