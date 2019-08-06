@@ -64,7 +64,7 @@ class Response {
     }
     setParameters(result, sendData) {
         this.output = {
-            numOfPlayer: result.num,
+            numOfPlayer: result.numOfPlayer,
             pinNum: result.pinNum,
         }
         sendData();
