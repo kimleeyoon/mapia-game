@@ -107,6 +107,7 @@ class Response {
             roomExist: result.roomExist,
             number1: result.number1,
         }
+        console.log(this.output);
         sendData();
     }
 }
