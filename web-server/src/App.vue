@@ -4,7 +4,7 @@
       <div class="col-md-8 offset-md-2">
         <h1 class="text-center mb-4">
           현주가 좋아하는
-          <br />마피아 게임!
+          <br />마피아 게임!!
         </h1>
         <!-- <input type="text" class="form-control" v-model="roomID" />
         <input type="text" class="form-control" v-model="name" />-->
