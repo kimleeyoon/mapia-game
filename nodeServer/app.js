@@ -23,14 +23,16 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 app.use((err, req, res, next) => next());
 
-router.route('/speaker/nugu').post((req, res) => {
-    console.log("asdfdasfasfdsafdsaf");
-});
-router.route('/speaker/nugu/TakePlayerNumAction').post((req, res) => {
-    console.log("asdfdasfasfdsafdsaf");
-});
+// router.route('/speaker/nugu').post((req, res) => {
+//     console.log("asdfdasfasfdsafdsaf");
+// });
+// router.route('/speaker/nugu/TakePlayerNumAction').post((req, res) => {
+//     console.log("asdfdasfasfdsafdsaf");
+// });
 
-router.route('/speaker/nugu/TakePlayerNumAction').post(nugu);
+router.route('/speaker/nugu/TakePlayerNumAction').post((req, res) => {
+    nugu(speakerCreateRoom, req, res, next);
+});
 
 const server = http.Server(app); // 익스프레스 사용해서 서버 생성 및 할당
 const io = require('socket.io')(server); // socket.io 서버 생성
@@ -39,9 +41,9 @@ app.use('/', router);
 
 server.listen(3000, () => { // 3000포트에서 서버 열음
     console.log('Server Open 3000');
-    createRoom(room, 4);
-    createRoom(room, 6);
-    createRoom(room, 5);
+    // createRoom(room, 4);
+    // createRoom(room, 6);
+    // createRoom(room, 5);
     // 3개의 방 생성
 });
 
@@ -295,6 +297,18 @@ function sendSocket(io, member, x, decide) { // 사용자에게 결정 받는 �
     return c; // Countdown 반환
 }
 
+function speakerCreateRoom(size){
+    return new Promise((resolve, reject) => {
+        let id = reateRoom(room, size);
+        if(id == -1){
+            reject();
+        }else{
+            resolve(id);
+        }
+    });
+    // return createRoom(room, size);
+}
+
 function createRoom(rooms, size) { // 특정 사이즈의 방 생성
     let id = -1;
     do {
@@ -307,6 +321,8 @@ function createRoom(rooms, size) { // 특정 사이즈의 방 생성
 
     console.log(`${rooms[rooms.length - 1].id} room 생성`);
     console.log(rooms);
+
+    return id;
 
     // createSocket(rooms, rooms.length - 1); 
 }
@@ -342,3 +358,5 @@ function createSocket(rooms, index) {
 // namespace2.on('connection', (socket) => {
 //     namespace2.emit('news', { hello: "Someone connected at Namespace2"});
 // });
+
+module.exports = speakerCreateRoom;

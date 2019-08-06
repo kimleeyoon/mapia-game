@@ -1,7 +1,8 @@
 class Request {
-    constructor(httpReq) {
+    constructor(httpReq, f) {
         this.context = httpReq.body.context;
         this.action = httpReq.body.action;
+        this.func = f;
         console.log(`NPKRequest: ${JSON.stringify(this.context)}, ${JSON.stringify(this.action)}`)
     }
     actionRequest(response, sendData) {
@@ -21,9 +22,12 @@ class Request {
                     }
 
                     // const throwResult = throwDice(diceCount);
+
+                    let pin = f(playerNum).then((pin) => pin).catch((error) => console.log("방 생설 실패"));
+
                     response.setOutputParameters({
                         numOfPlayer: playerNum,
-                        pin: "0000",
+                        pinNum: `${pin}`,
                     }, sendData);
                     break;
                 }
@@ -61,15 +65,15 @@ class Response {
     setParameters(result, sendData) {
         this.output = {
             numOfPlayer: result.num,
-            pin: result.pin,
+            pinNum: result.pinNum,
         }
         sendData();
     }
 }
 
-const reqObject = (req, res, next) => {
+const reqObject = (f, req, res, next) => {
     response = new Response();
-    request = new Request(req);
+    request = new Request(req, f);
     request.actionRequest(response, () => res.send(response));
 };
 
