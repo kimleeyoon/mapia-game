@@ -12,7 +12,7 @@ class Request {
         switch (actionName) {
             case "TakePlayerNumAction": {
                 if (!!parameters) {
-                    const playerNum = parameters.numOfPlayer;
+                    let playerNum = parameters.numOfPlayer;
                     if (parameters.length != 0 && playerNum) {
                         playerNum = parseInt(playerNum.value);
                     }
@@ -22,70 +22,72 @@ class Request {
                     }
                     // const throwResult = throwDice(diceCount);
 
-                    let pin = f(playerNum).then((pin) => pin).catch((error) => console.log("방 생설 실패"));
-
-                    response.setOutputParameters({
-                        numOfPlayer: playerNum,
-                        pinNum: `${pin}`,
-                    }, sendData);
+                    let pin = this.func(playerNum).then(
+                        (pin) => {
+                            response.setParameters({
+                                numOfPlayer: playerNum,
+                                pinNum: `${pin}`,
+                                roomExist: '1',
+                            }, sendData);
+                        }).catch((error) => console.log("방 생성 실패"));
                     break;
                 }
             }
 
             case "StartAndCheckRoleAction": {
-              const number_one = '1';
-              response.setOutputParameters({
-                  number1: number_one,
-              }, sendData);
-              break;
+                const number_one = '1';
+                response.setParameters({
+                    number1: number_one,
+                }, sendData);
+                break;
             }
 
             case "BowHeadAction": {
-              const number_one = '1';
-              response.setOutputParameters({
-                  number1: number_one,
-              }, sendData);
-              break;
+                const number_one = '1';
+                response.setParameters({
+                    number1: number_one,
+                }, sendData);
+                break;
             }
 
             case "CheckMapiaAction": {
-              const number_one = '1';
-              response.setOutputParameters({
-                  number1: number_one,
-              }, sendData);
-              break;
+                const number_one = '1';
+                response.setParameters({
+                    number1: number_one,
+                }, sendData);
+                break;
             }
 
             case "CheckDoctorAction": {
-              const number_one = '1';
-              response.setOutputParameters({
-                  number1: number_one,
-              }, sendData);
-              break;
+                const number_one = '1';
+                response.setParameters({
+                    number1: number_one,
+                }, sendData);
+                break;
             }
 
             case "CheckPoliceAction": {
-              const number_one = '1';
-              response.setOutputParameters({
-                  number1: number_one,
-              }, sendData);
-              break;
+                const number_one = '1';
+                response.setParameters({
+                    number1: number_one,
+                }, sendData);
+                break;
             }
 
             case "DebateAction": {
-              const number_one = '1';
-              response.setOutputParameters({
-                  number1: number_one,
-              }, sendData);
-              break;
+                const number_one = '1';
+                response.setParameters({
+                    number1: number_one,
+                }, sendData);
+                break;
             }
 
             case "NightComeAction": {
-              const number_one = '1';
-              response.setOutputParameters({
-                  number1: number_one,
-              }, sendData);
-              break;
+                const number_one = '1';
+                response.setParameters({
+                    number1: number_one,
+                }, sendData);
+                break;
             }
         }
     }
