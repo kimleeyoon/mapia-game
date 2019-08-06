@@ -23,7 +23,7 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 app.use((err, req, res, next) => next());
 
-router.route('/nugu/testAction').post(nugu);
+router.route('/nugu').post(nugu);
 
 const server = http.Server(app); // 익스프레스 사용해서 서버 생성 및 할당
 const io = require('socket.io')(server); // socket.io 서버 생성

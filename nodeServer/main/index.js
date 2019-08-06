@@ -1,12 +1,34 @@
-
-class Requset {
+class Request {
     constructor(httpReq) {
-        // console.log(httpReq.body);
+        this.context = httpReq.body.context;
         this.action = httpReq.body.action;
+        console.log(`NPKRequest: ${JSON.stringify(this.context)}, ${JSON.stringify(this.action)}`)
     }
     actionRequest(response, sendData) {
         let actionName = this.action.actionName;
         let parameters = this.action.parameters;
+
+        switch (actionName) {
+            case "TakePlayerNum": {
+                if (!!parameters) {
+                    const playerNum = parameters.numOfPlayer;
+                    if (parameters.length != 0 && playerNum) {
+                        playerNum = parseInt(playerNum.value);
+                    }
+
+                    if (isNaN(playerNum)) {
+                        playerNum = 4;
+                    }
+
+                    // const throwResult = throwDice(diceCount);
+                    response.setOutputParameters({
+                        numOfPlayer: playerNum,
+                        pin: 0000
+                    }, sendData);
+                    break;
+                }
+            }
+        }
 
         // getData(parameters.cityName.value)
         // .then((data) => {
@@ -37,10 +59,9 @@ class Response {
         this.directives = [];
     }
     setParameters(result, sendData) {
-        if(result){
-            this.output = result;
-        }else{
-            this.resultCode = "Error";
+        this.output = {
+            numOfPlayer: result.num,
+            pin: result.pin,
         }
         sendData();
     }
@@ -48,7 +69,7 @@ class Response {
 
 const reqObject = (req, res, next) => {
     response = new Response();
-    request = new Requset(req);
+    request = new Request(req);
     request.actionRequest(response, () => res.send(response));
 };
 
