@@ -23,10 +23,12 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 app.use((err, req, res, next) => next());
 
-router.post('/speaker/nugu', nugu);
+router.router('./speaker/nugu').post(nugu);
 
 const server = http.Server(app); // 익스프레스 사용해서 서버 생성 및 할당
 const io = require('socket.io')(server); // socket.io 서버 생성
+
+app.use('/', router);
 
 server.listen(3000, () => { // 3000포트에서 서버 열음
     console.log('Server Open 3000');
