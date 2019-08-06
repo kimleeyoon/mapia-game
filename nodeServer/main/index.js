@@ -115,7 +115,7 @@ const reqObject = (f, req, res, next) => {
     response = new Response();
     request = new Request(req, f);
     request.actionRequest(response, () => res.send(response));
-    console.log(`NPKResponse: ${JSON.stringify(npkResponse)}`);
+    console.log(`NPKResponse: ${JSON.stringify(response)}`);
 };
 
 module.exports = reqObject;
