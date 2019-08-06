@@ -9,7 +9,7 @@ class Request {
         let parameters = this.action.parameters;
 
         switch (actionName) {
-            case "TakePlayerNum": {
+            case "TakePlayerNumAction": {
                 if (!!parameters) {
                     const playerNum = parameters.numOfPlayer;
                     if (parameters.length != 0 && playerNum) {

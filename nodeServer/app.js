@@ -26,7 +26,7 @@ app.use((err, req, res, next) => next());
 router.route('/speaker/nugu').post((req, res) => {
     console.log("asdfdasfasfdsafdsaf");
 });
-router.route('/speaker/nugu/TakePlayerNum').post((req, res) => {
+router.route('/speaker/nugu/TakePlayerNumAction').post((req, res) => {
     console.log("asdfdasfasfdsafdsaf");
 });
 router.route('/speaker/nugu').get((req, res) => {
