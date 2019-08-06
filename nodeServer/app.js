@@ -299,7 +299,7 @@ function sendSocket(io, member, x, decide) { // 사용자에게 결정 받는 �
 
 function speakerCreateRoom(size) {
     return new Promise((resolve, reject) => {
-        let id = reateRoom(room, size);
+        let id = createRoom(room, size);
         if (id == -1) {
             reject();
         } else {
