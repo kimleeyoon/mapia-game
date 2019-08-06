@@ -30,7 +30,7 @@ app.use((err, req, res, next) => next());
 //     console.log("asdfdasfasfdsafdsaf");
 // });
 
-router.route('/speaker/nugu/TakePlayerNumAction').post((req, res) => {
+router.route('/speaker/nugu/TakePlayerNumAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
 });
 
@@ -297,12 +297,12 @@ function sendSocket(io, member, x, decide) { // 사용자에게 결정 받는 �
     return c; // Countdown 반환
 }
 
-function speakerCreateRoom(size){
+function speakerCreateRoom(size) {
     return new Promise((resolve, reject) => {
         let id = reateRoom(room, size);
-        if(id == -1){
+        if (id == -1) {
             reject();
-        }else{
+        } else {
             resolve(id);
         }
     });
