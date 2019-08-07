@@ -93,6 +93,7 @@ class Request {
     }
 }
 
+let count = 0;
 class Response {
     constructor() {
         this.version = '2.0';
@@ -108,15 +109,23 @@ class Response {
             number1: result.number1,
         }
         console.log(this.output);
-        this.resultCode = 'test';
-        sendData();
+        if (count < 10) {
+            this.resultCode = 'test';
+            count++;
+        } else if (count == 10) {
+            this.resultCode = 'FULLROOM'
+        } else {
+
+        }
+
+        sendData(this);
     }
 }
 
 const reqObject = (f, req, res, next) => {
     response = new Response();
     request = new Request(req, f);
-    request.actionRequest(response, () => res.send(response));
+    request.actionRequest(response, (r) => res.send(r));
     console.log(`NPKResponse: ${JSON.stringify(response)}`);
 };
 
