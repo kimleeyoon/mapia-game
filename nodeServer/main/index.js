@@ -108,6 +108,7 @@ class Response {
             number1: result.number1,
         }
         console.log(this.output);
+        this.resultCode = 'test';
         sendData();
     }
 }

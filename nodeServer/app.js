@@ -34,6 +34,30 @@ router.route('/speaker/nugu/TakePlayerNumAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
 });
 
+router.route('/speaker/nugu/StartAndCheckRoleAction').post((req, res, next) => {
+    nugu(speakerCreateRoom, req, res, next);
+});
+
+router.route('/speaker/nugu/BowHeadAction').post((req, res, next) => {
+    nugu(speakerCreateRoom, req, res, next);
+});
+
+router.route('/speaker/nugu/CheckMapiaAction').post((req, res, next) => {
+    nugu(speakerCreateRoom, req, res, next);
+});
+router.route('/speaker/nugu/CheckDoctorAction').post((req, res, next) => {
+    nugu(speakerCreateRoom, req, res, next);
+});
+router.route('/speaker/nugu/CheckPoliceAction').post((req, res, next) => {
+    nugu(speakerCreateRoom, req, res, next);
+});
+router.route('/speaker/nugu/DebateAction').post((req, res, next) => {
+    nugu(speakerCreateRoom, req, res, next);
+});
+router.route('/speaker/nugu/NightCome').post((req, res, next) => {
+    nugu(speakerCreateRoom, req, res, next);
+});
+
 const server = http.Server(app); // 익스프레스 사용해서 서버 생성 및 할당
 const io = require('socket.io')(server); // socket.io 서버 생성
 
