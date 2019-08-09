@@ -15,7 +15,7 @@ let nugu = require('./main'); // 스피커 서버에서 실행할 프로그램 �
 const app = express();
 let router = express.Router();
 
-app.use('/web', static(path.join(__dirname, 'public/dist'))); // public/dist 폴더를 클라이언트가 루트경로로 접근하도록 해줌
+app.use('/', static(path.join(__dirname, 'public/dist'))); // public/dist 폴더를 클라이언트가 루트경로로 접근하도록 해줌
 
 app.use(bodyParser.urlencoded({
     extended: false
@@ -30,7 +30,31 @@ app.use((err, req, res, next) => next());
 //     console.log("asdfdasfasfdsafdsaf");
 // });
 
-router.route('/speaker/nugu/TakePlayerNumAction').post((req, res) => {
+router.route('/speaker/nugu/TakePlayerNumAction').post((req, res, next) => {
+    nugu(speakerCreateRoom, req, res, next);
+});
+
+router.route('/speaker/nugu/StartAndCheckRoleAction').post((req, res, next) => {
+    nugu(speakerCreateRoom, req, res, next);
+});
+
+router.route('/speaker/nugu/BowHeadAction').post((req, res, next) => {
+    nugu(speakerCreateRoom, req, res, next);
+});
+
+router.route('/speaker/nugu/CheckMapiaAction').post((req, res, next) => {
+    nugu(speakerCreateRoom, req, res, next);
+});
+router.route('/speaker/nugu/CheckDoctorAction').post((req, res, next) => {
+    nugu(speakerCreateRoom, req, res, next);
+});
+router.route('/speaker/nugu/CheckPoliceAction').post((req, res, next) => {
+    nugu(speakerCreateRoom, req, res, next);
+});
+router.route('/speaker/nugu/DebateAction').post((req, res, next) => {
+    nugu(speakerCreateRoom, req, res, next);
+});
+router.route('/speaker/nugu/NightCome').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
 });
 
@@ -301,12 +325,12 @@ function sendSocket(io, member, x, decide) { // 사용자에게 결정 받는 �
     return c; // Countdown 반환
 }
 
-function speakerCreateRoom(size){
+function speakerCreateRoom(size) {
     return new Promise((resolve, reject) => {
-        let id = reateRoom(room, size);
-        if(id == -1){
+        let id = createRoom(room, size);
+        if (id == -1) {
             reject();
-        }else{
+        } else {
             resolve(id);
         }
     });
