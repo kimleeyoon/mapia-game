@@ -32,7 +32,7 @@ app.use((err, req, res, next) => next());
 // });
 
 router.route('/speaker/nugu/TakePlayerNumAction').post((req, res, next) => {
-    nugu(speakerCreateRoom, req, res, next);
+    nugu(speakerCreateRoom, req, res, setPin, next);
 });
 
 router.route('/speaker/nugu/StartAndCheckRoleAction').post((req, res, next) => {
@@ -59,8 +59,9 @@ router.route('/speaker/nugu/NightCome').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
 });
 
-router.route('/speaker/nugu/LetStartGameAction').post((req, res) => {
+router.route('/speaker/nugu/LetStartGameAction').post((req, res) => { // 게임 시작
     nugu(speakerCreateRoom, req, res, next);
+    gameStartInformation[`${req.body.context.session.id}`].run();
 });
 
 router.route('/speaker/nugu/KillNightAction').post((req, res) => {
@@ -154,6 +155,27 @@ let room = [];
 
 let decides = [];
 
+let gameStartInformation = {};
+
+let contextId = {};
+
+function setPin(session, pin){
+    contextId[session] = `${pin}`;
+}
+
+class gameStartInformationClass {
+    constructor(system, member, io, room, curDecide, getT){
+        this.system = system;
+        this.member = member;
+        this.io = io;
+        this.room = room;
+        this.decide = curDecide;
+        this.getT = getT;
+    }
+    run(){
+        grun(this.system, this.member, this.io, this.room, this.decide, this.getT);
+    }
+}
 
 io.on('connection', (socket) => { // 사용자 접속 오면
 
@@ -212,8 +234,9 @@ io.on('connection', (socket) => { // 사용자 접속 오면
                     io.to(`${data.room}`).emit('START_GAME', data);
                     console.log("게임 시작");
                     // 해당 방 정보 재설정 후 게임이 시작함을 방에 있는 모든 유저들에게 알림
+                    gameStartInformation[`${data.room}`] = new gameStartInformationClass(system, curRoom.member, io, `${data.room}`, curDecide, getT);
+                    // grun(system, curRoom.member, io, `${data.room}`, curDecide, getT);
 
-                    grun(system, curRoom.member, io, `${data.room}`, curDecide, getT);
                     // 게임 메인 프로토콜 실행
                 }
             }
@@ -240,13 +263,17 @@ function grun(g, member, io, room, curDecide, getText) {
                         setTimeout(iterate, 0, x.value);
                         // 모든 사용자에게 역할 공지하고 다음 명령 실행
                     } else if (x.value.do === "VOTE_TEXT") {
-                        const it = getText();
+                        const it = getText(room, 'vote');
                         it.next();
                         if (x.value.isDeath == 0) { // 죽은 사람이 없는 경우
                             it.next('');
                         } else { // 죽은 사람이 있는 경우
                             it.next(x.value.text);
                         }
+                    } else if (x.value.do === "DAY_TEXT") {
+                        const it = getText(room, 'day');
+                        it.next();
+                        it.next(x.value.day);
                     } else if (x.value.do === "ResultOfInvestigation") { // 경찰 조사 결과 전송
                         for (let name of x.value.nameList) {
                             io.to(member.find(o => o.name == name).socket).emit("RESULT_OF_INVESTIGATION", {

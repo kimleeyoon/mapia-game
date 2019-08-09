@@ -1,8 +1,9 @@
 class Request {
-    constructor(httpReq, f) {
+    constructor(httpReq, f, f2) {
         this.context = httpReq.body.context;
         this.action = httpReq.body.action;
         this.func = f;
+        this.func2 = f2;
         console.log(`NPKRequest: ${JSON.stringify(this.context)}, ${JSON.stringify(this.action)}`)
     }
     actionRequest(response, sendData) {
@@ -25,6 +26,7 @@ class Request {
                     let pin = this.func(playerNum).then(
                         (pin) => {
                             contextId[this.context.session.id] = pin;
+                            this.func2(this.context.session.id, pin);
                             response.setParameters({
                                 numOfPlayer: playerNum,
                                 pinNum: `${pin}`,
@@ -103,6 +105,7 @@ class Request {
                 const number_one = '1';
                 response.setOutputParameters({
                     number1: number_one,
+                    dayOrder: outText[contextId[this.context.session.id]].day
                 }, sendData);
                 break;
             }
@@ -134,16 +137,16 @@ class Request {
             case "FinalArgumentAction": {
               const number_one = '1';
               let tieVote_Exist = '0';
-              if (outText[contextId[this.context.session.id]].length > 0) {
+              if (outText[contextId[this.context.session.id]].text.length > 0) {
                   tieVote_Exist = '0';
               } else {
                   tieVote_Exist = '1';
               }
               if (tieVote_Exist == '0') {
-                  let tieVoteExistPrompt = `${outText[contextId[this.context.session.id]]}님이 사형대에 올랐습니다.
+                  let tieVoteExistPrompt = `${outText[contextId[this.context.session.id]].text}님이 사형대에 올랐습니다.
                   1분동안 최후 변론을 진행해주세요. <pause time = "60000"> 최후 변론이 종료되었습니다.
                   플레이어들은 10초동안 찬반투표를 진행해주세요. <pause time = "10000">
-                  ${outText[contextId[this.context.session.id]]}님을 죽이시려면 죽이자고, 살리시려면 살리자고 말씀해주세요.`
+                  ${outText[contextId[this.context.session.id]].text}님을 죽이시려면 죽이자고, 살리시려면 살리자고 말씀해주세요.`
               } else if (tieVote_Exist == '1') {
                   let tieVoteExistPrompt = `아무도 사형대에 오르지 않았습니다. 다음으로 넘어가시려면 확인이라고 말씀해주세요.`
                   //이거 다음에 '바로 밤이 되었습니다' 액션으로 넘어감.
@@ -185,9 +188,14 @@ let contextId = {};
 
 let outText = {};
 
-function* getText(id) {
+function* getText(id, target) {
     const text = yield;
-    outText[id] = text;
+    if(!outText[id]){outText[id] = {}}
+    if(target === 'vote'){
+        outText[id].text = text;
+    }else if(target ==='day'){
+        outText[id].day = text;
+    }
 }
 
 
@@ -217,9 +225,9 @@ class Response {
     }
 }
 
-const reqObject = (f, req, res, next) => {
+const reqObject = (f, req, res, f2, next) => {
     response = new Response();
-    request = new Request(req, f);
+    request = new Request(req, f, f2);
     request.actionRequest(response, (r) => {
         console.log(r);
         res.send(r)
