@@ -535,8 +535,10 @@ function* mainGame(member) {
         
         if (count >= Object.keys(memberClass.getLiveAfterList()).length / 2) {
             isCitizenWin = 0;
-        }else{
+        } else if (count == 0) {
             isCitizenWin = 1;
+        }else{
+            isCitizenWin = 2;
         }
         
         yield {
