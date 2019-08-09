@@ -95,7 +95,7 @@ class Request {
 
             case "NightComeAction": {
                 const number_one = '1';
-                response.setOutputParameters({
+                response.setParameters({
                     number1: number_one,
                 }, sendData);
                 break;
@@ -104,7 +104,7 @@ class Request {
             case "LetsStartGameAction": {
                 const number_one = '1';
                 console.log(outText);
-                response.setOutputParameters({
+                response.setParameters({
                     number1: number_one,
                     dayOrder: 0
                 }, sendData);
@@ -113,7 +113,7 @@ class Request {
 
             case "KillNightAction": {
                 let number_one = '1';
-                response.setOutputParameters({
+                response.setParameters({
                     number1: number_one,
                     dayOrderNum: outText[contextId[this.context.session.id]].day,
                 }, sendData);
@@ -128,7 +128,7 @@ class Request {
                 } else if (doctor_Vs_Mapia == '1') {
                   let doctorVsMapiaPrompt = '의사가 플레이어를 살렸습니다.';
                 }
-                response.setOutputParameters({
+                response.setParameters({
                     number1: number_one,
                     doctorVsMapia: doctorVsMapiaPrompt,
                 }, sendData);
@@ -152,7 +152,7 @@ class Request {
                   let tieVoteExistPrompt = `아무도 사형대에 오르지 않았습니다. 다음으로 넘어가시려면 확인이라고 말씀해주세요.`
                   //이거 다음에 '바로 밤이 되었습니다' 액션으로 넘어감.
               }
-              response.setOutputParameters({
+              response.setParameters({
                   number1: number_one,
                   tieVoteExist: tieVoteExistPrompt,
               }, sendData);
@@ -173,7 +173,7 @@ class Request {
               } else if (mapia_Or_CitizenWin = '1') {
                 let mapiaOrCitizenWinPrompt = '시민이 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.'
               }
-              response.setOutputParameters({
+              response.setParameters({
                   number1: number_one,
                   doctorVsMapia: doctorVsMapiaPrompt,
                   mapiaOrCitizenWin: mapiaOrCitizenWinPrompt,
