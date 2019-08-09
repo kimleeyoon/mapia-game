@@ -83,6 +83,7 @@ router.route('/speaker/nugu/KillNightAction').post((req, res, next) => { // 본�
 router.route('/speaker/nugu/CheckWhoDiedAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
     console.log("CheckWhoDiedAction");
+    gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
 });
 router.route('/speaker/nugu/FinalArgumentAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
@@ -163,9 +164,31 @@ class dMessage { // decide 관리를 위한 class
         this.num = 0;
     }
     isEnd() { // 결정 다 받았는지 확인하는 함수
-        return this.num <= this.count;
+        // return this.num <= this.count;
+        return false;
     }
 }
+
+class gameStartInformationClass {
+    constructor(system, member, io, room, curDecide, getT, data) {
+        this.system = system;
+        this.member = member;
+        this.io = io;
+        this.room = room;
+        this.decide = curDecide;
+        this.getT = getT;
+        this.data = data;
+        this.first = false;
+        this.mapiaDo = false;
+        this.doctorDo = false;
+        this.policeDo = false;
+    }
+    run() {
+        io.to(`${this.room}`).emit('START_GAME', this.data);
+        grun(this.system, this.member, this.io, this.room, this.decide, this.getT);
+    }
+}
+
 
 let room = [];
 
@@ -175,26 +198,10 @@ let gameStartInformation = {};
 
 let contextId = {};
 
-function setPin(session, pin){
+function setPin(session, pin) {
     contextId[session] = `${pin}`;
 }
 
-class gameStartInformationClass {
-    constructor(system, member, io, room, curDecide, getT, data){
-        this.system = system;
-        this.member = member;
-        this.io = io;
-        this.room = room;
-        this.decide = curDecide;
-        this.getT = getT;
-        this.data = data;
-        this.first = false;
-    }
-    run(){
-        io.to(`${this.room}`).emit('START_GAME', this.data);
-        grun(this.system, this.member, this.io, this.room, this.decide, this.getT);
-    }
-}
 
 io.on('connection', (socket) => { // 사용자 접속 오면
 
@@ -282,15 +289,25 @@ function grun(g, member, io, room, curDecide, getText) {
                         console.log("역할 공지 완료");
                         setTimeout(iterate, 0, x.value);
                         // 모든 사용자에게 역할 공지하고 다음 명령 실행
-                    } else if(x.value.do === "WAIT_FIRST_NIGHT"){
-                        (function k(){
-                            if(gameStartInformation[room].first){
+                    } else if (x.value.do === "WAIT_FIRST_NIGHT") {
+                        (function k() {
+                            if (gameStartInformation[room].first) {
+                                gameStartInformation[room].first = false;
                                 setTimeout(iterate, 0, x.value);
-                            }else{
+                            } else {
                                 setTimeout(k, 0.5);
                             }
                         })();
-                    }else if (x.value.do === "VOTE_TEXT") {
+                    } else if (x.value.do === "WAIT_CHECK") {
+                        (function k() {
+                            if (gameStartInformation[room].first) {
+                                gameStartInformation[room].first = false;
+                                setTimeout(iterate, 0, x.value);
+                            } else {
+                                setTimeout(k, 0.5);
+                            }
+                        })();
+                    } else if (x.value.do === "VOTE_TEXT") {
                         const it = getText(room, 'vote');
                         it.next();
                         if (x.value.isDeath == 0) { // 죽은 사람이 없는 경우
