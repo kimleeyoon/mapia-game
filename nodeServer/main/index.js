@@ -103,6 +103,7 @@ class Request {
 
             case "LetsStartGameAction": {
                 const number_one = '1';
+                console.log(outText);
                 response.setOutputParameters({
                     number1: number_one,
                     dayOrder: outText[contextId[this.context.session.id]].day
