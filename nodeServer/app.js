@@ -67,7 +67,7 @@ router.route('/speaker/nugu/NightCome').post((req, res, next) => {
     console.log("NightCome");
 });
 
-router.route('/speaker/nugu/LetsStartGameAction').post((req, res) => { // 게임 시작
+router.route('/speaker/nugu/LetsStartGameAction').post((req, res, next) => { // 게임 시작
     nugu(speakerCreateRoom, req, res, next);
     gameStartInformation[`${req.body.context.session.id}`].run();
     console.log("LetsStartGameAction");
