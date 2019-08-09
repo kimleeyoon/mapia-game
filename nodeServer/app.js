@@ -164,15 +164,17 @@ function setPin(session, pin){
 }
 
 class gameStartInformationClass {
-    constructor(system, member, io, room, curDecide, getT){
+    constructor(system, member, io, room, curDecide, getT, data){
         this.system = system;
         this.member = member;
         this.io = io;
         this.room = room;
         this.decide = curDecide;
         this.getT = getT;
+        this.data = data;
     }
     run(){
+        io.to(`${this.room}`).emit('START_GAME', this.data);
         grun(this.system, this.member, this.io, this.room, this.decide, this.getT);
     }
 }
@@ -231,10 +233,10 @@ io.on('connection', (socket) => { // 사용자 접속 오면
                 if (curRoom.size === curRoom.member.length) { // 방에 사람 다 들어왔다면
                     data.member = curRoom.member;
                     data.size = curRoom.size;
-                    io.to(`${data.room}`).emit('START_GAME', data);
+                    // io.to(`${data.room}`).emit('START_GAME', data);
                     console.log("게임 시작");
                     // 해당 방 정보 재설정 후 게임이 시작함을 방에 있는 모든 유저들에게 알림
-                    gameStartInformation[`${data.room}`] = new gameStartInformationClass(system, curRoom.member, io, `${data.room}`, curDecide, getT);
+                    gameStartInformation[`${data.room}`] = new gameStartInformationClass(system, curRoom.member, io, `${data.room}`, curDecide, getT, data);
                     // grun(system, curRoom.member, io, `${data.room}`, curDecide, getT);
 
                     // 게임 메인 프로토콜 실행
