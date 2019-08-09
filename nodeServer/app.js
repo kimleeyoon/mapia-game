@@ -287,7 +287,8 @@ function grun(g, member, io, room, curDecide, getText) {
                         }
                     } else if (x.value.do === "DAY_TEXT") {
                         const it = getText(room, 'day');
-                        it.next();
+                        console.log(it);
+                        console.log(it.next());
                         it.next(x.value.day);
                     } else if (x.value.do === "ResultOfInvestigation") { // 경찰 조사 결과 전송
                         for (let name of x.value.nameList) {

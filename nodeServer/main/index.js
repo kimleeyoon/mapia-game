@@ -191,10 +191,10 @@ let outText = {};
 
 function* getText(id, target) {
     const text = yield;
-    if(!outText[id]){outText[id] = {}}
-    if(target === 'vote'){
+    if(!outText[id]){outText[id] = {};}
+    if(target == 'vote'){
         outText[id].text = text;
-    }else if(target ==='day'){
+    }else if(target =='day'){
         outText[id].day = text;
     }
 }
