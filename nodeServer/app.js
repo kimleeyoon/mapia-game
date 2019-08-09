@@ -286,7 +286,9 @@ function grun(g, member, io, room, curDecide, getText) {
                             it.next(x.value.text);
                         }
                     } else if (x.value.do === "DAY_TEXT") {
+                        console.log("스피커한테 day 보낼 준비 from app.js");
                         const it = getText(room, 'day');
+                        console.log("이터레이터 실행");
                         console.log(it);
                         console.log(it.next());
                         it.next(x.value.day);
