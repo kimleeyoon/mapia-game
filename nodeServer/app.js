@@ -15,7 +15,7 @@ let nugu = require('./main'); // 스피커 서버에서 실행할 프로그램 �
 const app = express();
 let router = express.Router();
 
-app.use('/web', static(path.join(__dirname, 'public/dist'))); // public/dist 폴더를 클라이언트가 루트경로로 접근하도록 해줌
+app.use('/', static(path.join(__dirname, 'public/dist'))); // public/dist 폴더를 클라이언트가 루트경로로 접근하도록 해줌
 
 app.use(bodyParser.urlencoded({
     extended: false
