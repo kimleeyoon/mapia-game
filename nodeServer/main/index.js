@@ -120,14 +120,41 @@ class Request {
                 break;
             }
 
-            case "CheckWhoDiedAction": {
-                const number_one = '1';
-                const doctor_Vs_Mapia = '1'; //지금은 의사가 이긴 상황
-                if (doctor_Vs_Mapia == '0') {
-                  let doctorVsMapiaPrompt = '의사가 플레이어를 살리지 못했습니다. 마피아가 죽인 플레이어는 %s님 입니다.';
-                } else if (doctor_Vs_Mapia == '1') {
-                  let doctorVsMapiaPrompt = '의사가 플레이어를 살렸습니다.';
+
+            case "LetMeOutAction": {
+                let doctorVsMapiaPrompt = "";
+                if(outText[contextId[this.context.session.id]].after === "NoneKill"){  // 마피아가 아무도 안죽인 경우
+                    doctor_Vs_Mapia = 2;
+                    doctorVsMapiaPrompt = "";
+                }else{
+                    doctor_Vs_Mapia = 0;
+                    doctorVsMapiaPrompt = outText[contextId[this.context.session.id]].after;
                 }
+                const number_one = '1';
+                response.setParameters({
+                    number1: number_one,
+                    doctorVsMapia: doctorVsMapiaPrompt,
+                    mapiaOrCitizenWinNum: outText[contextId[this.context.session.id]].isCitizenWin
+                }, sendData);
+            }
+
+            case "CheckWhoDiedActions": {
+                let doctorVsMapiaPrompt = "";
+                if(outText[contextId[this.context.session.id]].after === "NoneKill"){  // 마피아가 아무도 안죽인 경우
+                    doctor_Vs_Mapia = 2;
+                    doctorVsMapiaPrompt = "";
+                }else{
+                    doctor_Vs_Mapia = 0;
+                    doctorVsMapiaPrompt = outText[contextId[this.context.session.id]].after;
+                }
+
+                const number_one = '1';
+                // const doctor_Vs_Mapia = '1'; //지금은 의사가 이긴 상황
+                // if (doctor_Vs_Mapia == '0') {
+                //   let doctorVsMapiaPrompt = '의사가 플레이어를 살리지 못했습니다. 마피아가 죽인 플레이어는 %s님 입니다.';
+                // } else if (doctor_Vs_Mapia == '1') {
+                //   let doctorVsMapiaPrompt = '의사가 플레이어를 살렸습니다.';
+                // }
                 response.setParameters({
                     number1: number_one,
                     doctorVsMapia: doctorVsMapiaPrompt,
@@ -136,6 +163,9 @@ class Request {
             }
 
             case "FinalArgumentAction": {
+
+
+
               const number_one = '1';
               let tieVote_Exist = '0';
               if (outText[contextId[this.context.session.id]].text.length > 0) {
@@ -159,7 +189,7 @@ class Request {
               break;
             }
 
-            case "MaybeMapiaWinAction": {
+            case "MaybeMapiaWinActions": {
               const number_one = '1';
               const doctor_Vs_Mapia = '1'; //지금은 의사가 이긴 상황
               if (doctor_Vs_Mapia == '0') {
@@ -196,6 +226,9 @@ function* getText(id, target) {
         outText[id].text = text;
     }else if(target =='day'){
         outText[id].day = text;
+    }else if(target =='after'){
+        outText[id].after = text.text;
+        outText[id].isCitizenWin = text.isCitizenWin;
     }
 }
 

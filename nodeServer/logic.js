@@ -416,7 +416,7 @@ function* mainGame(member) {
 
         yield {
             do: "WAIT_SECOND",
-            time: 5
+            time: 20
         };
         // alert("해가 저물고 밤이 되었습니다. 플레이어들은 모두 고개를 숙여주세요.");
         yield "해가 저물고 밤이 되었습니다. 플레이어들은 모두 고개를 숙여주세요.";
@@ -440,6 +440,10 @@ function* mainGame(member) {
         // }
         // }
 
+        yield {
+            do: "WAIT_SECOND",
+            time: 9
+        };
 
         // alert("다시 고개를 숙여주십시오.");
         yield "다시 고개를 숙여주십시오.";
@@ -465,6 +469,11 @@ function* mainGame(member) {
         ///////////////////////////// 경찰이 암살 당하는 경우 미리 죽어서 조사 못하는 현상 해결을 위해 아래로 내림
         // mapiaVSdoctorResult = savePlayer(mapiaPick, doctorPick, doctorAlive, afterList, memberClass.memberObj);
         ///////////////////////////////////
+
+        yield {
+            do: "WAIT_SECOND",
+            time: 9
+        };
 
         // alert("다시 고개를 숙여주십시오.");
         yield "다시 고개를 숙여주십시오.";
@@ -500,11 +509,33 @@ function* mainGame(member) {
         mapiaVSdoctorResult = savePlayer(mapiaPick, doctorPick, doctorAlive, afterList, memberClass.memberObj);
         //////////////////////////////////////////////////////////////////////////////////////////////////////
 
+        
         // alert("다시 고개를 숙여주십시오.");
         yield "다시 고개를 숙여주십시오.";
-
+        
         yield {
             do: "WAIT_CHECK"
+        };
+
+        let count = 0;
+        for (var key in memberClass.getLiveAfterList()) {
+            if (memberClass.getLiveAfterList()[key] === "마피아") {
+                count++;
+            }
+        }
+
+        let isCitizenWin = 0;
+
+        if (count >= Object.keys(memberClass.getLiveAfterList()).length / 2) {
+            isCitizenWin = 0;
+        }else{
+            isCitizenWin = 1;
+        }
+
+        yield {
+            do: "AFTER_TEXT",
+            text: `${mapiaVSdoctorResult}`,
+            win: isCitizenWin
         };
 
         // alert(mapiaVSdoctorResult);
@@ -514,18 +545,13 @@ function* mainGame(member) {
             yield `${mapiaVSdoctorResult}`;
         }
 
+
         yield {
             do: "DEATH_UPDATE",
             nameList: memberClass.memberObj
         };
 
-        let count = 0;
 
-        for (var key in memberClass.getLiveAfterList()) {
-            if (memberClass.getLiveAfterList()[key] === "마피아") {
-                count++;
-            }
-        }
 
         if (count >= Object.keys(memberClass.getLiveAfterList()).length / 2) {
             // alert("마피아가 승리하였습니다. 모든 player들의 정체를 공개합니다.");

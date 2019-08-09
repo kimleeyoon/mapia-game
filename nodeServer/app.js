@@ -80,18 +80,38 @@ router.route('/speaker/nugu/KillNightAction').post((req, res, next) => { // 본�
     console.log("KillNightAction");
     gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
 });
-router.route('/speaker/nugu/CheckWhoDiedAction').post((req, res, next) => {
+router.route('/speaker/nugu/CheckWhoDiedActions').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
     console.log("CheckWhoDiedAction");
     gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
 });
-router.route('/speaker/nugu/FinalArgumentAction').post((req, res, next) => {
+router.route('/speaker/nugu/FinalArgumentActions').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
     console.log("FinalArgumentAction");
 });
-router.route('/speaker/nugu/MaybeMapiaWinAction').post((req, res, next) => {
+router.route('/speaker/nugu/LetMeOutAction').post((req, res, next) => {
+    nugu(speakerCreateRoom, req, res, next);
+    console.log("LetMeOutAction");
+});
+router.route('/speaker/nugu/MaybeMapiaWinActions').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
     console.log("MaybeMapiaWinAction");
+});
+router.route('/speaker/nugu/HeIsSavedActions').post((req, res, next) => {
+    nugu(speakerCreateRoom, req, res, next);
+    console.log("HeIsSavedActions");
+});
+router.route('/speaker/nugu/HeIsDiedActions').post((req, res, next) => {
+    nugu(speakerCreateRoom, req, res, next);
+    console.log("HeIsDiedActions");
+});
+router.route('/speaker/nugu/GameEndMapiaActions').post((req, res, next) => {
+    nugu(speakerCreateRoom, req, res, next);
+    console.log("GameEndMapiaActions");
+});
+router.route('/speaker/nugu/GameEndCitizenActions').post((req, res, next) => {
+    nugu(speakerCreateRoom, req, res, next);
+    console.log("GameEndCitizenActions");
 });
 
 const server = http.Server(app); // 익스프레스 사용해서 서버 생성 및 할당
@@ -334,7 +354,15 @@ function grun(g, member, io, room, curDecide, getText) {
                             });
                         } // 경찰 찾아서 조사 결과 전송
                         setTimeout(iterate, 0, x.value);
-                    } else if (x.value.do === "DEATH_UPDATE") { // 죽은 사람 업데이트
+                    }else if(x.value.do === "AFTER_TEXT"){
+                        console.log("스피커한테 after 보낼 준비 from app.js");
+                        const it = getText(room, 'after');
+                        console.log("이터레이터 실행");
+                        console.log(it);
+                        console.log(it.next());
+                        it.next({text: x.value.text, isCitizenWin: x.value.win});
+                        setTimeout(iterate, 0, x.value);
+                    }else if (x.value.do === "DEATH_UPDATE") { // 죽은 사람 업데이트
                         for (let tempMember of x.value.nameList) {
                             let tempSocket = member.find(o => o.name == tempMember.name);
                             io.to(tempSocket.socket).emit("UPDATE_LIST", x.value.nameList);
@@ -411,7 +439,7 @@ function sendSocket(io, member, x, decide, time) { // 사용자에게 결정 받
     decide.reset();
     decide.setNum(num)
     // 결정 초기화
-    const c = new Countdown(30);
+    const c = new Countdown(20);
     c.on('tick', (total, i) => { // 작업 진행 바 조절을 위한 tick 이벤트 발생
         for (let name of x.value.nameList) {
             let tempSocket = member.find(o => o.name == name);
