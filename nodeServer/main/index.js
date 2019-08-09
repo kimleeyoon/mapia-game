@@ -101,7 +101,7 @@ class Request {
                 break;
             }
 
-            case "LetStartGameAction": {
+            case "LetsStartGameAction": {
                 const number_one = '1';
                 response.setOutputParameters({
                     number1: number_one,
