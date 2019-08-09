@@ -94,15 +94,15 @@ function savePlayer(mapiaPick, doctorPick, doctorAlive, afterList, memberClass) 
     console.log(`Doctor Pick : ${doctorPick}`);
     console.log(`Mapia Pick : ${mapiaPick}`);
 
-    if(mapiaPick == "None" || !mapiaPick){ // 마피아가 사람을 죽이지 않는 경우
+    if (mapiaPick == "None" || !mapiaPick) { // 마피아가 사람을 죽이지 않는 경우
         mapiaVSdoctorResult = "NoneKill";
-    }else if(!doctorPick || doctorAlive || doctorPick == "None"){ // 의사가 아무도 치료하지 않는 경우
+    } else if (!doctorPick || doctorAlive || doctorPick == "None") { // 의사가 아무도 치료하지 않는 경우
         mapiaVSdoctorResult = parse('의사가 플레이어를 살리지 못했습니다. 마피아가 죽인 플레이어는 %s님 입니다.', mapiaPick);
         memberClass.find(o => o.name === mapiaPick).isAlive = false;
         delete afterList[mapiaPick];
-    }else if(mapiaPick == doctorPick){ // 의사가 플레이어를 살린 경우
+    } else if (mapiaPick == doctorPick) { // 의사가 플레이어를 살린 경우
         mapiaVSdoctorResult = parse('의사가 플레이어를 살렸습니다.');
-    }else { // 의사가 틀린 경우
+    } else { // 의사가 틀린 경우
         mapiaVSdoctorResult = parse('의사가 플레이어를 살리지 못했습니다. 마피아가 죽인 플레이어는 %s님 입니다.', mapiaPick);
         memberClass.find(o => o.name === mapiaPick).isAlive = false;
         delete afterList[mapiaPick];
@@ -143,9 +143,9 @@ function assassinatePlayer(playerName, afterList) { //마피아가 사람을 암
         idOfMapiaPick = '경찰';
     } else if (afterList[playerName] == '시민') {
         idOfMapiaPick = '경찰';
-    } else if(afterList[playerName] == '마피아'){
+    } else if (afterList[playerName] == '마피아') {
         idOfMapiaPick = '마피아';
-    }else {
+    } else {
         // alert("잘못 입력하셨습니다. 다시 입력해주세요.");
         idOfMapiaPick = "None";
     }
@@ -155,9 +155,9 @@ function assassinatePlayer(playerName, afterList) { //마피아가 사람을 암
 function investigatePlayer(playerName, afterList) { //경찰이 사람을 조사하는 함수
     //policePick = prompt('경찰은 조사할 사람을 선택해주세요');
     let idOfPolicePick = 0;
-    if(playerName == "None"){
+    if (playerName == "None") {
         idOfPolicePick = "None";
-    }else if (afterList[playerName] == '경찰') {
+    } else if (afterList[playerName] == '경찰') {
         idOfPolicePick = '경찰';
     } else if (afterList[playerName] == '마피아') {
         idOfPolicePick = '마피아';
@@ -255,10 +255,10 @@ class Members {
         }
         return temp;
     }
-    getLiveAfterList(){
+    getLiveAfterList() {
         let temp = {};
         for (let k of this.memberObj) {
-            if(k.isAlive){
+            if (k.isAlive) {
                 temp[k.name] = k.role
             }
         }
@@ -266,7 +266,7 @@ class Members {
     }
 }
 
-function handelDecide(tempPick, forceData){
+function handelDecide(tempPick, forceData) {
     let pick;
 
     const frequency = tempPick.reduce((a, x) => {
@@ -283,16 +283,16 @@ function handelDecide(tempPick, forceData){
         }
     });
     console.log(`MaxF : ${tempPick.count}`);
-    if(!maxF){
+    if (!maxF) {
         console.log("항목없음");
         pick = "None";
-    }else if(forceData){
+    } else if (forceData) {
         if (maxF.length == 1) {
             pick = maxF[0];
         } else {
             pick = shuffle(maxF)[0];
         }
-    }else{
+    } else {
         if (maxF.length == 1) {
             pick = maxF[0];
         } else {
@@ -403,17 +403,17 @@ function* mainGame(member) {
         let tempMapiaPick = [];
 
         // while (idOfMapiaPick == 0) {
-            tempMapiaPick = yield {
-                do: "Assassinate",
-                nameList: Object.keys(memberClass.getLiveAfterList()).filter(o => afterList[o] == "마피아")
-            }; // 마피아로부터 암살할 사람 고르라고 함
+        tempMapiaPick = yield {
+            do: "Assassinate",
+            nameList: Object.keys(memberClass.getLiveAfterList()).filter(o => afterList[o] == "마피아")
+        }; // 마피아로부터 암살할 사람 고르라고 함
 
-            mapiaPick = handelDecide(tempMapiaPick, true);
+        mapiaPick = handelDecide(tempMapiaPick, true);
 
-            // idOfMapiaPick = assassinatePlayer(mapiaPick, afterList);
-            // if(idOfMapiaPick == "None"){
-            //     mapiaPick = "None";
-            // }
+        // idOfMapiaPick = assassinatePlayer(mapiaPick, afterList);
+        // if(idOfMapiaPick == "None"){
+        //     mapiaPick = "None";
+        // }
         // }
 
         // alert("다시 고개를 숙여주십시오.");
@@ -426,14 +426,14 @@ function* mainGame(member) {
         doctorAlive = isThereAnyDoctor(afterList);
         if (doctorAlive == 0) {
             // while (mapiaVSdoctorResult == "Error" || mapiaVSdoctorResult == "None") {
-                tempDoctorPick = yield {
-                    do: "Treatment",
-                    nameList: Object.keys(memberClass.getLiveAfterList()).filter(o => afterList[o] == "의사")
-                };
+            tempDoctorPick = yield {
+                do: "Treatment",
+                nameList: Object.keys(memberClass.getLiveAfterList()).filter(o => afterList[o] == "의사")
+            };
 
-                doctorPick = handelDecide(tempDoctorPick, true);
+            doctorPick = handelDecide(tempDoctorPick, true);
 
-                // mapiaVSdoctorResult = savePlayer(mapiaPick, doctorPick, doctorAlive, afterList, memberClass.memberObj);
+            // mapiaVSdoctorResult = savePlayer(mapiaPick, doctorPick, doctorAlive, afterList, memberClass.memberObj);
             // }
         }
 
@@ -450,24 +450,24 @@ function* mainGame(member) {
         policeAlive = isThereAnyPolice(afterList);
         if (policeAlive == 0) {
             // while (idOfPolicePick == 0) {
-                tempPolicePick = yield {
-                    do: "Investigation",
-                    nameList: Object.keys(memberClass.getLiveAfterList()).filter(o => afterList[o] == "경찰")
+            tempPolicePick = yield {
+                do: "Investigation",
+                nameList: Object.keys(memberClass.getLiveAfterList()).filter(o => afterList[o] == "경찰")
+            };
+
+            policePick = handelDecide(tempPolicePick, true);
+
+            idOfPolicePick = investigatePlayer(policePick, afterList);
+            if (idOfPolicePick != "None") { // 경찰이 조사를 하면
+
+                idOfPolicePick = idOfPolicePick == "마피아" ? "마피아" : "시민";
+                yield {
+                    name: policePick,
+                    nameList: Object.keys(memberClass.getLiveAfterList()).filter(o => memberClass.getAfterList()[o] == "경찰"),
+                    role: idOfPolicePick,
+                    do: "ResultOfInvestigation"
                 };
-
-                policePick = handelDecide(tempPolicePick, true);
-
-                idOfPolicePick = investigatePlayer(policePick, afterList);
-                if (idOfPolicePick != "None") { // 경찰이 조사를 하면
-
-                    idOfPolicePick = idOfPolicePick == "마피아" ? "마피아" : "시민";
-                    yield {
-                        name: policePick,
-                        nameList: Object.keys(memberClass.getLiveAfterList()).filter(o => memberClass.getAfterList()[o] == "경찰"),
-                        role: idOfPolicePick,
-                        do: "ResultOfInvestigation"
-                    };
-                }
+            }
             // }
         }
 
@@ -479,7 +479,7 @@ function* mainGame(member) {
         yield "다시 고개를 숙여주십시오.";
 
         // alert(mapiaVSdoctorResult);
-        
+
         if (mapiaVSdoctorResult == "NoneKill") { // 마피아가 사람을 죽이지 않음
         } else { // 사람 죽음
             yield `${mapiaVSdoctorResult}`;
@@ -523,16 +523,26 @@ function* mainGame(member) {
             do: "Vote",
             nameList: memberClass.getLiveList()
         };
-        
+
 
         id = handelDecide(tempId, false);
 
         console.log(`id : ${id}`);
-        if(id == "None"){ // 사람이 안죽는 경우
+        if (id == "None") { // 사람이 안죽는 경우
             // yield ``;
-        }else{ // 사람이 죽는 경우
+            yield {
+                do: "VOTE_TEXT",
+                text: '',
+                isDeath: 0
+            };
+        } else { // 사람이 죽는 경우
             afterList = killPlayer(id, afterList, memberClass.memberObj);
             yield `${id}가 투표로 죽었습니다.`
+            yield {
+                do: "VOTE_TEXT",
+                text: `${id}`,
+                isDeath: 1
+            };
             memberClass.setLive(id, false);
         }
 

@@ -9,6 +9,7 @@ const EventEmitter = require('events').EventEmitter; // 이벤트 on, listener
 const Room = require('./room'); // 방 class
 const Member = require('./member') // 멤버 class
 const system = require('./logic'); // 로직 프로그램
+const getT = require('./main/index').getText;
 
 let nugu = require('./main'); // 스피커 서버에서 실행할 프로그램 받아오는 것 -> index.js
 
@@ -203,7 +204,7 @@ io.on('connection', (socket) => { // 사용자 접속 오면
                     console.log("게임 시작");
                     // 해당 방 정보 재설정 후 게임이 시작함을 방에 있는 모든 유저들에게 알림
 
-                    grun(system, curRoom.member, io, `${data.room}`, curDecide);
+                    grun(system, curRoom.member, io, `${data.room}`, curDecide, getT);
                     // 게임 메인 프로토콜 실행
                 }
             }
@@ -211,7 +212,7 @@ io.on('connection', (socket) => { // 사용자 접속 오면
     });
 });
 
-function grun(g, member, io, room, curDecide) {
+function grun(g, member, io, room, curDecide, getText) {
     // 게임 메인 로직을 실행하기위한 제너레이터 실행 함수
     // 마피아 게임은 이 위에서 돌아감
 
@@ -229,6 +230,14 @@ function grun(g, member, io, room, curDecide) {
                         io.to(member.find(o => o.name == x.value.name).socket).emit("ROLE_ALERT", `${x.value.role}`);
                         setTimeout(iterate, 0, x.value);
                         // 모든 사용자에게 역할 공지하고 다음 명령 실행
+                    } else if (x.value.do === "VOTE_TEXT") {
+                        const it = getText();
+                        it.next();
+                        if (x.value.isDeath == 0) { // 죽은 사람이 없는 경우
+                            it.next('');
+                        } else { // 죽은 사람이 있는 경우
+                            it.next(x.value.text);
+                        }
                     } else if (x.value.do === "ResultOfInvestigation") { // 경찰 조사 결과 전송
                         for (let name of x.value.nameList) {
                             io.to(member.find(o => o.name == name).socket).emit("RESULT_OF_INVESTIGATION", {
