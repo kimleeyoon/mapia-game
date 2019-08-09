@@ -300,7 +300,7 @@ function grun(g, member, io, room, curDecide) {
     })();
 }
 
-function sendSocket(io, member, x, decide) { // 사용자에게 결정 받는 소켓 전송 함수
+function sendSocket(io, member, x, decide, time) { // 사용자에게 결정 받는 소켓 전송 함수
 
     let num = x.value.nameList.length; // 보낼 사람 수
     decide.reset();
