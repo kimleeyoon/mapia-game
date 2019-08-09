@@ -75,9 +75,10 @@ router.route('/speaker/nugu/LetsStartGameAction').post((req, res, next) => { // 
     console.log("LetsStartGameAction");
 });
 
-router.route('/speaker/nugu/KillNightAction').post((req, res) => {
+router.route('/speaker/nugu/KillNightAction').post((req, res) => { // 본격적인 활동 시작
     nugu(speakerCreateRoom, req, res, next);
     console.log("KillNightAction");
+    gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
 });
 router.route('/speaker/nugu/CheckWhoDiedAction').post((req, res) => {
     nugu(speakerCreateRoom, req, res, next);
@@ -187,6 +188,7 @@ class gameStartInformationClass {
         this.decide = curDecide;
         this.getT = getT;
         this.data = data;
+        this.first = false;
     }
     run(){
         io.to(`${this.room}`).emit('START_GAME', this.data);
@@ -280,7 +282,15 @@ function grun(g, member, io, room, curDecide, getText) {
                         console.log("역할 공지 완료");
                         setTimeout(iterate, 0, x.value);
                         // 모든 사용자에게 역할 공지하고 다음 명령 실행
-                    } else if (x.value.do === "VOTE_TEXT") {
+                    } else if(x.value.do === "WAIT_FIRST_NIGHT"){
+                        (function k(){
+                            if(gameStartInformation[room].first){
+                                setTimeout(iterate, 0, x.value);
+                            }else{
+                                setTimeout(k, 0.5);
+                            }
+                        })();
+                    }else if (x.value.do === "VOTE_TEXT") {
                         const it = getText(room, 'vote');
                         it.next();
                         if (x.value.isDeath == 0) { // 죽은 사람이 없는 경우
