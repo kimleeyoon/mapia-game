@@ -122,6 +122,7 @@ class Request {
 
 
             case "LetMeOutAction": {
+                let doctor_Vs_Mapia = 0; //지금은 의사가 이긴 상황
                 let doctorVsMapiaPrompt = "";
                 if(outText[contextId[this.context.session.id]].after === "NoneKill"){  // 마피아가 아무도 안죽인 경우
                     doctor_Vs_Mapia = 2;
@@ -139,6 +140,7 @@ class Request {
             }
 
             case "CheckWhoDiedActions": {
+                let doctor_Vs_Mapia = 0; //지금은 의사가 이긴 상황
                 let doctorVsMapiaPrompt = "";
                 if(outText[contextId[this.context.session.id]].after === "NoneKill"){  // 마피아가 아무도 안죽인 경우
                     doctor_Vs_Mapia = 2;
