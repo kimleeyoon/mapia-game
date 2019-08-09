@@ -132,6 +132,8 @@ class Request {
                     doctorVsMapiaPrompt = outText[contextId[this.context.session.id]].after;
                 }
                 const number_one = '1';
+                console.log("outtext:");
+                console.log(outText[contextId[this.context.session.id]].isCitizenWin);
                 response.setParameters({
                     number1: number_one,
                     doctorVsMapiaPrompt: doctorVsMapiaPrompt,
@@ -193,17 +195,28 @@ class Request {
 
             case "MaybeMapiaWinActions": {
               const number_one = '1';
-              const doctor_Vs_Mapia = '1'; //지금은 의사가 이긴 상황
-              if (doctor_Vs_Mapia == '0') {
-                let doctorVsMapiaPrompt = '의사가 플레이어를 살리지 못했습니다. 마피아가 죽인 플레이어는 %s님 입니다.';
-              } else if (doctor_Vs_Mapia == '1') {
-                let doctorVsMapiaPrompt = '의사가 플레이어를 살렸습니다.';
+            //   const doctor_Vs_Mapia = '1'; //지금은 의사가 이긴 상황
+
+              let doctor_Vs_Mapia = 0; //지금은 의사가 이긴 상황
+              let doctorVsMapiaPrompt = "";
+              if(outText[contextId[this.context.session.id]].after === "NoneKill"){  // 마피아가 아무도 안죽인 경우
+                  doctor_Vs_Mapia = 2;
+                  doctorVsMapiaPrompt = "";
+              }else{
+                  doctor_Vs_Mapia = 0;
+                  doctorVsMapiaPrompt = outText[contextId[this.context.session.id]].after;
               }
-              const mapia_Or_CitizenWin = '1'; //지금은 시민이 이긴 상황
-              if (mapia_Or_CitizenWin = '0') {
-                let mapiaOrCitizenWinPrompt = '마피아가 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.';
-              } else if (mapia_Or_CitizenWin = '1') {
-                let mapiaOrCitizenWinPrompt = '시민이 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.'
+            //   if (doctor_Vs_Mapia == '0') {
+            //     let doctorVsMapiaPrompt = '의사가 플레이어를 살리지 못했습니다. 마피아가 죽인 플레이어는 %s님 입니다.';
+            //   } else if (doctor_Vs_Mapia == '1') {
+            //     let doctorVsMapiaPrompt = '의사가 플레이어를 살렸습니다.';
+            //   }
+              const mapia_Or_CitizenWin = outText[contextId[this.context.session.id]].isCitizenWin; //지금은 시민이 이긴 상황
+              let mapiaOrCitizenWinPrompt;
+              if (mapia_Or_CitizenWin == 0) {
+                mapiaOrCitizenWinPrompt = '마피아가 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.';
+              } else if (mapia_Or_CitizenWin == 1) {
+                mapiaOrCitizenWinPrompt = '시민이 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.'
               }
               response.setParameters({
                   number1: number_one,
@@ -244,6 +257,8 @@ class Response {
         this.directives = [];
     }
     setParameters(result, sendData) {
+        console.log("result :");
+        console.log(result);
         this.output = {
             numOfPlayer: result.numOfPlayer,
             pinNum: result.pinNum,
