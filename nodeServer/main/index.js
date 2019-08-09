@@ -105,6 +105,31 @@ class Request {
               }, sendData);
               break;
             }
+
+            case "KillNightAction": {
+              const number_one = '1';
+              const tieVote_Exist = '0';
+              if (tieVote_Exist == '0'){
+                let tieVoteExistPrompt = '이현주님이 사형대에 올랐습니다. 1분동안 최후 변론을 진행해주세요. <pause time = "60000"> 최후 변론이 종료되었습니다. 플레이어들은 10초동안 찬반투표를 진행해주세요. <pause time = "10000">'
+              } else if (tieVote_Exist == '1'){
+                let tieVoteExistPrompt = '지목된 사람이 두 명을 넘어서 아무도 사형대에 오르지 않았습니다. '
+              }
+              const yesOrNoVote_Result = '1';
+              if (yesOrNoVote_Result == '0'){
+                let yesOrNoVoteResultPrompt = '찬반 투표 결과 과반수가 반대하여 사형되지 않았습니다. '
+              } else if (yesOrNoVote_Result == '1'){
+                let yesOrNoVoteResultPrompt = '찬반 투표 결과 과반수가 동의하여 형장의 이슬이 되었습니다. '
+              } else {
+                let yesOrNoVote_Result = ' '
+              }
+              response.setOutputParameters({
+                  number1: number_one,
+                  tieVoteExist: tieVoteExistPrompt,
+                  yesOrNoVoteResult: yesOrNoVoteResultPrompt,
+              }, sendData);
+              break;
+            }
+
         }
     }
 }
@@ -123,6 +148,8 @@ class Response {
             pinNum: result.pinNum,
             roomExist: result.roomExist,
             number1: result.number1,
+            tieVoteExist: result.tieVoteExist,
+            yesOrNoVoteResult: result.yesOrNoVoteResult,
         }
         console.log(this.output);
 
