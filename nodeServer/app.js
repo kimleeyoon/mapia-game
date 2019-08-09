@@ -75,20 +75,20 @@ router.route('/speaker/nugu/LetsStartGameAction').post((req, res, next) => { // 
     console.log("LetsStartGameAction");
 });
 
-router.route('/speaker/nugu/KillNightAction').post((req, res) => { // 본격적인 활동 시작
+router.route('/speaker/nugu/KillNightAction').post((req, res, next) => { // 본격적인 활동 시작
     nugu(speakerCreateRoom, req, res, next);
     console.log("KillNightAction");
     gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
 });
-router.route('/speaker/nugu/CheckWhoDiedAction').post((req, res) => {
+router.route('/speaker/nugu/CheckWhoDiedAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
     console.log("CheckWhoDiedAction");
 });
-router.route('/speaker/nugu/FinalArgumentAction').post((req, res) => {
+router.route('/speaker/nugu/FinalArgumentAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
     console.log("FinalArgumentAction");
 });
-router.route('/speaker/nugu/MaybeMapiaWinAction').post((req, res) => {
+router.route('/speaker/nugu/MaybeMapiaWinAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
     console.log("MaybeMapiaWinAction");
 });
