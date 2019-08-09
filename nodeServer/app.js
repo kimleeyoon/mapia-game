@@ -277,6 +277,7 @@ function grun(g, member, io, room, curDecide, getText) {
                 if (x.value instanceof Object) { // Object가 메시지로 왔다며
                     if (x.value.do === "AnnounceRole") { // 역할 공지라면
                         io.to(member.find(o => o.name == x.value.name).socket).emit("ROLE_ALERT", `${x.value.role}`);
+                        console.log("역할 공지 완료");
                         setTimeout(iterate, 0, x.value);
                         // 모든 사용자에게 역할 공지하고 다음 명령 실행
                     } else if (x.value.do === "VOTE_TEXT") {
