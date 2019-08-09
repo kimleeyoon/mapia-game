@@ -106,7 +106,7 @@ class Request {
                 console.log(outText);
                 response.setOutputParameters({
                     number1: number_one,
-                    dayOrder: outText[contextId[this.context.session.id]].day
+                    dayOrder: 0
                 }, sendData);
                 break;
             }
