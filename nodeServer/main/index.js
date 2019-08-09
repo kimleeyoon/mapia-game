@@ -114,7 +114,7 @@ class Request {
                 let number_one = '1';
                 response.setOutputParameters({
                     number1: number_one,
-                    dayOrderNum: 아몰라 잠만,
+                    dayOrderNum: outText[contextId[this.context.session.id]].day,
                 }, sendData);
                 break;
             }
