@@ -139,6 +139,7 @@ class Request {
                     doctorVsMapiaPrompt: doctorVsMapiaPrompt,
                     mapiaOrCitizenWinPrompt: outText[contextId[this.context.session.id]].isCitizenWin
                 }, sendData);
+                break;
             }
 
             case "CheckWhoDiedActions": {
