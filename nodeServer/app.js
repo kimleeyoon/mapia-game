@@ -328,6 +328,7 @@ function grun(g, member, io, room, curDecide, getText) {
                             }
                         })();
                     } else if (x.value.do === "WAIT_SECOND") {
+                        console.log(`${x.value.time} 기다리기`);
                         setTimeout(iterate, x.value.time, x.value);
                     } else if (x.value.do === "VOTE_TEXT") {
                         const it = getText(room, 'vote');
