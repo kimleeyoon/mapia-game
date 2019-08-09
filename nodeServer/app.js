@@ -33,48 +33,61 @@ app.use((err, req, res, next) => next());
 
 router.route('/speaker/nugu/TakePlayerNumAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, setPin, next);
+    console.log("TakePlayerNumAction");
 });
 
 router.route('/speaker/nugu/StartAndCheckRoleAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
+    console.log("StartAndCheckRoleAction");
 });
 
 router.route('/speaker/nugu/BowHeadAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
+    console.log("BowHeadAction");
 });
 
 router.route('/speaker/nugu/CheckMapiaAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
+    console.log("CheckMapiaAction");
 });
 router.route('/speaker/nugu/CheckDoctorAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
+    console.log("CheckDoctorAction");
 });
 router.route('/speaker/nugu/CheckPoliceAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
+    console.log("CheckPoliceAction");
 });
 router.route('/speaker/nugu/DebateAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
+    console.log("DebateAction");
 });
 router.route('/speaker/nugu/NightCome').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
+    console.log("NightCome");
 });
 
 router.route('/speaker/nugu/LetStartGameAction').post((req, res) => { // 게임 시작
     nugu(speakerCreateRoom, req, res, next);
     gameStartInformation[`${req.body.context.session.id}`].run();
+    console.log("LetStartGameAction");
 });
 
 router.route('/speaker/nugu/KillNightAction').post((req, res) => {
     nugu(speakerCreateRoom, req, res, next);
+    console.log("KillNightAction");
 });
 router.route('/speaker/nugu/CheckWhoDiedAction').post((req, res) => {
     nugu(speakerCreateRoom, req, res, next);
+    console.log("CheckWhoDiedAction");
 });
 router.route('/speaker/nugu/FinalArgumentAction').post((req, res) => {
     nugu(speakerCreateRoom, req, res, next);
+    console.log("FinalArgumentAction");
 });
 router.route('/speaker/nugu/MaybeMapiaWinAction').post((req, res) => {
     nugu(speakerCreateRoom, req, res, next);
+    console.log("MaybeMapiaWinAction");
 });
 
 const server = http.Server(app); // 익스프레스 사용해서 서버 생성 및 할당
