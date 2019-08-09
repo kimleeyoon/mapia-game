@@ -442,7 +442,7 @@ function* mainGame(member) {
 
         yield {
             do: "WAIT_SECOND",
-            time: 9
+            time: 11
         };
 
         // alert("다시 고개를 숙여주십시오.");
@@ -472,7 +472,7 @@ function* mainGame(member) {
 
         yield {
             do: "WAIT_SECOND",
-            time: 9
+            time: 11
         };
 
         // alert("다시 고개를 숙여주십시오.");
@@ -535,7 +535,7 @@ function* mainGame(member) {
         yield {
             do: "AFTER_TEXT",
             text: `${mapiaVSdoctorResult}`,
-            win: isCitizenWin
+            win: `${isCitizenWin}`
         };
 
         // alert(mapiaVSdoctorResult);
