@@ -288,6 +288,7 @@ function grun(g, member, io, room, curDecide, getText) {
                         } else { // 죽은 사람이 있는 경우
                             it.next(x.value.text);
                         }
+                        setTimeout(iterate, 0, x.value);
                     } else if (x.value.do === "DAY_TEXT") {
                         console.log("스피커한테 day 보낼 준비 from app.js");
                         const it = getText(room, 'day');
@@ -295,6 +296,7 @@ function grun(g, member, io, room, curDecide, getText) {
                         console.log(it);
                         console.log(it.next());
                         it.next(x.value.day);
+                        setTimeout(iterate, 0, x.value);
                     } else if (x.value.do === "ResultOfInvestigation") { // 경찰 조사 결과 전송
                         for (let name of x.value.nameList) {
                             io.to(member.find(o => o.name == name).socket).emit("RESULT_OF_INVESTIGATION", {
