@@ -1,7 +1,7 @@
 const express = require(`express`); // 익스프레스 프레임워크
 const http = require('http'); // http
 // const server = require('http').Server(app);
-const static = require('serve-static'); // 서버 경로 재지정 해주는 
+const static = require('serve-static'); // 서버 경로 재지정 해주는
 const path = require('path'); // OS Path 조정 시 사용
 let bodyParser = require('body-parser');
 const EventEmitter = require('events').EventEmitter; // 이벤트 on, listener
@@ -31,6 +31,10 @@ app.use((err, req, res, next) => next());
 // });
 
 router.route('/speaker/nugu/TakePlayerNumAction').post((req, res) => {
+    nugu(speakerCreateRoom, req, res, next);
+});
+
+router.route('/speaker/nugu/LetStartGameAction').post((req, res) => {
     nugu(speakerCreateRoom, req, res, next);
 });
 
@@ -237,7 +241,7 @@ function grun(g, member, io, room, curDecide) {
                                 io.to(room).emit("END_DECIDE");
                                 setTimeout(iterate, 0, curDecide.decides)
                             });
-                    } else if (x.value.do === "Investigation") { // 경찰 조사 
+                    } else if (x.value.do === "Investigation") { // 경찰 조사
 
                         const c = sendSocket(io, member, x, curDecide) // // 해당 명령 보낸 후 Countdown 리턴 받음
                         c.go(curDecide)
@@ -324,7 +328,7 @@ function createRoom(rooms, size) { // 특정 사이즈의 방 생성
 
     return id;
 
-    // createSocket(rooms, rooms.length - 1); 
+    // createSocket(rooms, rooms.length - 1);
 }
 
 function createSocket(rooms, index) {

@@ -87,6 +87,22 @@ class Request {
               }, sendData);
               break;
             }
+
+            case "NightComeAction": {
+              const number_one = '1';
+              response.setOutputParameters({
+                  number1: number_one,
+              }, sendData);
+              break;
+            }
+
+            case "LetStartGameAction": {
+              const number_one = '1';
+              response.setOutputParameters({
+                  number1: number_one,
+              }, sendData);
+              break;
+            }
         }
     }
 }
