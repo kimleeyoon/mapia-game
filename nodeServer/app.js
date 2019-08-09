@@ -307,6 +307,8 @@ function grun(g, member, io, room, curDecide, getText) {
                                 setTimeout(k, 0.5);
                             }
                         })();
+                    } else if (x.value.do === "WAIT_SECOND") {
+                        setTimeout(iterate, x.value.time, x.value);
                     } else if (x.value.do === "VOTE_TEXT") {
                         const it = getText(room, 'vote');
                         it.next();
