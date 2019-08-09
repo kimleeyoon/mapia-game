@@ -137,7 +137,7 @@ class Request {
                 response.setParameters({
                     number1: number_one,
                     doctorVsMapiaPrompt: doctorVsMapiaPrompt,
-                    mapiaOrCitizenWinPrompt: outText[contextId[this.context.session.id]].isCitizenWin
+                    mapiaOrCitizenWinNum: outText[contextId[this.context.session.id]].isCitizenWin
                 }, sendData);
                 break;
             }
@@ -270,6 +270,7 @@ class Response {
             dayOrderNum: result.dayOrderNum,
             doctorVsMapia: result.doctorVsMapiaPrompt,
             mapiaOrCitizenWin: result.mapiaOrCitizenWinPrompt,
+            mapiaOrCitizenWinNum: result.mapiaOrCitizenWinNum,
         }
         console.log(this.output);
 
