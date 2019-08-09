@@ -416,7 +416,7 @@ function* mainGame(member) {
 
         yield {
             do: "WAIT_SECOND",
-            time: 20.5
+            time: 21.5
         };
         // alert("해가 저물고 밤이 되었습니다. 플레이어들은 모두 고개를 숙여주세요.");
         yield "해가 저물고 밤이 되었습니다. 플레이어들은 모두 고개를 숙여주세요.";
@@ -477,7 +477,7 @@ function* mainGame(member) {
 
         yield {
             do: "WAIT_SECOND",
-            time: 9
+            time: 10
         };
 
         // alert("다시 고개를 숙여주십시오.");
@@ -523,31 +523,32 @@ function* mainGame(member) {
         // alert("다시 고개를 숙여주십시오.");
         yield "다시 고개를 숙여주십시오.";
         
-        yield {
-            do: "WAIT_CHECK"
-        };
-
+        
         let count = 0;
         for (var key in memberClass.getLiveAfterList()) {
             if (memberClass.getLiveAfterList()[key] === "마피아") {
                 count++;
             }
         }
-
+        
         let isCitizenWin = 0;
-
+        
         if (count >= Object.keys(memberClass.getLiveAfterList()).length / 2) {
             isCitizenWin = 0;
         }else{
             isCitizenWin = 1;
         }
-
+        
         yield {
             do: "AFTER_TEXT",
             text: `${mapiaVSdoctorResult}`,
             win: `${isCitizenWin}`
         };
-
+        
+        yield {
+            do: "WAIT_CHECK"
+        };
+        
         // alert(mapiaVSdoctorResult);
 
         if (mapiaVSdoctorResult == "NoneKill") { // 마피아가 사람을 죽이지 않음
