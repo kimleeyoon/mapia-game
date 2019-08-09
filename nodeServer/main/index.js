@@ -134,8 +134,8 @@ class Request {
                 const number_one = '1';
                 response.setParameters({
                     number1: number_one,
-                    doctorVsMapia: doctorVsMapiaPrompt,
-                    mapiaOrCitizenWinNum: outText[contextId[this.context.session.id]].isCitizenWin
+                    doctorVsMapiaPrompt: doctorVsMapiaPrompt,
+                    mapiaOrCitizenWinPrompt: outText[contextId[this.context.session.id]].isCitizenWin
                 }, sendData);
             }
 
@@ -207,8 +207,8 @@ class Request {
               }
               response.setParameters({
                   number1: number_one,
-                  doctorVsMapia: doctorVsMapiaPrompt,
-                  mapiaOrCitizenWin: mapiaOrCitizenWinPrompt,
+                  doctorVsMapiaPrompt: doctorVsMapiaPrompt,
+                  mapiaOrCitizenWinPrompt: mapiaOrCitizenWinPrompt,
               }, sendData);
               break;
             }

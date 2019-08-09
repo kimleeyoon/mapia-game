@@ -416,7 +416,7 @@ function* mainGame(member) {
 
         yield {
             do: "WAIT_SECOND",
-            time: 20
+            time: 20.5
         };
         // alert("해가 저물고 밤이 되었습니다. 플레이어들은 모두 고개를 숙여주세요.");
         yield "해가 저물고 밤이 되었습니다. 플레이어들은 모두 고개를 숙여주세요.";
@@ -442,7 +442,7 @@ function* mainGame(member) {
 
         yield {
             do: "WAIT_SECOND",
-            time: 11
+            time: 12
         };
 
         // alert("다시 고개를 숙여주십시오.");
@@ -464,6 +464,11 @@ function* mainGame(member) {
 
             // mapiaVSdoctorResult = savePlayer(mapiaPick, doctorPick, doctorAlive, afterList, memberClass.memberObj);
             // }
+        }else{
+            yield {
+                do: "WAIT_SECOND",
+                time: 20
+            };
         }
 
         ///////////////////////////// 경찰이 암살 당하는 경우 미리 죽어서 조사 못하는 현상 해결을 위해 아래로 내림
@@ -472,7 +477,7 @@ function* mainGame(member) {
 
         yield {
             do: "WAIT_SECOND",
-            time: 11
+            time: 5
         };
 
         // alert("다시 고개를 숙여주십시오.");
@@ -503,6 +508,11 @@ function* mainGame(member) {
                 };
             }
             // }
+        }else{
+            yield {
+                do: "WAIT_SECOND",
+                time: 20
+            };
         }
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////
