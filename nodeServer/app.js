@@ -71,7 +71,7 @@ router.route('/speaker/nugu/LetsStartGameAction').post((req, res, next) => { // 
     nugu(speakerCreateRoom, req, res, next);
     console.log(gameStartInformation);
     console.log(req.body.context.session.id);
-    gameStartInformation[`${req.body.context.session.id}`].run();
+    gameStartInformation[`${contextId[req.body.context.session.id]}`].run();
     console.log("LetsStartGameAction");
 });
 
