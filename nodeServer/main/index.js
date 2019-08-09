@@ -108,6 +108,7 @@ class Request {
             }
 
             case "KillNightAction": {
+
                 let number_one = '1';
                 let tieVote_Exist = '0';
                 if (outText[contextId[this.context.session.id]].length > 0) {
@@ -116,9 +117,13 @@ class Request {
                     tieVote_Exist = '1';
                 }
                 if (tieVote_Exist == '0') {
-                    let tieVoteExistPrompt = `${outText[contextId[this.context.session.id]]}님이 사형대에 올랐습니다. 1분동안 최후 변론을 진행해주세요. <pause time = "60000"> 최후 변론이 종료되었습니다. 플레이어들은 10초동안 찬반투표를 진행해주세요. <pause time = "10000">`
+                    let tieVoteExistPrompt = `${outText[contextId[this.context.session.id]]}님이 사형대에 올랐습니다.
+                    1분동안 최후 변론을 진행해주세요. <pause time = "60000"> 최후 변론이 종료되었습니다.
+                    플레이어들은 10초동안 찬반투표를 진행해주세요. <pause time = "10000">
+                    ${outText[contextId[this.context.session.id]]}님을 죽이시려면 죽이자고, 살리시려면 살리자고 말씀해주세요.`
                 } else if (tieVote_Exist == '1') {
-                    let tieVoteExistPrompt = `아무도 사형대에 오르지 않았습니다.`
+                    let tieVoteExistPrompt = `아무도 사형대에 오르지 않았습니다. 다음으로 넘어가시려면 확인이라고 말씀해주세요.`
+                    //이거 다음에 '바로 밤이 되었습니다' 액션으로 넘어감.
                 }
                 const yesOrNoVote_Result = '1';
                 if (yesOrNoVote_Result == '0') {
@@ -166,6 +171,7 @@ class Response {
             number1: result.number1,
             tieVoteExist: result.tieVoteExist,
             yesOrNoVoteResult: result.yesOrNoVoteResult,
+            dayOrder: result.dayOrder,
         }
         console.log(this.output);
 
