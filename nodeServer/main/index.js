@@ -105,6 +105,7 @@ class Request {
 
             case "KillNightAction" || "KillNightAction2": {
                 let number_one = '1';
+                console.log("KillNight Action 실행함");
                 response.setParameters({
                     number1: number_one,
                     dayOrderNum: outText[contextId[this.context.session.id]].day,
