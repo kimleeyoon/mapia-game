@@ -130,11 +130,11 @@
             <span class="badge badge-primary badge-pill">{{badge[member.name]}}</span>
           </li> -->
           <div class="list-group" v-bind:key="member.name">
-            <a href="#" class="list-group-item list-group-item-action">{{member.name}}<button
+            <a href="#" class="list-group-item list-group-item-action" style="width:95%;">{{member.name}}<button
               type="button"
               @click.prevent="decide($event, member.name)"
               style="display:none"
-            ></button></a>
+            ></button><strong>{{badge[member.name]}</strong></a>
           </div>
         </template>
         <template v-for="member in deadMember">
