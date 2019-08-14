@@ -118,7 +118,7 @@
           >
             <button
               type="button"
-              class="list-group-item list-group-item-action list-group-item-primary"
+              class="list-group-item list-group-item-action list-group-item-danger"
               @click.prevent="decide($event, member.name)"
             >{{member.name}}</button>
             <span class="badge badge-primary badge-pill">{{badge[member.name]}}</span>
