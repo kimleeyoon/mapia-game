@@ -284,13 +284,13 @@ class Request {
                 const number_one = '1';
                 console.log("outtext:");
                 console.log(outText[contextId[this.context.session.id]].isCitizenWin);
-                let temp = `1`;
-                if (outText[contextId[this.context.session.id]].isCitizenWin == '0' || outText[contextId[this.context.session.id]].isCitizenWin == '1') {
-                    temp = `0`;
-                }
+                // let temp = `1`;
+                // if (outText[contextId[this.context.session.id]].isCitizenWin == '0' || outText[contextId[this.context.session.id]].isCitizenWin == '1') {
+                //     temp = `0`;
+                // }
                 response.setParameters({
                     number1: number_one,
-                    mapiaOrCitizenWinNum: temp
+                    mapiaOrCitizenWinNum: `${outText[contextId[this.context.session.id]].isCitizenWin}`
                 }, sendData);
                 break;
             }
