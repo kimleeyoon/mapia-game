@@ -80,6 +80,11 @@ router.route('/speaker/nugu/KillNightAction').post((req, res, next) => { // 본�
     console.log("KillNightAction");
     gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
 });
+router.route('/speaker/nugu/KillNightAction2').post((req, res, next) => { // 본격적인 활동 시작
+    nugu(speakerCreateRoom, req, res, next);
+    console.log("KillNightAction2");
+    gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
+});
 router.route('/speaker/nugu/CheckWhoDiedActions').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
     console.log("CheckWhoDiedActions");

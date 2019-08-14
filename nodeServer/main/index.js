@@ -103,7 +103,7 @@ class Request {
                 break;
             }
 
-            case "KillNightAction": {
+            case "KillNightAction" || "KillNightAction2": {
                 let number_one = '1';
                 response.setParameters({
                     number1: number_one,
@@ -367,7 +367,18 @@ class Response {
             doctorVsMapia: result.doctorVsMapiaPrompt,
             mapiaOrCitizenWin: result.mapiaOrCitizenWinPrompt,
             mapiaOrCitizenWinNum: result.mapiaOrCitizenWinNum,
-            moreThanTwoExist: result.moreThanTwoExist
+            moreThanTwoExist: result.moreThanTwoExist,
+            numOfPlayer2: result.numOfPlayer,
+            pinNum2: result.pinNum,
+            roomExist2: result.roomExist,
+            number12: result.number1,
+            tieVoteExist2: result.tieVoteExist,
+            yesOrNoVoteResult2: result.yesOrNoVoteResult,
+            dayOrderNum2: result.dayOrderNum,
+            doctorVsMapia2: result.doctorVsMapiaPrompt,
+            mapiaOrCitizenWin2: result.mapiaOrCitizenWinPrompt,
+            mapiaOrCitizenWinNum2: result.mapiaOrCitizenWinNum,
+            moreThanTwoExist2: result.moreThanTwoExist
         }
         console.log(this.output);
 
