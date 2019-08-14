@@ -103,7 +103,7 @@ class Request {
                 break;
             }
 
-            case "KillNightAction": {
+            case "KillNightAction" || "KillNightAction2": {
                 let number_one = '1';
                 response.setParameters({
                     number1: number_one,
@@ -145,8 +145,8 @@ class Request {
                 let deadMan = "";
                 let tieVoteExist = "";
                 console.log("VOTE TEXt");
-                console.log(outText[contextId[this.context.session.id]].textect);
-                if (outText[contextId[this.context.session.id]].text == "None") { // 사형대에 아무도 오르지 않는 경우
+                console.log(outText[contextId[this.context.session.id]].text);
+                if (outText[contextId[this.context.session.id]].text == "None" || outText[contextId[this.context.session.id]].text == "") { // 사형대에 아무도 오르지 않는 경우
                     moreThanTwoExist = 1;
                     deadMan = 'none';
                 } else {
@@ -335,6 +335,7 @@ function* getText(id, target) {
         outText[id] = {};
     }
     if (target == 'vote') {
+        console.log('getText에서 vote 시랳ㅇ함');
         outText[id].text = text;
     } else if (target == 'day') {
         outText[id].day = text;
@@ -366,7 +367,18 @@ class Response {
             doctorVsMapia: result.doctorVsMapiaPrompt,
             mapiaOrCitizenWin: result.mapiaOrCitizenWinPrompt,
             mapiaOrCitizenWinNum: result.mapiaOrCitizenWinNum,
-            moreThanTwoExist: result.moreThanTwoExist
+            moreThanTwoExist: result.moreThanTwoExist,
+            numOfPlayer2: result.numOfPlayer,
+            pinNum2: result.pinNum,
+            roomExist2: result.roomExist,
+            number12: result.number1,
+            tieVoteExist2: result.tieVoteExist,
+            yesOrNoVoteResult2: result.yesOrNoVoteResult,
+            dayOrderNum2: result.dayOrderNum,
+            doctorVsMapia2: result.doctorVsMapiaPrompt,
+            mapiaOrCitizenWin2: result.mapiaOrCitizenWinPrompt,
+            mapiaOrCitizenWinNum2: result.mapiaOrCitizenWinNum,
+            moreThanTwoExist2: result.moreThanTwoExist
         }
         console.log(this.output);
 
