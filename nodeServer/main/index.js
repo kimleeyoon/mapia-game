@@ -9,6 +9,8 @@ class Request {
     actionRequest(response, sendData) {
         let actionName = this.action.actionName;
         let parameters = this.action.parameters;
+        console.log("Action Name");
+        console.log(actionName);
 
         switch (actionName) {
             case "TakePlayerNumAction": {
@@ -103,6 +105,7 @@ class Request {
                 break;
             }
 
+            case 'KillNightAction2':
             case "KillNightAction" || "KillNightAction2": {
                 let number_one = '1';
                 console.log("KillNight Action 실행함");
@@ -373,7 +376,8 @@ class Response {
             pinNum2: result.pinNum,
             roomExist2: result.roomExist,
             number12: result.number1,
-            tieVoteExist2: result.tieVoteExist,
+            tieVoteExist2: re   6   4034
+            sult.tieVoteExist,
             yesOrNoVoteResult2: result.yesOrNoVoteResult,
             dayOrderNum2: result.dayOrderNum,
             doctorVsMapia2: result.doctorVsMapiaPrompt,
