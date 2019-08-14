@@ -210,7 +210,7 @@ class Request {
                 }, sendData);
                 break;
             }
-            case "FinalArgumentAction2":
+            case "FinalArgumentAciton2":
             case "FinalArgumentAction": {
                 const number_one = '1';
 

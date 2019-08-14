@@ -95,7 +95,7 @@ router.route('/speaker/nugu/CheckWhoDiedActions2').post((req, res, next) => {
     console.log("CheckWhoDiedActions2");
     gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
 });
-router.route('/speaker/nugu/FinalArgumentAction2').post((req, res, next) => {
+router.route('/speaker/nugu/FinalArgumentAciton2').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
     // gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
     console.log("FinalArgumentAction2");
