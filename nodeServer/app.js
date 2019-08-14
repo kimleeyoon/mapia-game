@@ -87,6 +87,7 @@ router.route('/speaker/nugu/CheckWhoDiedActions').post((req, res, next) => {
 });
 router.route('/speaker/nugu/FinalArgumentAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
+    gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
     console.log("FinalArgumentAction");
 });
 router.route('/speaker/nugu/NoOneDeadAction').post((req, res, next) => {
@@ -99,7 +100,7 @@ router.route('/speaker/nugu/LetMeOutAction').post((req, res, next) => {
 });
 router.route('/speaker/nugu/LetMeOut2Actions').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
-    gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
+    
     console.log("LetMeOut2Actions");
 });
 router.route('/speaker/nugu/LetMeOut3Action').post((req, res, next) => {
@@ -219,6 +220,7 @@ class gameStartInformationClass {
         this.mapiaDo = false;
         this.doctorDo = false;
         this.policeDo = false;
+        this.goDie = false;
     }
     run() {
         io.to(`${this.room}`).emit('START_GAME', this.data);
