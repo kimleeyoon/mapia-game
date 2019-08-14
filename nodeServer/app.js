@@ -102,6 +102,7 @@ router.route('/speaker/nugu/FinalArgumentAction').post((req, res, next) => {
 });
 router.route('/speaker/nugu/NoOneDeadAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
+    gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
     console.log("NoOneDeadAction");
 });
 router.route('/speaker/nugu/LetMeOutAction').post((req, res, next) => {
