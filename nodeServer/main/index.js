@@ -116,7 +116,7 @@ class Request {
                 break;
             }
 
-
+            case "LetMeOut1Action2":
             case "LetMeOutAction": {
                 let doctor_Vs_Mapia = 0; //지금은 의사가 이긴 상황
                 let doctorVsMapiaPrompt = "";
@@ -142,6 +142,7 @@ class Request {
                 break;
             }
 
+            case "LetMeOut2Actions2":
             case "LetMeOut2Actions": {
                 // 아무도 사형대에 오르지 않는 경우에 moreThanTwoExist : 1
                 // 사형대에 오르는 사람이 있으면 moreThanTwoExist : 0
@@ -175,6 +176,7 @@ class Request {
                 break;
             }
 
+            case "CheckWhoDiedActions2":
             case "CheckWhoDiedActions": {
                 let doctor_Vs_Mapia = 0; //지금은 의사가 이긴 상황
                 let doctorVsMapiaPrompt = "";
@@ -224,6 +226,7 @@ class Request {
                 break;
             }
 
+            case "MaybeMapiaWinActions2":
             case "MaybeMapiaWinActions": {
                 const number_one = '1';
                 //   const doctor_Vs_Mapia = '1'; //지금은 의사가 이긴 상황
@@ -276,7 +279,7 @@ class Request {
                 }, sendData);
                 break;
             }
-
+            case "LetMeOut3Action2":
             case "LetMeOut3Action": {
                 response.setParameters({
 

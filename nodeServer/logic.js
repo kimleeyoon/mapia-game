@@ -600,7 +600,7 @@ function* mainGame(member) {
 
         yield {
             do: "WAIT_SECOND",
-            time: 15
+            time: 5
         };
         // yield {
         //     do: "WAIT_SECOND",
@@ -658,6 +658,10 @@ function* mainGame(member) {
                 count++;
             }
         }
+
+        yield {
+            do: "WAIT_CHECK"
+        };
 
         if (count >= Object.keys(memberClass.getLiveAfterList()).length / 2) {
             // alert("마피아가 승리하였습니다. 모든 player들의 정체를 공개합니다.");
