@@ -95,10 +95,20 @@ router.route('/speaker/nugu/CheckWhoDiedActions2').post((req, res, next) => {
     console.log("CheckWhoDiedActions2");
     gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
 });
+router.route('/speaker/nugu/FinalArgumentAction2').post((req, res, next) => {
+    nugu(speakerCreateRoom, req, res, next);
+    gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
+    console.log("FinalArgumentAction2");
+});
 router.route('/speaker/nugu/FinalArgumentAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
     gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
     console.log("FinalArgumentAction");
+});
+router.route('/speaker/nugu/NoOneDeadAction2').post((req, res, next) => {
+    nugu(speakerCreateRoom, req, res, next);
+    gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
+    console.log("NoOneDeadAction2");
 });
 router.route('/speaker/nugu/NoOneDeadAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);

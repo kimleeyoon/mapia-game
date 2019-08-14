@@ -366,6 +366,9 @@ export default {
 body {
   background-color: black;
 }
+.list-group {
+  background-color: #31353D;
+}
 #app {
   /* font-family: "Avenir", Helvetica, Arial, sans-serif; */
   font-family: "나눔고딕", "Malgun Gothic", sans-serif;

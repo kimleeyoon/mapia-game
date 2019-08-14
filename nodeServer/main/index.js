@@ -201,7 +201,7 @@ class Request {
                 }, sendData);
                 break;
             }
-
+            case "NoOneDeadAction2":
             case "NoOneDeadAction": {
                 const number_one = '1';
                 response.setParameters({
@@ -210,7 +210,7 @@ class Request {
                 }, sendData);
                 break;
             }
-
+            case "FinalArgumentAction2":
             case "FinalArgumentAction": {
                 const number_one = '1';
 
