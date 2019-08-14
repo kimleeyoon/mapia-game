@@ -100,7 +100,7 @@ router.route('/speaker/nugu/LetMeOutAction').post((req, res, next) => {
 });
 router.route('/speaker/nugu/LetMeOut2Actions').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
-    
+
     console.log("LetMeOut2Actions");
 });
 router.route('/speaker/nugu/LetMeOut3Action').post((req, res, next) => {
@@ -374,15 +374,18 @@ function grun(g, member, io, room, curDecide, getText) {
                             });
                         } // 경찰 찾아서 조사 결과 전송
                         setTimeout(iterate, 0, x.value);
-                    }else if(x.value.do === "AFTER_TEXT"){
+                    } else if (x.value.do === "AFTER_TEXT") {
                         console.log("스피커한테 after 보낼 준비 from app.js");
                         const it = getText(room, 'after');
                         console.log("이터레이터 실행");
                         console.log(it);
                         console.log(it.next());
-                        it.next({text: x.value.text, isCitizenWin: x.value.win});
+                        it.next({
+                            text: x.value.text,
+                            isCitizenWin: x.value.win
+                        });
                         setTimeout(iterate, 0, x.value);
-                    }else if (x.value.do === "DEATH_UPDATE") { // 죽은 사람 업데이트
+                    } else if (x.value.do === "DEATH_UPDATE") { // 죽은 사람 업데이트
                         for (let tempMember of x.value.nameList) {
                             let tempSocket = member.find(o => o.name == tempMember.name);
                             io.to(tempSocket.socket).emit("UPDATE_LIST", x.value.nameList);

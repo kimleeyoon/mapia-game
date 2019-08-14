@@ -138,7 +138,7 @@ class Request {
                 break;
             }
 
-            case "LetMeOut2Action": {
+            case "LetMeOut2Actions": {
                 // 아무도 사형대에 오르지 않는 경우에 moreThanTwoExist : 1
                 // 사형대에 오르는 사람이 있으면 moreThanTwoExist : 0
                 let moreThanTwoExist = 0; // 사형대에 오르는 사람이 있는 경우

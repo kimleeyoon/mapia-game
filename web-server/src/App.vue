@@ -36,20 +36,26 @@
           />
           <small id="roomIdHelp" class="form-text text-muted">NUGU가 알려준 방 ID를 입력하세요</small>
         </div>
-        <button type="button" class="btn btn-primary btn-lg" @click.prevent="roomConnect">
+        <button type="button" class="btn btn-danger btn-lg" @click.prevent="roomConnect">
           <b>접속</b>
         </button>
       </div>
       <p>{{ temp }}</p>
     </div>
     <div class="container" v-else-if="!isStartGame">
-      <h1 class="display-4"><b>방에 접속하셨습니다!</b></h1>
+      <h1 class="display-4">
+        <b>방에 접속하셨습니다!</b>
+      </h1>
       <div>
-        <div class="blink">사람들 기다리는 중인가 뭐시기</div><br><br>
-        {{members.length}} / <b>{{roomSize}}</b><br>
+        <div class="blink">사람들 기다리는 중인가 뭐시기</div>
+        <br />
+        <br />
+        {{members.length}} /
+        <b>{{roomSize}}</b>
+        <br />
       </div>
-      <br>
-      <br>
+      <br />
+      <br />
       <!-- <ul class="list-group">
         <li
           class="list-group-item"
@@ -86,8 +92,11 @@
               v-bind:key="member.name"
             >
               <a href="#" class="list-group-item list-group-item-dark">{{member.name}}</a>
-            </li> -->
-            <li class="list-group-item list-group-item-dark align-items-center" v-bind:key="member.name">{{member.name}}</li>
+            </li>-->
+            <li
+              class="list-group-item list-group-item-dark align-items-center"
+              v-bind:key="member.name"
+            >{{member.name}}</li>
           </template>
         </ul>
       </div>
@@ -121,8 +130,11 @@
             v-bind:key="member.name"
           >
             <a href="#" class="list-group-item list-group-item-dark">{{member.name}}</a>
-          </li> -->
-          <li class="list-group-item list-group-item-dark align-items-center" v-bind:key="member.name">{{member.name}}</li>
+          </li>-->
+          <li
+            class="list-group-item list-group-item-dark align-items-center"
+            v-bind:key="member.name"
+          >{{member.name}}</li>
         </template>
       </ul>
       <ul class="list-group" v-else-if="isDeciding">
@@ -146,8 +158,11 @@
             v-bind:key="member.name"
           >
             <a href="#" class="list-group-item list-group-item-dark">{{member.name}}</a>
-          </li> -->
-          <li class="list-group-item list-group-item-dark align-items-center" v-bind:key="member.name">{{member.name}}</li>
+          </li>-->
+          <li
+            class="list-group-item list-group-item-dark align-items-center"
+            v-bind:key="member.name"
+          >{{member.name}}</li>
         </template>
       </ul>
       <div class="list-group" v-if="false">
@@ -164,11 +179,14 @@
           </span>
         </button>
       </div>
-      <p class="announce" style="overflow:scroll;height:300px; padding:10px; white-space:pre">{{tempAnnounce}}</p>
+      <p
+        class="announce"
+        style="overflow:scroll;height:300px; padding:10px; white-space:pre"
+      >{{tempAnnounce}}</p>
     </div>
     <button
       type="button"
-      class="btn btn-primary btn-lg"
+      class="btn btn-danger"
       @click="isNotJoinedRoom = !isNotJoinedRoom"
       v-if="!isNotJoinedRoom"
     >나가기!</button>
@@ -192,7 +210,7 @@ export default {
       isStartGame: false,
       memberObject: [],
       members: [],
-      deadMember : [],
+      deadMember: [],
       tempAnnounce: "메시지",
       role: "",
       isNowSelect: false,
@@ -303,37 +321,41 @@ export default {
     this.socket.on("RESULT_OF_INVESTIGATION", data => {
       // this.tempAnnounce +=
       //   "경찰 결과 왔다 받아라~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
-      if(data.role == "시민"){
-        this.tempAnnounce += data.name + "님은" + "마피아가 아닙니다.\n"
-      }else{
+      if (data.role == "시민") {
+        this.tempAnnounce += data.name + "님은" + "마피아가 아닙니다.\n";
+      } else {
         this.tempAnnounce += data.name + "님은 " + data.role + "입니다.\n";
       }
       // this.isNowSelect = true;
     });
     this.socket.on("END_DECIDE", () => {
       // this.tempAnnounce += "END_DICIDEEEEEE"
-      Object.keys(this.badge).forEach((o)=> (this.badge[o] = 0));
+      Object.keys(this.badge).forEach(o => (this.badge[o] = 0));
       this.isDeciding = false;
       this.isVoting = false;
-      this.isNowSelect =false;
+      this.isNowSelect = false;
     });
 
     this.socket.on("DECIDE_BADGE", data => {
-      if(!this.isVoting ){
+      if (!this.isVoting) {
         this.badge[data]++;
       }
     });
     this.socket.on("VOTE_BADGE", data => {
-      if(this.isVoting){
+      if (this.isVoting) {
         this.badge[data]++;
       }
     });
     this.socket.on("UPDATE_LIST", data => {
       this.memberObject = data;
-      this.members = this.memberObject.filter(o => o.isAlive === true).map(o => o);
-      this.deadMember = this.memberObject.filter(o => o.isAlive === false).map(o => {
-        o.name += "  ";
-        return o;
+      this.members = this.memberObject
+        .filter(o => o.isAlive === true)
+        .map(o => o);
+      this.deadMember = this.memberObject
+        .filter(o => o.isAlive === false)
+        .map(o => {
+          o.name += "  ";
+          return o;
         });
     });
   }
@@ -341,21 +363,26 @@ export default {
 </script>
 
 <style>
+body {
+  background-color: black;
+}
 #app {
   /* font-family: "Avenir", Helvetica, Arial, sans-serif; */
   font-family: "나눔고딕", "Malgun Gothic", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  /* background-color: black; */
+  /* color: #2c3e50; */
+  color: white;
   margin-top: 60px;
 }
 .blink {
-    -webkit-animation: fadeOut 1.5s 1s infinite linear alternate;
-    -moz-animation: fadeOut 1.5s 1s infinite linear alternate;
-    -ms-animation: fadeOut 1.5s 1s infinite linear alternate;
-    -o-animation: fadeOut 1.5s 1s infinite linear alternate;
-    animation: fadeOut 1.5s 1s infinite linear alternate;
+  -webkit-animation: fadeOut 1.5s 1s infinite linear alternate;
+  -moz-animation: fadeOut 1.5s 1s infinite linear alternate;
+  -ms-animation: fadeOut 1.5s 1s infinite linear alternate;
+  -o-animation: fadeOut 1.5s 1s infinite linear alternate;
+  animation: fadeOut 1.5s 1s infinite linear alternate;
 }
 @keyframes fadeOut {
   0% {
@@ -365,7 +392,7 @@ export default {
     opacity: 0;
   }
 }
-@-webkit-keyframes fadeOut {   
+@-webkit-keyframes fadeOut {
   0% {
     opacity: 1;
   }
@@ -373,7 +400,7 @@ export default {
     opacity: 0;
   }
 }
-@-moz-keyframes fadeOut { 
+@-moz-keyframes fadeOut {
   0% {
     opacity: 1;
   }
@@ -381,15 +408,7 @@ export default {
     opacity: 0;
   }
 }
-@-ms-keyframes fadeOut {   
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  } 
-}
-@-o-keyframes fadeOut {   
+@-ms-keyframes fadeOut {
   0% {
     opacity: 1;
   }
@@ -397,13 +416,20 @@ export default {
     opacity: 0;
   }
 }
-@keyframes fadeOut {   
+@-o-keyframes fadeOut {
   0% {
     opacity: 1;
   }
   100% {
     opacity: 0;
-  } 
+  }
 }
-
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
 </style>
