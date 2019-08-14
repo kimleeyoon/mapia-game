@@ -97,20 +97,14 @@ router.route('/speaker/nugu/LetMeOutAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
     console.log("LetMeOutAction");
 });
-<<<<<<< HEAD
 router.route('/speaker/nugu/LetMeOut2Actions').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
+    gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
     console.log("LetMeOut2Actions");
 });
 router.route('/speaker/nugu/LetMeOut3Action').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
     console.log("LetMeOut3Action");
-=======
-router.route('/speaker/nugu/LetMeOut2Action').post((req, res, next) => {
-    nugu(speakerCreateRoom, req, res, next);
-    gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
-    console.log("LetMeOut2Action");
->>>>>>> 56718d99541d688b4aa2da90cec64cbb2da72703
 });
 router.route('/speaker/nugu/MaybeMapiaWinActions').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
@@ -463,7 +457,7 @@ function sendSocket(io, member, x, decide, time) { // 사용자에게 결정 받
     decide.reset();
     decide.setNum(num)
     // 결정 초기화
-    const c = new Countdown(20);
+    const c = new Countdown(10);
     c.on('tick', (total, i) => { // 작업 진행 바 조절을 위한 tick 이벤트 발생
         for (let name of x.value.nameList) {
             let tempSocket = member.find(o => o.name == name);
