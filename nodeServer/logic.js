@@ -630,7 +630,6 @@ function* mainGame(member) {
                 do: "WAIT_CHECK"
             };
         } else { // 사람이 죽는 경우
-            afterList = killPlayer(id, afterList, memberClass.memberObj);
             yield {
                 do: "VOTE_TEXT",
                 text: `${id}`,
@@ -644,6 +643,7 @@ function* mainGame(member) {
             if(goDie == 'true'){
                 yield `${id}가 투표로 죽었습니다.`
                 memberClass.setLive(id, false);
+                afterList = killPlayer(id, afterList, memberClass.memberObj);
             }else{
                 yield '아무도 안죽음~';
             }

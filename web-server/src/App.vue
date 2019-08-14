@@ -43,7 +43,7 @@
       <p>{{ temp }}</p>
     </div>
     <div class="container" v-else-if="!isStartGame">
-      <h1 class="display-4">
+      <h1>
         <b>방에 접속하셨습니다!</b>
       </h1>
       <div>
@@ -74,7 +74,8 @@
       <br />
     </div>
     <div class="container" v-if="isStartGame">
-      게임 시작!
+      {{name}}님!<br>
+      !게임 시작!
       <br />
       당신의 역할 : {{role}}
       <div class="list-group" v-if="!isNowSelect && !isDeciding">
@@ -117,7 +118,7 @@
       </div>
       <ul class="list-group" v-if="isNowSelect">
         <template v-for="member in members">
-          <li
+          <!-- <li
             class="list-group-item d-flex justify-content-between align-items-center"
             v-bind:key="member.name"
           >
@@ -127,7 +128,14 @@
               @click.prevent="decide($event, member.name)"
             >{{member.name}}</button>
             <span class="badge badge-primary badge-pill">{{badge[member.name]}}</span>
-          </li>
+          </li> -->
+          <div class="list-group" v-bind:key="member.name">
+            <a href="#" class="list-group-item list-group-item-action">{{member.name}}<button
+              type="button"
+              @click.prevent="decide($event, member.name)"
+              style="display:none"
+            ></button></a>
+          </div>
         </template>
         <template v-for="member in deadMember">
           <!-- <li
@@ -144,7 +152,7 @@
       </ul>
       <ul class="list-group" v-else-if="isDeciding">
         <template v-for="member in members">
-          <li
+          <!-- <li
             class="list-group-item d-flex justify-content-between align-items-center"
             v-bind:key="member.name"
           >
@@ -155,7 +163,13 @@
               disabled
             >{{member.name}}</button>
             <span class="badge badge-primary badge-pill">{{badge[member.name]}}</span>
-          </li>
+          </li> -->
+          <div class="list-group" v-bind:key="member.name">
+            <a href="#" class="list-group-item list-group-item-action">{{member.name}}<button
+              type="button"
+              @click.prevent="decide($event, member.name)"
+              style="display:none"
+            ></button></a>
         </template>
         <template v-for="member in deadMember">
           <!-- <li
