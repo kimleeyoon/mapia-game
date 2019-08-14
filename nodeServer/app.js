@@ -82,36 +82,52 @@ router.route('/speaker/nugu/KillNightAction').post((req, res, next) => { // 본�
 });
 router.route('/speaker/nugu/CheckWhoDiedActions').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
-    console.log("CheckWhoDiedAction");
+    console.log("CheckWhoDiedActions");
     gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
 });
-router.route('/speaker/nugu/FinalArgumentActions').post((req, res, next) => {
+router.route('/speaker/nugu/FinalArgumentAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
     console.log("FinalArgumentAction");
+});
+router.route('/speaker/nugu/NoOneDeadAction').post((req, res, next) => {
+    nugu(speakerCreateRoom, req, res, next);
+    console.log("NoOneDeadAction");
 });
 router.route('/speaker/nugu/LetMeOutAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
     console.log("LetMeOutAction");
 });
+router.route('/speaker/nugu/LetMeOut2Actions').post((req, res, next) => {
+    nugu(speakerCreateRoom, req, res, next);
+    console.log("LetMeOut2Actions");
+});
+router.route('/speaker/nugu/LetMeOut3Action').post((req, res, next) => {
+    nugu(speakerCreateRoom, req, res, next);
+    console.log("LetMeOut3Action");
+});
 router.route('/speaker/nugu/MaybeMapiaWinActions').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
-    console.log("MaybeMapiaWinAction");
+    console.log("MaybeMapiaWinActions");
 });
-router.route('/speaker/nugu/HeIsSavedActions').post((req, res, next) => {
+router.route('/speaker/nugu/HeIsSavedAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
-    console.log("HeIsSavedActions");
+    console.log("HeIsSavedAction");
 });
-router.route('/speaker/nugu/HeIsDiedActions').post((req, res, next) => {
+router.route('/speaker/nugu/HeIsDiedAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
-    console.log("HeIsDiedActions");
+    console.log("HeIsDiedAction");
 });
-router.route('/speaker/nugu/GameEndMapiaActions').post((req, res, next) => {
+router.route('/speaker/nugu/GameEndMapiaAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
-    console.log("GameEndMapiaActions");
+    console.log("GameEndMapiaAction");
 });
-router.route('/speaker/nugu/GameEndCitizenActions').post((req, res, next) => {
+router.route('/speaker/nugu/GameEndCitizenAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
-    console.log("GameEndCitizenActions");
+    console.log("GameEndCitizenAction");
+});
+router.route('/speaker/nugu/TurnBackAction').post((req, res, next) => {
+    nugu(speakerCreateRoom, req, res, next);
+    console.log("TurnBackAction");
 });
 
 const server = http.Server(app); // 익스프레스 사용해서 서버 생성 및 할당
