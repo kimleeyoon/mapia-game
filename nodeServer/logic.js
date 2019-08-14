@@ -414,9 +414,13 @@ function* mainGame(member) {
         dayOrder++;
         // TODO: 작동할걸?????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
 
+        // yield {
+        //     do: "WAIT_SECOND",
+        //     time: 21.5
+        // };
         yield {
             do: "WAIT_SECOND",
-            time: 21.5
+            time: 1
         };
         // alert("해가 저물고 밤이 되었습니다. 플레이어들은 모두 고개를 숙여주세요.");
         yield "해가 저물고 밤이 되었습니다. 플레이어들은 모두 고개를 숙여주세요.";
@@ -440,9 +444,13 @@ function* mainGame(member) {
         // }
         // }
 
+        // yield {
+        //     do: "WAIT_SECOND",
+        //     time: 12
+        // };
         yield {
             do: "WAIT_SECOND",
-            time: 12
+            time: 1
         };
 
         // alert("다시 고개를 숙여주십시오.");
@@ -475,9 +483,14 @@ function* mainGame(member) {
         // mapiaVSdoctorResult = savePlayer(mapiaPick, doctorPick, doctorAlive, afterList, memberClass.memberObj);
         ///////////////////////////////////
 
+        // yield {
+        //     do: "WAIT_SECOND",
+        //     time: 10
+        // };
+
         yield {
             do: "WAIT_SECOND",
-            time: 10
+            time: 1
         };
 
         // alert("다시 고개를 숙여주십시오.");
@@ -607,6 +620,7 @@ function* mainGame(member) {
         console.log(`id : ${id}`);
         if (id == "None") { // 사람이 안죽는 경우
             // yield ``;
+            console.log("Logic 아무도 안죽어");
             yield {
                 do: "VOTE_TEXT",
                 text: 'None',

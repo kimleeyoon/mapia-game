@@ -144,7 +144,9 @@ class Request {
                 let moreThanTwoExist = 0; // 사형대에 오르는 사람이 있는 경우
                 let deadMan = "";
                 let tieVoteExist = "";
-                if (outText[contextId[this.context.session.id]].text === "None") { // 사형대에 아무도 오르지 않는 경우
+                console.log("VOTE TEXt");
+                console.log(outText[contextId[this.context.session.id]].textect);
+                if (outText[contextId[this.context.session.id]].text == "None") { // 사형대에 아무도 오르지 않는 경우
                     moreThanTwoExist = 1;
                     deadMan = 'none';
                 } else {
@@ -253,8 +255,7 @@ class Request {
 
             case "HeIsSavedAction": {
               const number_one = '1';
-              let yesOrNoVoteResultPrompt = '${outText[contextId[this.context.session.id]].text}님은 찬반투표에서 과반수 이상이
-              반대를 하여 최종적으로 사형대에 오르지 않습니다.'
+              let yesOrNoVoteResultPrompt = '${outText[contextId[this.context.session.id]].text}님은 찬반투표에서 과반수 이상이 반대를 하여 최종적으로 사형대에 오르지 않습니다.'
               response.setParameters({
                   number1: number_one,
                   yesOrNoVoteResult: yesOrNoVoteResultPrompt,
@@ -263,8 +264,7 @@ class Request {
             }
 
             case "HeIsDiedAction": {
-              let yesOrNoVoteResultPrompt = '${outText[contextId[this.context.session.id]].text}님은 찬반투표에서 과반수 이상이
-              찬성을 하여 최종적으로 사형당하셨습니다.'
+              let yesOrNoVoteResultPrompt = '${outText[contextId[this.context.session.id]].text}님은 찬반투표에서 과반수 이상이 찬성을 하여 최종적으로 사형당하셨습니다.'
               const number_one = '1';
                 response.setParameters({
                     number1: number_one,
