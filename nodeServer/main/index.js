@@ -114,28 +114,68 @@ class Request {
 
 
             case "LetMeOutAction": {
+                let doctor_Vs_Mapia = 0; //지금은 의사가 이긴 상황
                 let doctorVsMapiaPrompt = "";
-                if(outText[contextId[this.context.session.id]].after === "NoneKill"){  // 마피아가 아무도 안죽인 경우
+                if (outText[contextId[this.context.session.id]].after === "NoneKill") { // 마피아가 아무도 안죽인 경우
                     doctor_Vs_Mapia = 2;
                     doctorVsMapiaPrompt = "";
-                }else{
+                } else {
                     doctor_Vs_Mapia = 0;
                     doctorVsMapiaPrompt = outText[contextId[this.context.session.id]].after;
                 }
                 const number_one = '1';
+                console.log("outtext:");
+                console.log(outText[contextId[this.context.session.id]].isCitizenWin);
+                let temp = `1`;
+                if (outText[contextId[this.context.session.id]].isCitizenWin == '0' || outText[contextId[this.context.session.id]].isCitizenWin == '1') {
+                    temp = `0`;
+                }
                 response.setParameters({
                     number1: number_one,
-                    doctorVsMapia: doctorVsMapiaPrompt,
-                    mapiaOrCitizenWinNum: outText[contextId[this.context.session.id]].isCitizenWin
+                    doctorVsMapiaPrompt: doctorVsMapiaPrompt,
+                    mapiaOrCitizenWinNum: temp
                 }, sendData);
+                break;
+            }
+
+            case "LetMeOut2Action": {
+                // 아무도 사형대에 오르지 않는 경우에 moreThanTwoExist : 1
+                // 사형대에 오르는 사람이 있으면 moreThanTwoExist : 0
+                let moreThanTwoExist = 0; // 사형대에 오르는 사람이 있는 경우
+                let deadMan = "";
+                let tieVoteExist = "";
+                if (outText[contextId[this.context.session.id]].text === "None") { // 사형대에 아무도 오르지 않는 경우
+                    moreThanTwoExist = 1;
+                    deadMan = 'none';
+                } else {
+                    moreThanTwoExist = 0;
+                    deadMan = outText[contextId[this.context.session.id]].text;
+                    // tieVoteExist = `${deadMan}님이 사형대에 올랐습니다.
+                    // 1분동안 최후 변론을 진행해주세요. <pause time = "60000"> 최후 변론이 종료되었습니다.
+                    // 플레이어들은 10초동안 찬반투표를 진행해주세요. <pause time = "10000">
+                    // ${deadMan}님을 죽이시려면 죽이자고, 살리시려면 살리자고 말씀해주세요.`;
+                }
+                const number_one = '1';
+                console.log("outtext:");
+                // let temp = `1`;
+                // if (outText[contextId[this.context.session.id]].isCitizenWin == '0' || outText[contextId[this.context.session.id]].isCitizenWin == '1') {
+                //     temp = `0`;
+                // }
+                response.setParameters({
+                    number1: number_one,
+                    tieVoteExist: tieVoteExist, // 죽은 사람이 있으면 말하는 말
+                    moreThanTwoExist: moreThanTwoExist
+                }, sendData);
+                break;
             }
 
             case "CheckWhoDiedActions": {
+                let doctor_Vs_Mapia = 0; //지금은 의사가 이긴 상황
                 let doctorVsMapiaPrompt = "";
-                if(outText[contextId[this.context.session.id]].after === "NoneKill"){  // 마피아가 아무도 안죽인 경우
+                if (outText[contextId[this.context.session.id]].after === "NoneKill") { // 마피아가 아무도 안죽인 경우
                     doctor_Vs_Mapia = 2;
                     doctorVsMapiaPrompt = "";
-                }else{
+                } else {
                     doctor_Vs_Mapia = 0;
                     doctorVsMapiaPrompt = outText[contextId[this.context.session.id]].after;
                 }
@@ -150,13 +190,6 @@ class Request {
                 response.setParameters({
                     number1: number_one,
                     doctorVsMapia: doctorVsMapiaPrompt,
-                }, sendData);
-                break;
-            }
-
-            case "LetMeOut2Action": {
-                response.setParameters({
-
                 }, sendData);
                 break;
             }
@@ -186,25 +219,36 @@ class Request {
             }
 
             case "MaybeMapiaWinActions": {
-              const number_one = '1';
-              const doctor_Vs_Mapia = '1'; //지금은 의사가 이긴 상황
-              if (doctor_Vs_Mapia == '0') {
-                let doctorVsMapiaPrompt = '의사가 플레이어를 살리지 못했습니다. 마피아가 죽인 플레이어는 %s님 입니다.';
-              } else if (doctor_Vs_Mapia == '1') {
-                let doctorVsMapiaPrompt = '의사가 플레이어를 살렸습니다.';
-              }
-              const mapia_Or_CitizenWin = '1'; //지금은 시민이 이긴 상황
-              if (mapia_Or_CitizenWin = '0') {
-                let mapiaOrCitizenWinPrompt = '마피아가 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.';
-              } else if (mapia_Or_CitizenWin = '1') {
-                let mapiaOrCitizenWinPrompt = '시민이 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.'
-              }
-              response.setParameters({
-                  number1: number_one,
-                  doctorVsMapia: doctorVsMapiaPrompt,
-                  mapiaOrCitizenWin: mapiaOrCitizenWinPrompt,
-              }, sendData);
-              break;
+                const number_one = '1';
+                //   const doctor_Vs_Mapia = '1'; //지금은 의사가 이긴 상황
+
+                let doctor_Vs_Mapia = 0; //지금은 의사가 이긴 상황
+                let doctorVsMapiaPrompt = "";
+                if (outText[contextId[this.context.session.id]].after === "NoneKill") { // 마피아가 아무도 안죽인 경우
+                    doctor_Vs_Mapia = 2;
+                    doctorVsMapiaPrompt = "";
+                } else {
+                    doctor_Vs_Mapia = 0;
+                    doctorVsMapiaPrompt = outText[contextId[this.context.session.id]].after;
+                }
+                //   if (doctor_Vs_Mapia == '0') {
+                //     let doctorVsMapiaPrompt = '의사가 플레이어를 살리지 못했습니다. 마피아가 죽인 플레이어는 %s님 입니다.';
+                //   } else if (doctor_Vs_Mapia == '1') {
+                //     let doctorVsMapiaPrompt = '의사가 플레이어를 살렸습니다.';
+                //   }
+                const mapia_Or_CitizenWin = outText[contextId[this.context.session.id]].isCitizenWin; //지금은 시민이 이긴 상황
+                let mapiaOrCitizenWinPrompt;
+                if (mapia_Or_CitizenWin == 0) {
+                    mapiaOrCitizenWinPrompt = '마피아가 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.';
+                } else if (mapia_Or_CitizenWin == 1) {
+                    mapiaOrCitizenWinPrompt = '시민이 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.'
+                }
+                response.setParameters({
+                    number1: number_one,
+                    doctorVsMapiaPrompt: doctorVsMapiaPrompt,
+                    mapiaOrCitizenWinPrompt: mapiaOrCitizenWinPrompt,
+                }, sendData);
+                break;
             }
 
             case "HeIsSavedAction": {
@@ -287,12 +331,14 @@ let outText = {};
 
 function* getText(id, target) {
     const text = yield;
-    if(!outText[id]){outText[id] = {};}
-    if(target == 'vote'){
+    if (!outText[id]) {
+        outText[id] = {};
+    }
+    if (target == 'vote') {
         outText[id].text = text;
-    }else if(target =='day'){
+    } else if (target == 'day') {
         outText[id].day = text;
-    }else if(target =='after'){
+    } else if (target == 'after') {
         outText[id].after = text.text;
         outText[id].isCitizenWin = text.isCitizenWin;
     }
@@ -307,6 +353,8 @@ class Response {
         this.directives = [];
     }
     setParameters(result, sendData) {
+        console.log("result :");
+        console.log(result);
         this.output = {
             numOfPlayer: result.numOfPlayer,
             pinNum: result.pinNum,
@@ -317,6 +365,8 @@ class Response {
             dayOrderNum: result.dayOrderNum,
             doctorVsMapia: result.doctorVsMapiaPrompt,
             mapiaOrCitizenWin: result.mapiaOrCitizenWinPrompt,
+            mapiaOrCitizenWinNum: result.mapiaOrCitizenWinNum,
+            moreThanTwoExist: result.moreThanTwoExist
         }
         console.log(this.output);
 

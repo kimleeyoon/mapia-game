@@ -97,6 +97,7 @@ router.route('/speaker/nugu/LetMeOutAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
     console.log("LetMeOutAction");
 });
+<<<<<<< HEAD
 router.route('/speaker/nugu/LetMeOut2Actions').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
     console.log("LetMeOut2Actions");
@@ -104,6 +105,12 @@ router.route('/speaker/nugu/LetMeOut2Actions').post((req, res, next) => {
 router.route('/speaker/nugu/LetMeOut3Action').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
     console.log("LetMeOut3Action");
+=======
+router.route('/speaker/nugu/LetMeOut2Action').post((req, res, next) => {
+    nugu(speakerCreateRoom, req, res, next);
+    gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
+    console.log("LetMeOut2Action");
+>>>>>>> 56718d99541d688b4aa2da90cec64cbb2da72703
 });
 router.route('/speaker/nugu/MaybeMapiaWinActions').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
@@ -344,7 +351,8 @@ function grun(g, member, io, room, curDecide, getText) {
                             }
                         })();
                     } else if (x.value.do === "WAIT_SECOND") {
-                        setTimeout(iterate, x.value.time, x.value);
+                        console.log(`${x.value.time} 기다리기`);
+                        setTimeout(iterate, x.value.time * 1000, x.value);
                     } else if (x.value.do === "VOTE_TEXT") {
                         const it = getText(room, 'vote');
                         it.next();

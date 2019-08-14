@@ -416,7 +416,7 @@ function* mainGame(member) {
 
         yield {
             do: "WAIT_SECOND",
-            time: 20
+            time: 21.5
         };
         // alert("해가 저물고 밤이 되었습니다. 플레이어들은 모두 고개를 숙여주세요.");
         yield "해가 저물고 밤이 되었습니다. 플레이어들은 모두 고개를 숙여주세요.";
@@ -442,7 +442,7 @@ function* mainGame(member) {
 
         yield {
             do: "WAIT_SECOND",
-            time: 9
+            time: 12
         };
 
         // alert("다시 고개를 숙여주십시오.");
@@ -464,6 +464,11 @@ function* mainGame(member) {
 
             // mapiaVSdoctorResult = savePlayer(mapiaPick, doctorPick, doctorAlive, afterList, memberClass.memberObj);
             // }
+        }else{
+            yield {
+                do: "WAIT_SECOND",
+                time: 20
+            };
         }
 
         ///////////////////////////// 경찰이 암살 당하는 경우 미리 죽어서 조사 못하는 현상 해결을 위해 아래로 내림
@@ -472,7 +477,7 @@ function* mainGame(member) {
 
         yield {
             do: "WAIT_SECOND",
-            time: 9
+            time: 10
         };
 
         // alert("다시 고개를 숙여주십시오.");
@@ -503,6 +508,11 @@ function* mainGame(member) {
                 };
             }
             // }
+        }else{
+            yield {
+                do: "WAIT_SECOND",
+                time: 20
+            };
         }
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -513,31 +523,34 @@ function* mainGame(member) {
         // alert("다시 고개를 숙여주십시오.");
         yield "다시 고개를 숙여주십시오.";
         
-        yield {
-            do: "WAIT_CHECK"
-        };
-
+        
         let count = 0;
         for (var key in memberClass.getLiveAfterList()) {
             if (memberClass.getLiveAfterList()[key] === "마피아") {
                 count++;
             }
         }
-
+        
         let isCitizenWin = 0;
-
+        
         if (count >= Object.keys(memberClass.getLiveAfterList()).length / 2) {
             isCitizenWin = 0;
-        }else{
+        } else if (count == 0) {
             isCitizenWin = 1;
+        }else{
+            isCitizenWin = 2;
         }
-
+        
         yield {
             do: "AFTER_TEXT",
             text: `${mapiaVSdoctorResult}`,
-            win: isCitizenWin
+            win: `${isCitizenWin}`
         };
-
+        
+        yield {
+            do: "WAIT_CHECK"
+        };
+        
         // alert(mapiaVSdoctorResult);
 
         if (mapiaVSdoctorResult == "NoneKill") { // 마피아가 사람을 죽이지 않음
@@ -572,6 +585,15 @@ function* mainGame(member) {
         // alert("플레이어들은 모두 고개를 들어주시고 3분 동안 토의를 진행하여 사형대에 올릴 플레이어를 골라주십시오.");
         yield "플레이어들은 모두 고개를 들어주시고 3분 동안 토의를 진행하여 사형대에 올릴 플레이어를 골라주십시오.";
 
+        yield {
+            do: "WAIT_SECOND",
+            time: 15
+        };
+        // yield {
+        //     do: "WAIT_SECOND",
+        //     time: 180
+        // };
+
         let id;
         let tempId = [];
         tempId = yield {
@@ -587,17 +609,23 @@ function* mainGame(member) {
             // yield ``;
             yield {
                 do: "VOTE_TEXT",
-                text: '',
+                text: 'None',
                 isDeath: 0
+            };
+            yield {
+                do: "WAIT_CHECK"
             };
         } else { // 사람이 죽는 경우
             afterList = killPlayer(id, afterList, memberClass.memberObj);
-            yield `${id}가 투표로 죽었습니다.`
             yield {
                 do: "VOTE_TEXT",
                 text: `${id}`,
                 isDeath: 1
             };
+            yield {
+                do: "WAIT_CHECK"
+            };
+            yield `${id}가 투표로 죽었습니다.`
             memberClass.setLive(id, false);
         }
 
