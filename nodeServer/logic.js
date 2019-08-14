@@ -585,6 +585,15 @@ function* mainGame(member) {
         // alert("플레이어들은 모두 고개를 들어주시고 3분 동안 토의를 진행하여 사형대에 올릴 플레이어를 골라주십시오.");
         yield "플레이어들은 모두 고개를 들어주시고 3분 동안 토의를 진행하여 사형대에 올릴 플레이어를 골라주십시오.";
 
+        yield {
+            do: "WAIT_SECOND",
+            time: 15
+        };
+        // yield {
+        //     do: "WAIT_SECOND",
+        //     time: 180
+        // };
+
         let id;
         let tempId = [];
         tempId = yield {
@@ -600,17 +609,23 @@ function* mainGame(member) {
             // yield ``;
             yield {
                 do: "VOTE_TEXT",
-                text: '',
+                text: 'None',
                 isDeath: 0
+            };
+            yield {
+                do: "WAIT_CHECK"
             };
         } else { // 사람이 죽는 경우
             afterList = killPlayer(id, afterList, memberClass.memberObj);
-            yield `${id}가 투표로 죽었습니다.`
             yield {
                 do: "VOTE_TEXT",
                 text: `${id}`,
                 isDeath: 1
             };
+            yield {
+                do: "WAIT_CHECK"
+            };
+            yield `${id}가 투표로 죽었습니다.`
             memberClass.setLive(id, false);
         }
 

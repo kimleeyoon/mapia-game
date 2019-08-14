@@ -135,13 +135,44 @@ class Request {
                 console.log("outtext:");
                 console.log(outText[contextId[this.context.session.id]].isCitizenWin);
                 let temp = `1`;
-                if(outText[contextId[this.context.session.id]].isCitizenWin == '0' || outText[contextId[this.context.session.id]].isCitizenWin == '1'){
+                if (outText[contextId[this.context.session.id]].isCitizenWin == '0' || outText[contextId[this.context.session.id]].isCitizenWin == '1') {
                     temp = `0`;
                 }
                 response.setParameters({
                     number1: number_one,
                     doctorVsMapiaPrompt: doctorVsMapiaPrompt,
                     mapiaOrCitizenWinNum: temp
+                }, sendData);
+                break;
+            }
+
+            case "LetMeOut2Action": {
+                // 아무도 사형대에 오르지 않는 경우에 moreThanTwoExist : 1
+                // 사형대에 오르는 사람이 있으면 moreThanTwoExist : 0
+                let moreThanTwoExist = 0; // 사형대에 오르는 사람이 있는 경우
+                let deadMan = "";
+                let tieVoteExist = "";
+                if (outText[contextId[this.context.session.id]].text === "None") { // 사형대에 아무도 오르지 않는 경우
+                    moreThanTwoExist = 1;
+                    deadMan = 'none';
+                } else {
+                    moreThanTwoExist = 0;
+                    deadMan = outText[contextId[this.context.session.id]].text;
+                    // tieVoteExist = `${deadMan}님이 사형대에 올랐습니다.
+                    // 1분동안 최후 변론을 진행해주세요. <pause time = "60000"> 최후 변론이 종료되었습니다.
+                    // 플레이어들은 10초동안 찬반투표를 진행해주세요. <pause time = "10000">
+                    // ${deadMan}님을 죽이시려면 죽이자고, 살리시려면 살리자고 말씀해주세요.`;
+                }
+                const number_one = '1';
+                console.log("outtext:");
+                // let temp = `1`;
+                // if (outText[contextId[this.context.session.id]].isCitizenWin == '0' || outText[contextId[this.context.session.id]].isCitizenWin == '1') {
+                //     temp = `0`;
+                // }
+                response.setParameters({
+                    number1: number_one,
+                    tieVoteExist: tieVoteExist, // 죽은 사람이 있으면 말하는 말
+                    moreThanTwoExist: moreThanTwoExist
                 }, sendData);
                 break;
             }
@@ -171,26 +202,13 @@ class Request {
                 break;
             }
 
-            case "FinalArgumentActions": {
-
-
+            case "FinalArgumentAction": {
 
                 const number_one = '1';
-                let tieVote_Exist = '0';
-                if (outText[contextId[this.context.session.id]].text.length > 0) {
-                    tieVote_Exist = '0';
-                } else {
-                    tieVote_Exist = '1';
-                }
-                if (tieVote_Exist == '0') {
-                    let tieVoteExistPrompt = `${outText[contextId[this.context.session.id]].text}님이 사형대에 올랐습니다.
-                  1분동안 최후 변론을 진행해주세요. <pause time = "60000"> 최후 변론이 종료되었습니다.
-                  플레이어들은 10초동안 찬반투표를 진행해주세요. <pause time = "10000">
-                  ${outText[contextId[this.context.session.id]].text}님을 죽이시려면 죽이자고, 살리시려면 살리자고 말씀해주세요.`
-                } else if (tieVote_Exist == '1') {
-                    let tieVoteExistPrompt = `아무도 사형대에 오르지 않았습니다. 다음으로 넘어가시려면 확인이라고 말씀해주세요.`
-                    //이거 다음에 '바로 밤이 되었습니다' 액션으로 넘어감.
-                }
+                let tieVoteExistPrompt = `${outText[contextId[this.context.session.id]].text}님이 사형대에 올랐습니다.
+                    1분동안 최후 변론을 진행해주세요. <pause time = "60000"> 최후 변론이 종료되었습니다.
+                    플레이어들은 10초동안 찬반투표를 진행해주세요. <pause time = "10000">
+                    ${outText[contextId[this.context.session.id]].text}님을 죽이시려면 죽이자고, 살리시려면 살리자고 말씀해주세요.`
                 response.setParameters({
                     number1: number_one,
                     tieVoteExist: tieVoteExistPrompt,
@@ -277,6 +295,7 @@ class Response {
             doctorVsMapia: result.doctorVsMapiaPrompt,
             mapiaOrCitizenWin: result.mapiaOrCitizenWinPrompt,
             mapiaOrCitizenWinNum: result.mapiaOrCitizenWinNum,
+            moreThanTwoExist: result.moreThanTwoExist
         }
         console.log(this.output);
 
