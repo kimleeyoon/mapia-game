@@ -118,7 +118,7 @@
       </div>
       <ul class="list-group" v-if="isNowSelect">
         <template v-for="member in members">
-          <!-- <li
+          <li
             class="list-group-item d-flex justify-content-between align-items-center"
             v-bind:key="member.name"
           >
@@ -128,8 +128,8 @@
               @click.prevent="decide($event, member.name)"
             >{{member.name}}</button>
             <span class="badge badge-primary badge-pill">{{badge[member.name]}}</span>
-          </li> -->
-          <div class="list-group" v-bind:key="member.name">
+          </li>
+          <div class="list-group" v-bind:key="member.name" v-if="false">
             <a href="#" class="list-group-item list-group-item-action" style="width:95%;">{{member.name}}<button
               type="button"
               @click.prevent="decide($event, member.name)"
@@ -155,7 +155,7 @@
         <template v-for="member in members">
           <li
             class="list-group-item d-flex justify-content-between align-items-center"
-            v-bind:key="member.name" v-if="false"
+            v-bind:key="member.name" v-if="true"
           >
             <button
               type="button"
@@ -165,7 +165,7 @@
             >{{member.name}}</button>
             <span class="badge badge-primary badge-pill">{{badge[member.name]}} </span>
           </li>
-          <div class="list-group" v-bind:key="member.name">
+          <div class="list-group" v-bind:key="member.name" v-if="false">
             <a href="#" class="list-group-item list-group-item-action">{{member.name}}<button
               type="button"
               @click.prevent="decide($event, member.name)"
@@ -176,12 +176,13 @@
         <template v-for="member in deadMember">
           <li
             class="list-group-item d-flex justify-content-between align-items-center"
-            v-bind:key="member.name" v-if="false">
+            v-bind:key="member.name" v-if="true">
             <a href="#" class="list-group-item list-group-item-dark">{{member.name}}</a>
           </li>
           <li
             class="list-group-item list-group-item-danger align-items-center"
             v-bind:key="member.name"
+            v-if="false"
           >{{member.name}}</li>
         </template>
       </ul>
