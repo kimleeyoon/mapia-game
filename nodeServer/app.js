@@ -90,6 +90,11 @@ router.route('/speaker/nugu/CheckWhoDiedActions').post((req, res, next) => {
     console.log("CheckWhoDiedActions");
     gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
 });
+router.route('/speaker/nugu/CheckWhoDiedActions2').post((req, res, next) => {
+    nugu(speakerCreateRoom, req, res, next);
+    console.log("CheckWhoDiedActions2");
+    gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
+});
 router.route('/speaker/nugu/FinalArgumentAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
     gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
@@ -103,18 +108,35 @@ router.route('/speaker/nugu/LetMeOutAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
     console.log("LetMeOutAction");
 });
+router.route('/speaker/nugu/LetMeOut1Action2').post((req, res, next) => {
+    nugu(speakerCreateRoom, req, res, next);
+    console.log("LetMeOut1Action2");
+});
 router.route('/speaker/nugu/LetMeOut2Actions').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
 
     console.log("LetMeOut2Actions");
 });
+router.route('/speaker/nugu/LetMeOut2Actions2').post((req, res, next) => {
+    nugu(speakerCreateRoom, req, res, next);
+
+    console.log("LetMeOut2Actions2");
+});
 router.route('/speaker/nugu/LetMeOut3Action').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
     console.log("LetMeOut3Action");
 });
+router.route('/speaker/nugu/LetMeOut3Action2').post((req, res, next) => {
+    nugu(speakerCreateRoom, req, res, next);
+    console.log("LetMeOut3Action2");
+});
 router.route('/speaker/nugu/MaybeMapiaWinActions').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
     console.log("MaybeMapiaWinActions");
+});
+router.route('/speaker/nugu/MaybeMapiaWinActions2').post((req, res, next) => {
+    nugu(speakerCreateRoom, req, res, next);
+    console.log("MaybeMapiaWinActions2");
 });
 router.route('/speaker/nugu/HeIsSavedAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);

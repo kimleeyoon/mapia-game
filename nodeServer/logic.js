@@ -600,7 +600,7 @@ function* mainGame(member) {
 
         yield {
             do: "WAIT_SECOND",
-            time: 15
+            time: 5
         };
         // yield {
         //     do: "WAIT_SECOND",
@@ -646,7 +646,7 @@ function* mainGame(member) {
         idOfPolicePick = 0; //다음날을 위한 초기화
         mapiaVSdoctorResult = "Error"; //다음날을 위한 초기화 
         count = 0;
-
+        console.log("투표 처리 완료");
         yield {
             do: "DEATH_UPDATE",
             nameList: memberClass.memberObj
@@ -659,6 +659,15 @@ function* mainGame(member) {
             }
         }
 
+        yield {
+            do: "DAY_TEXT",
+            day: `${dayOrder}`
+        };
+        console.log("다음날 넘어가기 직전");
+        yield {
+            do: "WAIT_CHECK"
+        };
+        console.log("다음날 넘어감");
         if (count >= Object.keys(memberClass.getLiveAfterList()).length / 2) {
             // alert("마피아가 승리하였습니다. 모든 player들의 정체를 공개합니다.");
             yield "마피아가 승리하였습니다. 모든 player들의 정체를 공개합니다.";

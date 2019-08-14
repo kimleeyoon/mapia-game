@@ -9,6 +9,8 @@ class Request {
     actionRequest(response, sendData) {
         let actionName = this.action.actionName;
         let parameters = this.action.parameters;
+        console.log("Action Name");
+        console.log(actionName);
 
         switch (actionName) {
             case "TakePlayerNumAction": {
@@ -103,6 +105,7 @@ class Request {
                 break;
             }
 
+            case 'KillNightAction2':
             case "KillNightAction" || "KillNightAction2": {
                 let number_one = '1';
                 console.log("KillNight Action 실행함");
@@ -113,7 +116,7 @@ class Request {
                 break;
             }
 
-
+            case "LetMeOut1Action2":
             case "LetMeOutAction": {
                 let doctor_Vs_Mapia = 0; //지금은 의사가 이긴 상황
                 let doctorVsMapiaPrompt = "";
@@ -139,6 +142,7 @@ class Request {
                 break;
             }
 
+            case "LetMeOut2Actions2":
             case "LetMeOut2Actions": {
                 // 아무도 사형대에 오르지 않는 경우에 moreThanTwoExist : 1
                 // 사형대에 오르는 사람이 있으면 moreThanTwoExist : 0
@@ -172,6 +176,7 @@ class Request {
                 break;
             }
 
+            case "CheckWhoDiedActions2":
             case "CheckWhoDiedActions": {
                 let doctor_Vs_Mapia = 0; //지금은 의사가 이긴 상황
                 let doctorVsMapiaPrompt = "";
@@ -198,7 +203,7 @@ class Request {
             }
 
             case "NoOneDeadAction": {
-              const number_one = '1';
+                const number_one = '1';
                 response.setParameters({
                     number1: number_one,
                     moreThanTwoExist: '1',
@@ -207,20 +212,21 @@ class Request {
             }
 
             case "FinalArgumentAction": {
-              const number_one = '1';
+                const number_one = '1';
 
-                  let tieVoteExistPrompt = `${outText[contextId[this.context.session.id]].text}님이 사형대에 올랐습니다.
+                let tieVoteExistPrompt = `${outText[contextId[this.context.session.id]].text}님이 사형대에 올랐습니다.
                   1분동안 최후 변론을 진행해주세요. <pause time = "60000"> 최후 변론이 종료되었습니다.
                   플레이어들은 10초동안 찬반투표를 진행해주세요. <pause time = "10000">
                   ${outText[contextId[this.context.session.id]].text}님을 죽이시려면 죽이자고, 살리시려면 살리자고 말씀해주세요.`
 
-              response.setParameters({
-                  number1: number_one,
-                  tieVoteExist: tieVoteExistPrompt,
-              }, sendData);
-              break;
+                response.setParameters({
+                    number1: number_one,
+                    tieVoteExist: tieVoteExistPrompt,
+                }, sendData);
+                break;
             }
 
+            case "MaybeMapiaWinActions2":
             case "MaybeMapiaWinActions": {
                 const number_one = '1';
                 //   const doctor_Vs_Mapia = '1'; //지금은 의사가 이긴 상황
@@ -255,18 +261,8 @@ class Request {
             }
 
             case "HeIsSavedAction": {
-              const number_one = '1';
-              let yesOrNoVoteResultPrompt = '${outText[contextId[this.context.session.id]].text}님은 찬반투표에서 과반수 이상이 반대를 하여 최종적으로 사형대에 오르지 않습니다.'
-              response.setParameters({
-                  number1: number_one,
-                  yesOrNoVoteResult: yesOrNoVoteResultPrompt,
-              }, sendData);
-              break;
-            }
-
-            case "HeIsDiedAction": {
-              let yesOrNoVoteResultPrompt = '${outText[contextId[this.context.session.id]].text}님은 찬반투표에서 과반수 이상이 찬성을 하여 최종적으로 사형당하셨습니다.'
-              const number_one = '1';
+                const number_one = '1';
+                let yesOrNoVoteResultPrompt = '${outText[contextId[this.context.session.id]].text}님은 찬반투표에서 과반수 이상이 반대를 하여 최종적으로 사형대에 오르지 않습니다.'
                 response.setParameters({
                     number1: number_one,
                     yesOrNoVoteResult: yesOrNoVoteResultPrompt,
@@ -274,21 +270,31 @@ class Request {
                 break;
             }
 
+            case "HeIsDiedAction": {
+                let yesOrNoVoteResultPrompt = '${outText[contextId[this.context.session.id]].text}님은 찬반투표에서 과반수 이상이 찬성을 하여 최종적으로 사형당하셨습니다.'
+                const number_one = '1';
+                response.setParameters({
+                    number1: number_one,
+                    yesOrNoVoteResult: yesOrNoVoteResultPrompt,
+                }, sendData);
+                break;
+            }
+            case "LetMeOut3Action2":
             case "LetMeOut3Action": {
-              response.setParameters({
+                response.setParameters({
 
-              }, sendData);
-              break;
+                }, sendData);
+                break;
             }
 
             case "GameEndCitizenAction": {
-              const number_one = '1';
-              const mapia_Or_CitizenWin = '1'; //지금은 시민이 이긴 상황
-              if (mapia_Or_CitizenWin = '0') {
-                let mapiaOrCitizenWinPrompt = '마피아가 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.';
-              } else if (mapia_Or_CitizenWin = '1') {
-                let mapiaOrCitizenWinPrompt = '시민이 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.'
-              }
+                const number_one = '1';
+                const mapia_Or_CitizenWin = '1'; //지금은 시민이 이긴 상황
+                if (mapia_Or_CitizenWin = '0') {
+                    let mapiaOrCitizenWinPrompt = '마피아가 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.';
+                } else if (mapia_Or_CitizenWin = '1') {
+                    let mapiaOrCitizenWinPrompt = '시민이 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.'
+                }
                 response.setParameters({
                     number1: number_one,
                     mapiaOrCitizenWinNum: '1',
@@ -298,13 +304,13 @@ class Request {
             }
 
             case "GameEndMapiaAction": {
-              const number_one = '1';
-              const mapia_Or_CitizenWin = '0'; //지금은 마피아가 이긴 상황
-              if (mapia_Or_CitizenWin = '0') {
-                let mapiaOrCitizenWinPrompt = '마피아가 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.';
-              } else if (mapia_Or_CitizenWin = '1') {
-                let mapiaOrCitizenWinPrompt = '시민이 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.'
-              }
+                const number_one = '1';
+                const mapia_Or_CitizenWin = '0'; //지금은 마피아가 이긴 상황
+                if (mapia_Or_CitizenWin = '0') {
+                    let mapiaOrCitizenWinPrompt = '마피아가 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.';
+                } else if (mapia_Or_CitizenWin = '1') {
+                    let mapiaOrCitizenWinPrompt = '시민이 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.'
+                }
                 response.setParameters({
                     number1: number_one,
                     mapiaOrCitizenWinNum: '0',
@@ -314,7 +320,7 @@ class Request {
             }
 
             case "TurnBackAction": {
-              const number_one = '1';
+                const number_one = '1';
                 response.setParameters({
                     number1: number_one,
                     moreThanTwoExist: '1',
