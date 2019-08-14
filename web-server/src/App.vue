@@ -80,7 +80,7 @@
       <div class="list-group" v-if="!isNowSelect && !isDeciding">
         <button
           type="button"
-          class="list-group-item list-group-item-action"
+          class="list-group-item list-group-item-action list-group-item-dark"
           v-for="member in members"
           v-bind:key="member.name"
           disabled
@@ -94,7 +94,7 @@
               <a href="#" class="list-group-item list-group-item-dark">{{member.name}}</a>
             </li>-->
             <li
-              class="list-group-item list-group-item-dark align-items-center"
+              class="list-group-item list-group-item-danger align-items-center"
               v-bind:key="member.name"
             >{{member.name}}</li>
           </template>
@@ -145,7 +145,7 @@
           >
             <button
               type="button"
-              class="list-group-item list-group-item-action"
+              class="list-group-item list-group-item-action list-group-item-dark"
               @click.prevent="decide($event, member.name)"
               disabled
             >{{member.name}}</button>
@@ -160,7 +160,7 @@
             <a href="#" class="list-group-item list-group-item-dark">{{member.name}}</a>
           </li>-->
           <li
-            class="list-group-item list-group-item-dark align-items-center"
+            class="list-group-item list-group-item-danger align-items-center"
             v-bind:key="member.name"
           >{{member.name}}</li>
         </template>
