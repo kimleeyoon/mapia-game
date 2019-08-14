@@ -145,8 +145,8 @@ class Request {
                 let deadMan = "";
                 let tieVoteExist = "";
                 console.log("VOTE TEXt");
-                console.log(outText[contextId[this.context.session.id]].textect);
-                if (outText[contextId[this.context.session.id]].text == "None") { // 사형대에 아무도 오르지 않는 경우
+                console.log(outText[contextId[this.context.session.id]].text);
+                if (outText[contextId[this.context.session.id]].text == "None" || outText[contextId[this.context.session.id]].text == "") { // 사형대에 아무도 오르지 않는 경우
                     moreThanTwoExist = 1;
                     deadMan = 'none';
                 } else {
@@ -335,6 +335,7 @@ function* getText(id, target) {
         outText[id] = {};
     }
     if (target == 'vote') {
+        console.log('getText에서 vote 시랳ㅇ함');
         outText[id].text = text;
     } else if (target == 'day') {
         outText[id].day = text;

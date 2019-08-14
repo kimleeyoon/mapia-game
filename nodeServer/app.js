@@ -353,7 +353,7 @@ function grun(g, member, io, room, curDecide, getText) {
                         const it = getText(room, 'vote');
                         it.next();
                         if (x.value.isDeath == 0) { // 죽은 사람이 없는 경우
-                            it.next('');
+                            it.next('None');
                         } else { // 죽은 사람이 있는 경우
                             it.next(x.value.text);
                         }
