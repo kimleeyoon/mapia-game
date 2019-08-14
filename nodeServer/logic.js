@@ -665,7 +665,7 @@ function* mainGame(member) {
             }
         }
 
-        let isCitizenWin = 0;
+        isCitizenWin = 0;
         
         if (count >= Object.keys(memberClass.getLiveAfterList()).length / 2) {
             isCitizenWin = 0;
