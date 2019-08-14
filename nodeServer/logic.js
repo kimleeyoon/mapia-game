@@ -620,6 +620,7 @@ function* mainGame(member) {
         console.log(`id : ${id}`);
         if (id == "None") { // 사람이 안죽는 경우
             // yield ``;
+            console.log("Logic 아무도 안죽어");
             yield {
                 do: "VOTE_TEXT",
                 text: 'None',

@@ -144,7 +144,9 @@ class Request {
                 let moreThanTwoExist = 0; // 사형대에 오르는 사람이 있는 경우
                 let deadMan = "";
                 let tieVoteExist = "";
-                if (outText[contextId[this.context.session.id]].text === "None") { // 사형대에 아무도 오르지 않는 경우
+                console.log("VOTE TEXt");
+                console.log(outText[contextId[this.context.session.id]].textect);
+                if (outText[contextId[this.context.session.id]].text == "None") { // 사형대에 아무도 오르지 않는 경우
                     moreThanTwoExist = 1;
                     deadMan = 'none';
                 } else {
