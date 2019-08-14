@@ -665,6 +665,22 @@ function* mainGame(member) {
             }
         }
 
+        let isCitizenWin = 0;
+        
+        if (count >= Object.keys(memberClass.getLiveAfterList()).length / 2) {
+            isCitizenWin = 0;
+        } else if (count == 0) {
+            isCitizenWin = 1;
+        }else{
+            isCitizenWin = 2;
+        }
+        
+        yield {
+            do: "AFTER_TEXT",
+            text: `${mapiaVSdoctorResult}`,
+            win: `${isCitizenWin}`
+        };
+
         yield {
             do: "DAY_TEXT",
             day: `${dayOrder}`

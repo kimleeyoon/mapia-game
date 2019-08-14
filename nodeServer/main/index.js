@@ -281,8 +281,16 @@ class Request {
             }
             case "LetMeOut3Action2":
             case "LetMeOut3Action": {
+                const number_one = '1';
+                console.log("outtext:");
+                console.log(outText[contextId[this.context.session.id]].isCitizenWin);
+                let temp = `1`;
+                if (outText[contextId[this.context.session.id]].isCitizenWin == '0' || outText[contextId[this.context.session.id]].isCitizenWin == '1') {
+                    temp = `0`;
+                }
                 response.setParameters({
-
+                    number1: number_one,
+                    mapiaOrCitizenWinNum: temp
                 }, sendData);
                 break;
             }
@@ -290,10 +298,11 @@ class Request {
             case "GameEndCitizenAction": {
                 const number_one = '1';
                 const mapia_Or_CitizenWin = '1'; //지금은 시민이 이긴 상황
-                if (mapia_Or_CitizenWin = '0') {
-                    let mapiaOrCitizenWinPrompt = '마피아가 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.';
-                } else if (mapia_Or_CitizenWin = '1') {
-                    let mapiaOrCitizenWinPrompt = '시민이 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.'
+                let mapiaOrCitizenWinPrompt = "";
+                if (mapia_Or_CitizenWin == '0') {
+                    mapiaOrCitizenWinPrompt = '마피아가 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.';
+                } else if (mapia_Or_CitizenWin == '1') {
+                    mapiaOrCitizenWinPrompt = '시민이 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.'
                 }
                 response.setParameters({
                     number1: number_one,
@@ -306,10 +315,11 @@ class Request {
             case "GameEndMapiaAction": {
                 const number_one = '1';
                 const mapia_Or_CitizenWin = '0'; //지금은 마피아가 이긴 상황
+                let mapiaOrCitizenWinPrompt = "";
                 if (mapia_Or_CitizenWin = '0') {
-                    let mapiaOrCitizenWinPrompt = '마피아가 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.';
+                    mapiaOrCitizenWinPrompt = '마피아가 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.';
                 } else if (mapia_Or_CitizenWin = '1') {
-                    let mapiaOrCitizenWinPrompt = '시민이 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.'
+                    mapiaOrCitizenWinPrompt = '시민이 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.'
                 }
                 response.setParameters({
                     number1: number_one,
@@ -349,7 +359,7 @@ function* getText(id, target) {
     } else if (target == 'after') {
         outText[id].after = text.text;
         outText[id].isCitizenWin = text.isCitizenWin;
-    }else if (target == 'vote_check'){
+    } else if (target == 'vote_check') {
         outText[id].vote_check = text.text;
     }
 }
