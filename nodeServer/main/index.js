@@ -316,9 +316,9 @@ class Request {
                 const number_one = '1';
                 const mapia_Or_CitizenWin = '0'; //지금은 마피아가 이긴 상황
                 let mapiaOrCitizenWinPrompt = "";
-                if (mapia_Or_CitizenWin = '0') {
+                if (mapia_Or_CitizenWin == '0') {
                     mapiaOrCitizenWinPrompt = '마피아가 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.';
-                } else if (mapia_Or_CitizenWin = '1') {
+                } else if (mapia_Or_CitizenWin == '1') {
                     mapiaOrCitizenWinPrompt = '시민이 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.'
                 }
                 response.setParameters({
