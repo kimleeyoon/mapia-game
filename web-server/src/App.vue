@@ -78,13 +78,18 @@
       <br />
       당신의 역할 : {{role}}
       <div class="list-group" v-if="!isNowSelect && !isDeciding">
-        <button
+        <!-- <button
           type="button"
           class="list-group-item list-group-item-action list-group-item-dark"
           v-for="member in members"
           v-bind:key="member.name"
           disabled
-        >{{member.name}}</button>
+        >{{member.name}}</button>-->
+        <li
+          class="list-group-item list-group-item-dark"
+          v-for="member in members"
+          v-bind:key="member.name"
+        >{{member.name}}</li>
         <ul class="list-group">
           <template v-for="member in deadMember">
             <!-- <li
@@ -367,7 +372,7 @@ body {
   background-color: black;
 }
 .list-group {
-  background-color: #31353D;
+  background-color: #31353d;
 }
 #app {
   /* font-family: "Avenir", Helvetica, Arial, sans-serif; */
