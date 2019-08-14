@@ -636,11 +636,17 @@ function* mainGame(member) {
                 text: `${id}`,
                 isDeath: 1
             };
-            yield {
-                do: "WAIT_CHECK"
+            const goDie = yield {
+                do: "VOTE_CHECK"
             };
-            yield `${id}가 투표로 죽었습니다.`
-            memberClass.setLive(id, false);
+            console.log("goDie");
+            console.log(goDie);
+            if(goDie == 'true'){
+                yield `${id}가 투표로 죽었습니다.`
+                memberClass.setLive(id, false);
+            }else{
+                yield '아무도 안죽음~';
+            }
         }
 
         idOfPolicePick = 0; //다음날을 위한 초기화

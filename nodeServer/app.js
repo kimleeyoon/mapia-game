@@ -97,12 +97,12 @@ router.route('/speaker/nugu/CheckWhoDiedActions2').post((req, res, next) => {
 });
 router.route('/speaker/nugu/FinalArgumentAction2').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
-    gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
+    // gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
     console.log("FinalArgumentAction2");
 });
 router.route('/speaker/nugu/FinalArgumentAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
-    gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
+    // gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
     console.log("FinalArgumentAction");
 });
 router.route('/speaker/nugu/NoOneDeadAction2').post((req, res, next) => {
@@ -149,12 +149,28 @@ router.route('/speaker/nugu/MaybeMapiaWinActions2').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
     console.log("MaybeMapiaWinActions2");
 });
+router.route('/speaker/nugu/HeIsSavedAction2').post((req, res, next) => {
+    nugu(speakerCreateRoom, req, res, next);
+    gameStartInformation[`${contextId[req.body.context.session.id]}`].goDie = false;
+    gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
+    console.log("HeIsSavedAction2");
+});
 router.route('/speaker/nugu/HeIsSavedAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
+    gameStartInformation[`${contextId[req.body.context.session.id]}`].goDie = false;
+    gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
     console.log("HeIsSavedAction");
+});
+router.route('/speaker/nugu/HeIsDiedAction2').post((req, res, next) => {
+    nugu(speakerCreateRoom, req, res, next);
+    gameStartInformation[`${contextId[req.body.context.session.id]}`].goDie = true;
+    gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
+    console.log("HeIsDiedAction2");
 });
 router.route('/speaker/nugu/HeIsDiedAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
+    gameStartInformation[`${contextId[req.body.context.session.id]}`].goDie = true;
+    gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
     console.log("HeIsDiedAction");
 });
 router.route('/speaker/nugu/GameEndMapiaAction').post((req, res, next) => {
@@ -384,7 +400,21 @@ function grun(g, member, io, room, curDecide, getText) {
                                 setTimeout(k, 0.5);
                             }
                         })();
-                    } else if (x.value.do === "WAIT_SECOND") {
+                    }else if(x.value.do === "VOTE_CHECK"){
+                        (function k() {
+                            if (gameStartInformation[room].first) {
+                                gameStartInformation[room].first = false;
+                                const it = getText(room, 'vote_check');
+                                console.log("이터레이터 실행");
+                                console.log(it);
+                                console.log(it.next());
+                                it.next(`${gameStartInformation[room].goDie}`);
+                                setTimeout(iterate, 0, `${gameStartInformation[room].goDie}`);
+                            } else {
+                                setTimeout(k, 0.5);
+                            }
+                        })();
+                    }else if (x.value.do === "WAIT_SECOND") {
                         console.log(`${x.value.time} 기다리기`);
                         setTimeout(iterate, x.value.time * 1000, x.value);
                     } else if (x.value.do === "VOTE_TEXT") {
