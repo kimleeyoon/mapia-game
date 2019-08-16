@@ -6,7 +6,7 @@
       <div class="twinkling"></div>
       <div class="clouds"></div>
       <div class="container" v-if="isNotJoinedRoom">
-        <div class="col-md-8 offset-md-2">
+        <div class="col-md-12 offset-md-1">
           <h1 class="text-center mb-4">
             현주가 좋아하는
             <br />마피아 게임!!
@@ -71,7 +71,7 @@
         <div class="list-group">
           <button
             type="button"
-            class="list-group-item list-group-item-action"
+            class="buttonWithTransparent"
             v-for="member in members"
             v-bind:key="member.name"
           >{{member.name}}</button>
@@ -92,11 +92,16 @@
             disabled
           >{{member.name}}</button>-->
           <li
-            class="list-group-item list-group-item-dark"
+            class="buttonWithTransparent"
             v-for="member in members"
             v-bind:key="member.name"
           >{{member.name}}</li>
-          <ul class="list-group">
+          <li
+            class="buttonWithTransparent"
+            v-for="member in deadMember"
+            v-bind:key="member.name"
+          >{{member.name}}</li>
+          <ul class="list-group" v-if="false">
             <template v-for="member in deadMember">
               <!-- <li
                 class="list-group-item d-flex justify-content-between align-items-center"
@@ -108,6 +113,7 @@
                 class="list-group-item list-group-item-danger align-items-center"
                 v-bind:key="member.name"
               >{{member.name}}</li>
+              <!-- <button class="buttonWithTransparent" v-bind:key="member.name">{{member.name}}</button> -->
             </template>
           </ul>
         </div>
@@ -470,7 +476,7 @@ body {
   left: 0;
   right: 0;
   display: block;
-  z-index: 0;
+  z-index: -5;
 }
 
 .twinkling {
@@ -484,7 +490,7 @@ body {
   right: 0;
   top: 0;
   bottom: 0;
-  z-index: 2;
+  z-index: -3;
 
   -moz-animation: move-background 70s linear infinite;
   -ms-animation: move-background 70s linear infinite;
@@ -509,7 +515,7 @@ body {
   right: 0;
   top: 0;
   bottom: 0;
-  z-index: 3;
+  z-index: -2;
 
   -moz-animation: move-background 150s linear infinite;
   -ms-animation: move-background 150s linear infinite;
@@ -521,7 +527,7 @@ img {
   height: 20vh;
   width: 20vh;
   position: absolute;
-  z-index: 3;
+  z-index: -2;
   right: 20px;
 }
 
