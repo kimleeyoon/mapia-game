@@ -665,7 +665,7 @@ span.contact-button {
 }
 .buttonWithTransparent:hover {
   color: #000000;
-  background-color: #ffffff;
+  background-color: transparent;
 }
 #app {
   /* font-family: "Avenir", Helvetica, Arial, sans-serif; */
