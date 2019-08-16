@@ -1,7 +1,7 @@
 <template>
   <div class="backgroud-container">
     <div id="app">
-      <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1231630/moon2.png" alt />
+    <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1231630/moon2.png" alt />
       <div class="stars"></div>
       <div class="twinkling"></div>
       <div class="clouds"></div>
@@ -421,7 +421,7 @@ body {
   background-color: black;
 }
 .list-group {
-  background-color: #31353d;
+  background-color: transparent;
 }
 
 @keyframes move-background {
@@ -529,6 +529,7 @@ img {
   position: absolute;
   z-index: -2;
   right: 20px;
+  top: 100px;
 }
 
 @import url(https://fonts.googleapis.com/css?family=Raleway:400, 300, 500, 700);
@@ -539,7 +540,7 @@ html {
   align-items: center;
   justify-content: center;
   height: 100%;
-  background-color: #1f3944;
+  background-color: transparent;
   -webkit-font-smoothing: antialiased;
   font-size: 18px;
 }
