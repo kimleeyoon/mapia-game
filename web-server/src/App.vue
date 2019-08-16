@@ -7,6 +7,15 @@
       <div class="clouds"></div>
       <div class="container" v-if="isNotJoinedRoom">
         <div class="col-md-12 offset-md-1">
+          <button
+            href="http://test.naver.com"
+            type="button"
+            class="contact-button"
+            @click.prevent="decide($event, member.name)"
+          >
+            test
+            <!-- <img src="./13230195.png" class="icon icon-paperplane"> -->
+          </button>
           <h1 class="text-center mb-1" v-if="false">
             현주가 좋아하는
             <br />마피아 게임!!
@@ -126,7 +135,7 @@
             v-bind:key="member.name"
           >{{member.name}}</li>
           <li
-            class="buttonWithTransparent"
+            class="buttonWithTransparent dead"
             v-for="member in deadMember"
             v-bind:key="member.name"
           >{{member.name}}</li>
@@ -172,6 +181,7 @@
                 href="http://test.naver.com"
                 type="button"
                 class="contact-button"
+                v-bind:content="badge[member.name]"
                 @click.prevent="decide($event, member.name)"
               >
                 {{member.name}}
@@ -950,7 +960,7 @@ span.contact-button {
   position: absolute;
   top: -14px;
   left: -12px;
-  width: 132px;
+  width: 45px;
   height: 25px;
 }
 .contact-button:before {
@@ -963,7 +973,7 @@ span.contact-button {
   content: "뱃지";
   font-size: 0.6em;
   top: -10px;
-  left: 0px;
+  left:-12px;
   color: white;
 }
 
@@ -981,7 +991,7 @@ span.contact-button {
   font-size: 1.2em;
   border: 2px solid white;
   border-radius: 4px;
-  padding: 20px 60px 20px 55px;
+  padding: 10px 60px 10px 55px;
   transition: 0.3s ease-in-out;
   z-index: 300;
 }
@@ -1014,6 +1024,9 @@ span.contact-button {
   background-color: transparent;
   text-align: center;
   transition: all 0.2s;
+}
+.dead {
+  color: red;
 }
 .buttonWithTransparent:hover {
   color: #000000;
