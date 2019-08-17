@@ -94,193 +94,197 @@
         <p>{{ temp }}</p>
       </div>
       <div class="container" v-else-if="!isStartGame">
-        <h1>
-          <b>방에 접속하셨습니다!</b>
-        </h1>
-        <div>
-          <div class="blink">사람들 기다리는 중인가 뭐시기</div>
-          {{members.length}} /
-          <b>{{roomSize}}</b>
+        <div class="col-md-10 offset-md-1">
+          <h1>
+            <b>방에 접속하셨습니다!</b>
+          </h1>
+          <div>
+            <div class="blink">사람들 기다리는 중인가 뭐시기</div>
+            {{members.length}} /
+            <b>{{roomSize}}</b>
+            <br />
+          </div>
+          <br />
+          <br />
+          <!-- <ul class="list-group">
+            <li
+              class="list-group-item"
+              v-for="member in members"
+              v-bind:key="member.name"
+            ><button class="list-group-item">{{member.name}}</button></li>
+          </ul>-->
+          <div class="list-group">
+            <button
+              type="button"
+              class="buttonWithTransparent"
+              v-for="member in members"
+              v-bind:key="member.name"
+            >{{member.name}}</button>
+          </div>
           <br />
         </div>
-        <br />
-        <br />
-        <!-- <ul class="list-group">
-          <li
-            class="list-group-item"
-            v-for="member in members"
-            v-bind:key="member.name"
-          ><button class="list-group-item">{{member.name}}</button></li>
-        </ul>-->
-        <div class="list-group">
-          <button
-            type="button"
-            class="buttonWithTransparent"
-            v-for="member in members"
-            v-bind:key="member.name"
-          >{{member.name}}</button>
-        </div>
-        <br />
       </div>
       <div class="container" v-if="isStartGame">
-        {{name}}님!
-        <br />!게임 시작!
-        <br />
-        당신의 역할 : {{role}}
-        <div class="list-group" v-if="!isNowSelect && !isDeciding">
-          <!-- <button
-            type="button"
-            class="list-group-item list-group-item-action list-group-item-dark"
-            v-for="member in members"
-            v-bind:key="member.name"
-            disabled
-          >{{member.name}}</button>-->
-          <li
-            class="buttonWithTransparent"
-            v-for="member in members"
-            v-bind:key="member.name"
-          >{{member.name}}</li>
-          <li
-            class="buttonWithTransparent dead"
-            v-for="member in deadMember"
-            v-bind:key="member.name"
-          >{{member.name}}</li>
-          <ul class="list-group" v-if="false">
-            <template v-for="member in deadMember">
-              <!-- <li
-                class="list-group-item d-flex justify-content-between align-items-center"
-                v-bind:key="member.name"
-              >
-                <a href="#" class="list-group-item list-group-item-dark">{{member.name}}</a>
-              </li>-->
-              <li
-                class="list-group-item list-group-item-danger align-items-center"
-                v-bind:key="member.name"
-              >{{member.name}}</li>
-              <!-- <button class="buttonWithTransparent" v-bind:key="member.name">{{member.name}}</button> -->
-            </template>
-          </ul>
-        </div>
-        <div class="progress" v-if="isNowSelect || isDeciding">
-          <div
-            class="progress-bar progress-bar-striped progress-bar-animated"
-            role="progressbar"
-            aria-valuenow="75"
-            aria-valuemin="0"
-            aria-valuemax="100"
-            :style="barStyle"
-          ></div>
-        </div>
-        <ul class="list-group" v-if="isNowSelect">
-          <template v-for="member in members">
-            <li
-              class="list-group-item d-flex justify-content-between align-items-center"
+        <div class="col-md-10 offset-md-1">
+          {{name}}님!
+          <br />!게임 시작!
+          <br />
+          당신의 역할 : {{role}}
+          <div class="list-group" v-if="!isNowSelect && !isDeciding">
+            <!-- <button
+              type="button"
+              class="list-group-item list-group-item-action list-group-item-dark"
+              v-for="member in members"
               v-bind:key="member.name"
-            >
-              <button
-                type="button"
-                class="list-group-item list-group-item-action list-group-item-danger"
-                @click.prevent="decide($event, member.name)"
-                v-if="false"
-              >{{member.name}}</button>
-              <button
-                href="http://test.naver.com"
-                type="button"
-                class="contact-button list-group-item"
-                v-bind:content="badge[member.name]"
-                @click.prevent="decide($event, member.name)"
-              >
-                {{member.name}}
-                <!-- <img src="./13230195.png" class="icon icon-paperplane"> -->
-              </button>
-              <span class="badge badge-primary badge-pill">{{badge[member.name]}}</span>
-            </li>
-            <div class="list-group" v-bind:key="member.name" v-if="false">
-              <a href="#" class="list-group-item list-group-item-action" style="width:95%;">
-                {{member.name}}
-                <button
-                  type="button"
-                  @click.prevent="decide($event, member.name)"
-                  style="display:none"
-                ></button>
-                <strong>{{badge[member.name]}}</strong>
-              </a>
-            </div>
-          </template>
-          <template v-for="member in deadMember">
+              disabled
+            >{{member.name}}</button>-->
             <li
-              class="list-group-item d-flex justify-content-between align-items-center"
-              v-bind:key="member.name"
-              v-if="false"
-            >
-              <a href="#" class="list-group-item list-group-item-dark">{{member.name}}</a>
-            </li>
-            <li
-              class="list-group-item list-group-item-dark align-items-center"
+              class="buttonWithTransparent"
+              v-for="member in members"
               v-bind:key="member.name"
             >{{member.name}}</li>
-          </template>
-        </ul>
-        <ul class="list-group" v-else-if="isDeciding">
-          <template v-for="member in members">
-            <li
-              class="list-group-item d-flex justify-content-between align-items-center"
-              v-bind:key="member.name"
-              v-if="true"
-            >
-              <button
-                type="button"
-                class="list-group-item list-group-item-action list-group-item-dark"
-                @click.prevent="decide($event, member.name)"
-                disabled
-              >{{member.name}}</button>
-              <span class="badge badge-primary badge-pill">{{badge[member.name]}}</span>
-            </li>
-            <div class="list-group" v-bind:key="member.name" v-if="false">
-              <a href="#" class="list-group-item list-group-item-action">
-                {{member.name}}
-                <button
-                  type="button"
-                  @click.prevent="decide($event, member.name)"
-                  style="display:none"
-                  disabled
-                ></button>
-              </a>
-            </div>
-          </template>
-          <template v-for="member in deadMember">
-            <li
-              class="list-group-item d-flex justify-content-between align-items-center"
-              v-bind:key="member.name"
-              v-if="false"
-            >
-              <a href="#" class="list-group-item list-group-item-dark">{{member.name}}</a>
-            </li>
             <li
               class="buttonWithTransparent dead"
               v-for="member in deadMember"
               v-bind:key="member.name"
             >{{member.name}}</li>
-          </template>
-        </ul>
-        <div class="list-group" v-if="false">
-          <button
-            type="button"
-            class="list-group-item list-group-item-action"
-            v-for="member in members"
-            v-bind:key="member.name"
-            @click.prevent="decide($event, member.name)"
-          >
-            {{member.name}}
-            <span v-if="isDeciding">
-              <span class="badge badge-primary badge-pill">{{badge[member.name]}}</span>
-            </span>
-          </button>
+            <ul class="list-group" v-if="false">
+              <template v-for="member in deadMember">
+                <!-- <li
+                  class="list-group-item d-flex justify-content-between align-items-center"
+                  v-bind:key="member.name"
+                >
+                  <a href="#" class="list-group-item list-group-item-dark">{{member.name}}</a>
+                </li>-->
+                <li
+                  class="list-group-item list-group-item-danger align-items-center"
+                  v-bind:key="member.name"
+                >{{member.name}}</li>
+                <!-- <button class="buttonWithTransparent" v-bind:key="member.name">{{member.name}}</button> -->
+              </template>
+            </ul>
+          </div>
+          <div class="progress" v-if="isNowSelect || isDeciding">
+            <div
+              class="progress-bar progress-bar-striped progress-bar-animated"
+              role="progressbar"
+              aria-valuenow="75"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              :style="barStyle"
+            ></div>
+          </div>
+          <ul class="list-group" v-if="isNowSelect">
+            <template v-for="member in members">
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center"
+                v-bind:key="member.name"
+              >
+                <button
+                  type="button"
+                  class="list-group-item list-group-item-action list-group-item-danger"
+                  @click.prevent="decide($event, member.name)"
+                  v-if="false"
+                >{{member.name}}</button>
+                <button
+                  href="http://test.naver.com"
+                  type="button"
+                  class="contact-button list-group-item"
+                  v-bind:content="badge[member.name]"
+                  @click.prevent="decide($event, member.name)"
+                >
+                  {{member.name}}
+                  <!-- <img src="./13230195.png" class="icon icon-paperplane"> -->
+                </button>
+                <span class="badge badge-primary badge-pill">{{badge[member.name]}}</span>
+              </li>
+              <div class="list-group" v-bind:key="member.name" v-if="false">
+                <a href="#" class="list-group-item list-group-item-action" style="width:95%;">
+                  {{member.name}}
+                  <button
+                    type="button"
+                    @click.prevent="decide($event, member.name)"
+                    style="display:none"
+                  ></button>
+                  <strong>{{badge[member.name]}}</strong>
+                </a>
+              </div>
+            </template>
+            <template v-for="member in deadMember">
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center"
+                v-bind:key="member.name"
+                v-if="false"
+              >
+                <a href="#" class="list-group-item list-group-item-dark">{{member.name}}</a>
+              </li>
+              <li
+                class="list-group-item list-group-item-dark align-items-center"
+                v-bind:key="member.name"
+              >{{member.name}}</li>
+            </template>
+          </ul>
+          <ul class="list-group" v-else-if="isDeciding">
+            <template v-for="member in members">
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center"
+                v-bind:key="member.name"
+                v-if="true"
+              >
+                <button
+                  type="button"
+                  class="list-group-item list-group-item-action list-group-item-dark"
+                  @click.prevent="decide($event, member.name)"
+                  disabled
+                >{{member.name}}</button>
+                <span class="badge badge-primary badge-pill">{{badge[member.name]}}</span>
+              </li>
+              <div class="list-group" v-bind:key="member.name" v-if="false">
+                <a href="#" class="list-group-item list-group-item-action">
+                  {{member.name}}
+                  <button
+                    type="button"
+                    @click.prevent="decide($event, member.name)"
+                    style="display:none"
+                    disabled
+                  ></button>
+                </a>
+              </div>
+            </template>
+            <template v-for="member in deadMember">
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center"
+                v-bind:key="member.name"
+                v-if="false"
+              >
+                <a href="#" class="list-group-item list-group-item-dark">{{member.name}}</a>
+              </li>
+              <li
+                class="buttonWithTransparent dead"
+                v-for="member in deadMember"
+                v-bind:key="member.name"
+              >{{member.name}}</li>
+            </template>
+          </ul>
+          <div class="list-group" v-if="false">
+            <button
+              type="button"
+              class="list-group-item list-group-item-action"
+              v-for="member in members"
+              v-bind:key="member.name"
+              @click.prevent="decide($event, member.name)"
+            >
+              {{member.name}}
+              <span v-if="isDeciding">
+                <span class="badge badge-primary badge-pill">{{badge[member.name]}}</span>
+              </span>
+            </button>
+          </div>
+          <p
+            class="announce"
+            style="overflow:scroll;height:300px; padding:10px; white-space:pre"
+          >{{tempAnnounce}}</p>
         </div>
-        <p
-          class="announce"
-          style="overflow:scroll;height:300px; padding:10px; white-space:pre"
-        >{{tempAnnounce}}</p>
       </div>
       <button
         type="button"
