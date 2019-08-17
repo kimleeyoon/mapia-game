@@ -6,16 +6,22 @@
       <div class="twinkling"></div>
       <div class="clouds"></div>
       <div class="container" v-if="isNotJoinedRoom">
-        <div class="col-md-12 offset-md-1">
-          <button
-            href="http://test.naver.com"
-            type="button"
-            class="contact-button"
-            @click.prevent="decide($event, member.name)"
-          >
-            test
-            <!-- <img src="./13230195.png" class="icon icon-paperplane"> -->
-          </button>
+        <div class="col-md-10 offset-md-1">
+          <ul class="list-group">
+            <li class="list-group-item" style="background-color: transparent;">
+              <button
+                href="http://test.naver.com"
+                type="button"
+                class="contact-button"
+                style="color:white;"
+                @click.prevent="decide($event, member.name)"
+              >
+                test
+                <!-- <img src="./13230195.png" class="icon icon-paperplane"> -->
+              </button>
+            </li>
+          </ul>
+          <button type="button" class="buttonWithTransparent">test</button>
           <h1 class="text-center mb-1" v-if="false">
             현주가 좋아하는
             <br />마피아 게임!!
@@ -180,7 +186,7 @@
               <button
                 href="http://test.naver.com"
                 type="button"
-                class="contact-button"
+                class="contact-button list-group-item"
                 v-bind:content="badge[member.name]"
                 @click.prevent="decide($event, member.name)"
               >
@@ -246,14 +252,14 @@
             <li
               class="list-group-item d-flex justify-content-between align-items-center"
               v-bind:key="member.name"
-              v-if="true"
+              v-if="false"
             >
               <a href="#" class="list-group-item list-group-item-dark">{{member.name}}</a>
             </li>
             <li
-              class="list-group-item list-group-item-danger align-items-center"
+              class="buttonWithTransparent dead"
+              v-for="member in deadMember"
               v-bind:key="member.name"
-              v-if="false"
             >{{member.name}}</li>
           </template>
         </ul>
@@ -939,7 +945,7 @@ span.contact-button {
 .contact-button:hover {
   transition: 0.3s ease-in-out;
   border: 2px solid white;
-  border-radius: 50px;
+  /* border-radius: 50px; */
   background-color: white;
   color: black;
 }
@@ -973,27 +979,30 @@ span.contact-button {
   content: "뱃지";
   font-size: 0.6em;
   top: -10px;
-  left:-12px;
+  left: -12px;
   color: white;
 }
-
+@import url("https://fonts.googleapis.com/css?family=Raleway&display=swap");
 .contact-button {
   position: relative;
   -webkit-perspective: 1000;
   -webkit-backface-visibility: hidden;
   -webkit-transform: translate3d(0, 0, 0);
-  color: white;
+  color: black;
+
   background-color: transparent;
   text-decoration: none;
-  text-transform: uppercase;
-  font-family: "Raleway", sans-serif;
-  font-weight: 500;
-  font-size: 1.2em;
+  /* text-transform: uppercase; */
+  font-family: "Roboto", sans-serif;
+  font-weight: 600;
+  /* font-size: 1.2em; */
   border: 2px solid white;
   border-radius: 4px;
-  padding: 10px 60px 10px 55px;
+  padding: 6.3px 21.6px 6.3px 21.6px;
   transition: 0.3s ease-in-out;
   z-index: 300;
+  margin: 0 auto;
+  width: 95%;
 }
 
 .inspiration {
@@ -1009,7 +1018,7 @@ span.contact-button {
   font-weight: 700;
   font-size: 1em;
 }
-@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+@import url("https://fonts.googleapis.com/css?family=Roboto&display=swap");
 .buttonWithTransparent {
   display: inline-block;
   padding: 0.35em 1.2em;
@@ -1030,7 +1039,7 @@ span.contact-button {
 }
 .buttonWithTransparent:hover {
   color: #000000;
-  background-color: transparent;
+  background-color: white;
 }
 #app {
   /* font-family: "Avenir", Helvetica, Arial, sans-serif; */
