@@ -219,11 +219,7 @@
               >
                 <a href="#" class="list-group-item list-group-item-dark">{{member.name}}</a>
               </li>
-              <li
-                class="buttonWithTransparent dead"
-                v-for="member in deadMember"
-                v-bind:key="member.name"
-              >{{member.name}}</li>
+              <li class="buttonWithTransparent dead" v-bind:key="member.name">{{member.name}}</li>
             </template>
           </ul>
           <ul class="list-group" v-else-if="isDeciding">
@@ -406,6 +402,7 @@ export default {
     this.socket.on("RESULT_OF_INVESTIGATION", data => {
       // this.tempAnnounce +=
       //   "경찰 결과 왔다 받아라~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+      this.tempAnnounce = "";
       if (data.role == "시민") {
         this.tempAnnounce += data.name + "님은" + "마피아가 아닙니다.\n";
       } else {
@@ -1177,7 +1174,7 @@ svg {
   width: 60%;
   height: 50%;
   margin: 0 auto;
-  white-space:pre;
+  white-space: pre;
   /* background: var(--color-bg); */
 }
 
@@ -1354,10 +1351,10 @@ img.inLetter {
   margin-top: 30px;
   align-self: center;
 }
-
+@import url('https://fonts.googleapis.com/css?family=Noto+Serif+KR&display=swap');
 /* Blockquote header */
 .blockquote h1 {
-  font-family: "Abril Fatface", cursive;
+  font-family: 'Noto Serif KR', cursive;
   position: relative; /* for pseudos */
   color: white;
   font-size: small;

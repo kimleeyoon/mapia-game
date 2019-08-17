@@ -307,7 +307,7 @@ class Request {
                 response.setParameters({
                     number1: number_one,
                     mapiaOrCitizenWinNum: '1',
-                    mapiaOrCitizenWin: mapiaOrCitizenWinPrompt,
+                    mapiaOrCitizenWinPrompt: mapiaOrCitizenWinPrompt,
                 }, sendData);
                 break;
             }
@@ -324,7 +324,7 @@ class Request {
                 response.setParameters({
                     number1: number_one,
                     mapiaOrCitizenWinNum: '0',
-                    mapiaOrCitizenWin: mapiaOrCitizenWinPrompt,
+                    mapiaOrCitizenWinPrompt: mapiaOrCitizenWinPrompt,
                 }, sendData);
                 break;
             }
