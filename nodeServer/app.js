@@ -648,6 +648,6 @@ function createSocket(rooms, index) {
 // // connection을 받으면, news 이벤트에 hello 객체를 담아 보낸다
 // namespace2.on('connection', (socket) => {
 //     namespace2.emit('news', { hello: "Someone connected at Namespace2"});
-// });
+// }); 
 
 module.exports = speakerCreateRoom;

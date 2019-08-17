@@ -435,7 +435,7 @@ function* mainGame(member) {
 
 
         // alert("지금부터 마피아는 고개를 들어 30초간 토의를 하시고 암살할 플레이어를 지목해주세요.");
-        yield "지금부터 마피아는 고개를 들어 30초간 토의를 하시고 암살할 플레이어를 지목해주세요.";
+        yield "마피아는 고개를 들어 30초간 토의를 하시고 암살할 플레이어를 지목해주세요.";
 
         idOfMapiaPick = 0;
         let tempMapiaPick = [];
@@ -466,7 +466,7 @@ function* mainGame(member) {
         // alert("다시 고개를 숙여주십시오.");
         yield "다시 고개를 숙여주십시오.";
         // alert("지금부터 의사는 고개를 들어 30초간 토의를 하시고 살릴 플레이어를 지목해주세요.");
-        yield "지금부터 의사는 고개를 들어 30초간 토의를 하시고 살릴 플레이어를 지목해주세요.";
+        yield "의사는 고개를 들어 30초간 토의를 하시고 살릴 플레이어를 지목해주세요.";
         doctorPick = "None";
         let tempDoctorPick = [];
 
@@ -506,7 +506,7 @@ function* mainGame(member) {
         // alert("다시 고개를 숙여주십시오.");
         yield "다시 고개를 숙여주십시오.";
         // alert("지금부터 경찰은 고개를 들어 30초간 토의를 하시고 조사할 플레이어를 지목해주세요.");
-        yield "지금부터 경찰은 고개를 들어 30초간 토의를 하시고 조사할 플레이어를 지목해주세요.";
+        yield "경찰은 고개를 들어 30초간 토의를 하시고 조사할 플레이어를 지목해주세요.";
 
         let tempPolicePick = [];
         policeAlive = isThereAnyPolice(afterList);
