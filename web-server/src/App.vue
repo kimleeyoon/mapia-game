@@ -96,7 +96,13 @@
             <!-- <button class="bttn-minimal bttn-md bttn-danLger" @click.prevent="roomConnect">Connect</button> -->
           </div>
         </div>
-        <p>{{ temp }}</p>
+        <div class="blockquote-wrapper">
+          <div class="blockquote">
+            <h1>
+              <span style="color:#ffffff">{{temp}}</span>
+            </h1>
+          </div>
+        </div>
       </div>
       <div class="container" v-else-if="!isStartGame">
         <div class="col-md-10 offset-md-1">
@@ -268,6 +274,7 @@
       <script src="https://codepen.io/fracturedNight/pen/exgzZg.js"></script>
 <script>
 import io from "socket.io-client";
+import { setTimeout } from "timers";
 
 export default {
   name: "app",
@@ -293,7 +300,8 @@ export default {
       isDeciding: false,
       isVoting: false,
       isNight: true,
-      roleView: false
+      roleView: false,
+      onceClick: false
     };
   },
   methods: {
@@ -303,14 +311,19 @@ export default {
         this.warnNoName = true;
         return;
       }
-
-      this.warnNoName = false;
-      this.room = io();
-      e.preventDefault();
-      this.socket.emit("ROOM_CONNECT", {
-        name: this.name,
-        room: this.roomID
-      });
+      if (this.onceClick == false) {
+        this.onceClick = true;
+        setTimeout(() => {
+          this.onceClick = false;
+        }, 1000);
+        this.warnNoName = false;
+        this.room = io();
+        e.preventDefault();
+        this.socket.emit("ROOM_CONNECT", {
+          name: this.name,
+          room: this.roomID
+        });
+      }
     },
     sendMessage(e) {
       e.preventDefault();

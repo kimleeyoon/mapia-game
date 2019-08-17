@@ -215,9 +215,7 @@ class Request {
                 const number_one = '1';
 
                 let tieVoteExistPrompt = `${outText[contextId[this.context.session.id]].text}님이 사형대에 올랐습니다.
-                  1분동안 최후 변론을 진행해주세요. <pause time = "60000"> 최후 변론이 종료되었습니다.
-                  플레이어들은 10초동안 찬반투표를 진행해주세요. <pause time = "10000">
-                  ${outText[contextId[this.context.session.id]].text}님을 죽이시려면 죽이자고, 살리시려면 살리자고 말씀해주세요.`
+                  1분동안 최후 변론을 진행해주세요. `;
 
                 response.setParameters({
                     number1: number_one,
