@@ -512,7 +512,9 @@ function grun(g, member, io, room, curDecide, getText) {
                                 setTimeout(iterate, 0, curDecide.decides)
                             });
                     }
-                } else { // 단순한 메시지 전송용
+                } else if(x.value.do === "TURN_DAY"){
+                    io.to(room).emit("TURN_DAY");
+                }else { // 단순한 메시지 전송용
                     io.to(room).emit("ALERT", {
                         message: x.value
                     });

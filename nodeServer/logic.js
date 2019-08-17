@@ -422,6 +422,9 @@ function* mainGame(member) {
             do: "WAIT_SECOND",
             time: 1
         };
+        yield {
+            do: "TURN_DAY"
+        };
         // alert("해가 저물고 밤이 되었습니다. 플레이어들은 모두 고개를 숙여주세요.");
         yield "해가 저물고 밤이 되었습니다. 플레이어들은 모두 고개를 숙여주세요.";
         // alert("지금부터 마피아는 고개를 들어 30초간 토의를 하시고 암살할 플레이어를 지목해주세요.");
@@ -563,6 +566,10 @@ function* mainGame(member) {
         yield {
             do: "WAIT_CHECK"
         };
+
+        yield {
+            do: "TURN_DAY"
+        };
         
         // alert(mapiaVSdoctorResult);
 
@@ -688,6 +695,9 @@ function* mainGame(member) {
         console.log("다음날 넘어가기 직전");
         yield {
             do: "WAIT_CHECK"
+        };
+        yield {
+            do: "TURN_DAY"
         };
         console.log("다음날 넘어감");
         if (count >= Object.keys(memberClass.getLiveAfterList()).length / 2) {

@@ -2,8 +2,25 @@
   <div class="backgroud-container">
     <div id="app">
       <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1231630/moon2.png" alt />
-      <div class="stars"></div>
-      <div class="twinkling"></div>
+      <div id="night" v-if="isNight">
+        <div class="stars"></div>
+        <div class="twinkling"></div>
+      </div>
+      <div id="day" v-else>
+        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+          viewBox="0 0 1200 673.149" enable-background="new 0 0 1200 673.149" xml:space="preserve">
+        <linearGradient id="Sky_1_" gradientUnits="userSpaceOnUse" x1="600" y1="357.2764" x2="600" y2="0">
+          <stop  offset="0.0034" style="stop-color:#ECABCD"/>
+          <stop  offset="1" style="stop-color:#59AADE"/>
+        </linearGradient>
+        <rect id="Sky" fill="url(#Sky_1_)" width="1200" height="357.276"/>
+        <radialGradient id="Sky_Overlay_1_" cx="593.1914" cy="353.3618" r="587.6592" gradientUnits="userSpaceOnUse">
+          <stop  offset="0" style="stop-color:#FFFFFF"/>
+          <stop  offset="1" style="stop-color:#000000"/>
+        </radialGradient>
+        <rect id="Sky_Overlay" display="none" opacity="0.3" fill="url(#Sky_Overlay_1_)" width="1200" height="357.276"/>
+        </svg>
+      </div>
       <div class="clouds"></div>
       <div class="container" v-if="isNotJoinedRoom">
         <div class="col-md-10 offset-md-1">
@@ -166,7 +183,11 @@
           </ul>
           <ul class="list-group" v-else-if="isDeciding">
             <template v-for="member in members">
-              <li v-bind:key="member.name" class="list-group-item" style="padding:0px; background-color: transparent;">
+              <li
+                v-bind:key="member.name"
+                class="list-group-item"
+                style="padding:0px; background-color: transparent;"
+              >
                 <button
                   type="button"
                   class="buttonWithTransparent list-group-item"
@@ -183,8 +204,7 @@
                 class="list-group-item d-flex justify-content-between align-items-center"
                 v-bind:key="member.name"
                 v-if="false"
-              >
-              </li>
+              ></li>
             </template>
             <template v-for="member in deadMember">
               <li
@@ -256,7 +276,8 @@ export default {
       barStyle: "",
       badge: {},
       isDeciding: false,
-      isVoting: false
+      isVoting: false,
+      isNight: true
     };
   },
   methods: {
@@ -314,6 +335,9 @@ export default {
     });
     this.socket.on("FULL_OF_ROOM", () => {
       this.temp += `${this.roomID}번 방은 자리가 없어여어엉`;
+    });
+    this.socket.on("TURN_DAY", () => {
+      this.isNight = !this.isNight;
     });
     this.socket.on("START_GAME", data => {
       this.isStartGame = true;
@@ -378,7 +402,6 @@ export default {
       if (!this.isVoting) {
         this.badge[data]++;
         // $('.contact-button:before').attr('data-before',this.badge[data]);
-        
       }
     });
     this.socket.on("VOTE_BADGE", data => {
@@ -904,7 +927,7 @@ span.contact-button {
 
 .contact-button:before,
 .contact-button:after {
-  content: '0';
+  content: "0";
   position: absolute;
   top: -14px;
   left: -12px;
@@ -919,7 +942,7 @@ span.contact-button {
   transition: 0.3s ease-in-out;
 }
 .contact-button:after {
-  content: '0';
+  content: "0";
   opacity: 0;
   font-size: 0.6em;
   top: -10px;
@@ -1003,6 +1026,7 @@ span.contact-button {
   -o-animation: fadeOut 1.5s 1s infinite linear alternate;
   animation: fadeOut 1.5s 1s infinite linear alternate;
 }
+
 @keyframes fadeOut {
   0% {
     opacity: 1;
@@ -1051,4 +1075,24 @@ span.contact-button {
     opacity: 0;
   }
 }
+#Sky_Overlay, #Water_overlay, #Ball_Overlay, #Lighthouse_Overlay,#Beach_Overlay, #Bush_Overlay, #Bush_Overlay_1_ {mix-blend-mode:multiply;}
+
+#lighthouse_reflection{
+  mix-blend-mode: soft-light;
+}
+
+#Sky_Overlay, #Water_overlay, #Sky{display: none;}
+
+#day{background:linear-gradient(to top, #fff, #ebabcc 50%, #59a9dd); margin:0;}
+
+svg{width:100%; height:100%;}
+
+#day{
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+}
+
 </style>
