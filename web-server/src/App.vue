@@ -93,7 +93,7 @@
             <br />
             <button class="btnk btn-1-non-border btn-1a" @click.prevent="roomConnect">Connect</button>
             <br />
-            <!-- <button class="bttn-minimal bttn-md bttn-danger" @click.prevent="roomConnect">Connect</button> -->
+            <!-- <button class="bttn-minimal bttn-md bttn-danLger" @click.prevent="roomConnect">Connect</button> -->
           </div>
         </div>
         <p>{{ temp }}</p>
@@ -104,7 +104,7 @@
             <b>방에 접속하셨습니다!</b>
           </h1>
           <div>
-            <div class="blink">사람들 기다리는 중인가 뭐시기</div>
+            <div class="blink">Now Loading...</div>
             {{members.length}} /
             <b>{{roomSize}}</b>
             <br />
@@ -932,7 +932,7 @@ span.contact-button {
   border: 2px solid white;
   /* border-radius: 50px; */
   background-color: white;
-  color: white;
+  color: black;
 }
 
 .contact-button > span {
@@ -1351,10 +1351,10 @@ img.inLetter {
   margin-top: 30px;
   align-self: center;
 }
-@import url('https://fonts.googleapis.com/css?family=Noto+Serif+KR&display=swap');
+@import url("https://fonts.googleapis.com/css?family=Noto+Serif+KR&display=swap");
 /* Blockquote header */
 .blockquote h1 {
-  font-family: 'Noto Serif KR', cursive;
+  font-family: "Noto Serif KR", cursive;
   position: relative; /* for pseudos */
   color: white;
   font-size: small;

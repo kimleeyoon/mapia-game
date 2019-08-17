@@ -656,7 +656,7 @@ function* mainGame(member) {
             console.log(goDie);
             if (goDie == 'true') {
                 const nameJosa = Josa(`${id}`, '가');
-                yield `${nameJosa}가 투표로 죽었습니다.`
+                yield `${nameJosa} 투표로 죽었습니다.`
                 memberClass.setLive(id, false);
                 afterList = killPlayer(id, afterList, memberClass.memberObj);
             } else {
