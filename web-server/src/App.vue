@@ -169,7 +169,7 @@
               <li v-bind:key="member.name" class="list-group-item" style="padding:0px;">
                 <button
                   type="button"
-                  class="contact-button list-group-item"
+                  class="buttonWithTransparent list-group-item"
                   style="background-color: transparent;"
                   v-bind:content="badge[member.name]"
                   @click.prevent="decide($event, member.name)"
@@ -914,11 +914,13 @@ span.contact-button {
 .contact-button:before {
   border: 2px solid #ee283e;
   background-color: #ee283e;
+  opacity: 0;
   transform: skew(-25deg);
   transition: 0.3s ease-in-out;
 }
 .contact-button:after {
   content: '0';
+  opacity: 0;
   font-size: 0.6em;
   top: -10px;
   left: -12px;
@@ -930,7 +932,7 @@ span.contact-button {
   -webkit-perspective: 1000;
   -webkit-backface-visibility: hidden;
   -webkit-transform: translate3d(0, 0, 0);
-  color: black;
+  color: white;
 
   background-color: transparent;
   text-decoration: none;
