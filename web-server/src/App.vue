@@ -139,21 +139,6 @@
               v-for="member in deadMember"
               v-bind:key="member.name"
             >{{member.name}}</li>
-            <ul class="list-group" v-if="false">
-              <template v-for="member in deadMember">
-                <!-- <li
-                  class="list-group-item d-flex justify-content-between align-items-center"
-                  v-bind:key="member.name"
-                >
-                  <a href="#" class="list-group-item list-group-item-dark">{{member.name}}</a>
-                </li>-->
-                <li
-                  class="list-group-item list-group-item-danger align-items-center"
-                  v-bind:key="member.name"
-                >{{member.name}}</li>
-                <!-- <button class="buttonWithTransparent" v-bind:key="member.name">{{member.name}}</button> -->
-              </template>
-            </ul>
           </div>
           <div class="progress" v-if="isNowSelect || isDeciding">
             <div
@@ -183,17 +168,6 @@
                 </button>
                 <!-- <span class="badge badge-primary badge-pill">{{badge[member.name]}}</span> -->
               </li>
-              <div class="list-group" v-bind:key="member.name" v-if="false">
-                <a href="#" class="list-group-item list-group-item-action" style="width:95%;">
-                  {{member.name}}
-                  <button
-                    type="button"
-                    @click.prevent="decide($event, member.name)"
-                    style="display:none"
-                  ></button>
-                  <strong>{{badge[member.name]}}</strong>
-                </a>
-              </div>
             </template>
             <template v-for="member in deadMember">
               <li
@@ -229,44 +203,17 @@
                 </button>
                 <!-- <span class="badge badge-primary badge-pill">{{badge[member.name]}}</span> -->
               </li>
-              <li
-                class="list-group-item d-flex justify-content-between align-items-center"
-                v-bind:key="member.name"
-                v-if="false"
-              ></li>
             </template>
             <template v-for="member in deadMember">
               <li
-                class="list-group-item d-flex justify-content-between align-items-center"
-                v-bind:key="member.name"
-                v-if="false"
-              >
-                <a href="#" class="list-group-item list-group-item-dark">{{member.name}}</a>
-              </li>
-              <li
                 class="buttonWithTransparent dead"
-                v-for="member in deadMember"
                 v-bind:key="member.name"
               >{{member.name}}</li>
             </template>
           </ul>
-          <div class="list-group" v-if="false">
-            <button
-              type="button"
-              class="list-group-item list-group-item-action"
-              v-for="member in members"
-              v-bind:key="member.name"
-              @click.prevent="decide($event, member.name)"
-            >
-              {{member.name}}
-              <span v-if="isDeciding">
-                <span class="badge badge-primary badge-pill">{{badge[member.name]}}</span>
-              </span>
-            </button>
-          </div>
           <p
             class="announce"
-            style="overflow:scroll;height:300px; padding:10px; white-space:pre"
+            style="overflow:scroll;height:300px; padding:10px; white-space:pre align:left;"
           >{{tempAnnounce}}</p>
         </div>
       </div>
@@ -274,7 +221,7 @@
         type="button"
         class="btn btn-danger"
         @click="isNotJoinedRoom = !isNotJoinedRoom"
-        v-if="!isNotJoinedRoom"
+        v-if="!isNotJoinedRoom && false"
       >나가기!</button>
     </div>
   </div>
@@ -367,6 +314,7 @@ export default {
     });
     this.socket.on("TURN_DAY", () => {
       this.isNight = !this.isNight;
+      this.tempAnnounce = "";
     });
     this.socket.on("START_GAME", data => {
       this.isStartGame = true;
@@ -381,7 +329,7 @@ export default {
       this.socket.emit("ROLE_FEEDBACK", { name: this.name, role: data });
     });
     this.socket.on("ALERT", data => {
-      this.tempAnnounce += `${data.message}\n`;
+      this.tempAnnounce += `${data.message}\n\n`;
     });
     this.socket.on("ASSASSINATE", () => {
       // this.tempAnnounce += "암살 명령 받음!!!!!!!!!!!!!!!!!!!!!!!!!!!!1\n";
@@ -893,7 +841,7 @@ img {
   top: 20px;
 }
 
-@import url(https://fonts.googleapis.com/css?family=Raleway:400, 300, 500, 700);
+@import url(https://fonts.googleapis.com/css?family=Raleway:400,300,500,700);
 
 html {
   display: flex;
