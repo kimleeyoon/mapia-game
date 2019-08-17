@@ -378,7 +378,7 @@ export default {
     this.socket.on("ROLE_ALERT", data => {
       this.role = data;
       this.socket.emit("ROLE_FEEDBACK", { name: this.name, role: data });
-      this.role = true;
+      this.roleView = true;
     });
     this.socket.on("ALERT", data => {
       this.tempAnnounce += `${data.message}\n\n`;
