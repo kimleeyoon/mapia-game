@@ -175,8 +175,8 @@
                 <a href="#" class="list-group-item list-group-item-dark">{{member.name}}</a>
               </li>
               <li
-                class="list-group-item list-group-item-dark align-items-center"
-                style="background-color: transparent; padding: 0px;"
+                class="buttonWithTransparent dead"
+                v-for="member in deadMember"
                 v-bind:key="member.name"
               >{{member.name}}</li>
             </template>
@@ -187,6 +187,7 @@
                 v-bind:key="member.name"
                 class="list-group-item"
                 style="padding:0px; background-color: transparent;"
+                disabled
               >
                 <button
                   type="button"
