@@ -166,7 +166,7 @@
           </ul>
           <ul class="list-group" v-else-if="isDeciding">
             <template v-for="member in members">
-              <li v-bind:key="member.name" class="list-group-item" style="padding:0px;">
+              <li v-bind:key="member.name" class="list-group-item" style="padding:0px; background-color: transparent;">
                 <button
                   type="button"
                   class="buttonWithTransparent list-group-item"
@@ -946,7 +946,7 @@ span.contact-button {
   transition: 0.3s ease-in-out;
   z-index: 300;
   margin: 0 auto;
-  width: 95%;
+  /* width: 95%; */
 }
 
 .inspiration {
