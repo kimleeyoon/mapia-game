@@ -190,10 +190,9 @@
               >
                 <button
                   type="button"
-                  class="buttonWithTransparent list-group-item"
+                  class="contact-button"
                   style="background-color: transparent;"
                   v-bind:content="badge[member.name]"
-                  @click.prevent="decide($event, member.name)"
                 >
                   {{member.name}}
                   <!-- <img src="./13230195.png" class="icon icon-paperplane"> -->
@@ -1093,6 +1092,7 @@ svg{width:100%; height:100%;}
   left: 0px;
   right: 0px;
   bottom: 0px;
+  height: 150%;
 }
 
 </style>
