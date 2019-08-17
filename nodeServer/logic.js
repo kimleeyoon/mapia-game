@@ -698,9 +698,6 @@ function* mainGame(member) {
         yield {
             do: "WAIT_CHECK"
         };
-        yield {
-            do: "TURN_DAY"
-        };
         console.log("다음날 넘어감");
         if (count >= Object.keys(memberClass.getLiveAfterList()).length / 2) {
             // alert("마피아가 승리하였습니다. 모든 player들의 정체를 공개합니다.");
