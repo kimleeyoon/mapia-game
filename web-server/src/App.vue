@@ -1177,6 +1177,7 @@ svg {
   width: 60%;
   height: 50%;
   margin: 0 auto;
+  white-space:pre;
   /* background: var(--color-bg); */
 }
 

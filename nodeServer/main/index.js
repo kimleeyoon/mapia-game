@@ -384,7 +384,7 @@ class Response {
             yesOrNoVoteResult: result.yesOrNoVoteResult,
             dayOrderNum: result.dayOrderNum,
             doctorVsMapia: result.doctorVsMapiaPrompt,
-            mapiaOrCitizenWin: result.mapiaOrCitizenWin,
+            mapiaOrCitizenWin: result.mapiaOrCitizenWinPrompt,
             mapiaOrCitizenWinNum: result.mapiaOrCitizenWinNum,
             moreThanTwoExist: result.moreThanTwoExist,
             numOfPlayer2: result.numOfPlayer,
@@ -395,7 +395,7 @@ class Response {
             yesOrNoVoteResult2: result.yesOrNoVoteResult,
             dayOrderNum2: result.dayOrderNum,
             doctorVsMapia2: result.doctorVsMapiaPrompt,
-            mapiaOrCitizenWin2: result.mapiaOrCitizenWin,
+            mapiaOrCitizenWin2: result.mapiaOrCitizenWinPrompt,
             mapiaOrCitizenWinNum2: result.mapiaOrCitizenWinNum,
             moreThanTwoExist2: result.moreThanTwoExist
         }

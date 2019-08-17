@@ -545,7 +545,7 @@ function* mainGame(member) {
 
 
         // alert("다시 고개를 숙여주십시오.");
-        yield "다시 고개를 숙여주십시오.";
+        // yield "다시 고개를 숙여주십시오.";
 
 
         let count = 0;
