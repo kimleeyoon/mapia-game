@@ -247,11 +247,19 @@ class Request {
                 //   }
                 const mapia_Or_CitizenWin = outText[contextId[this.context.session.id]].isCitizenWin; //지금은 시민이 이긴 상황
                 let mapiaOrCitizenWinPrompt;
+
+                let postFix = "";
+
+                outText[contextId[this.context.session.id]].list.map((o) => {
+                    postFix += `${o.name}의 역할은 ${o.role}입니다.`
+                });
+
                 if (mapia_Or_CitizenWin == 0) {
                     mapiaOrCitizenWinPrompt = '마피아가 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.';
                 } else if (mapia_Or_CitizenWin == 1) {
                     mapiaOrCitizenWinPrompt = '시민이 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.'
                 }
+                mapiaOrCitizenWinPrompt += postFix;
                 response.setParameters({
                     number1: number_one,
                     doctorVsMapiaPrompt: doctorVsMapiaPrompt,
@@ -298,12 +306,18 @@ class Request {
             case "GameEndCitizenAction": {
                 const number_one = '1';
                 const mapia_Or_CitizenWin = '1'; //지금은 시민이 이긴 상황
+                let postFix = "";
+
+                outText[contextId[this.context.session.id]].list.map((o) => {
+                    postFix += `${o.name}의 역할은 ${o.role}입니다.`
+                });
                 let mapiaOrCitizenWinPrompt = "";
                 if (mapia_Or_CitizenWin == '0') {
                     mapiaOrCitizenWinPrompt = '마피아가 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.';
                 } else if (mapia_Or_CitizenWin == '1') {
                     mapiaOrCitizenWinPrompt = '시민이 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.'
                 }
+                mapiaOrCitizenWinPrompt += postFix;
                 response.setParameters({
                     number1: number_one,
                     mapiaOrCitizenWinNum: '1',
@@ -316,11 +330,17 @@ class Request {
                 const number_one = '1';
                 const mapia_Or_CitizenWin = '0'; //지금은 마피아가 이긴 상황
                 let mapiaOrCitizenWinPrompt = "";
+                let postFix = "";
+
+                outText[contextId[this.context.session.id]].list.map((o) => {
+                    postFix += `${o.name}의 역할은 ${o.role}입니다.`
+                });
                 if (mapia_Or_CitizenWin == '0') {
                     mapiaOrCitizenWinPrompt = '마피아가 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.';
                 } else if (mapia_Or_CitizenWin == '1') {
                     mapiaOrCitizenWinPrompt = '시민이 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.'
                 }
+                mapiaOrCitizenWinPrompt += postFix;
                 response.setParameters({
                     number1: number_one,
                     mapiaOrCitizenWinNum: '0',
@@ -361,6 +381,8 @@ function* getText(id, target) {
         outText[id].isCitizenWin = text.isCitizenWin;
     } else if (target == 'vote_check') {
         outText[id].vote_check = text.text;
+    } else if (target == 'allAfterList') {
+        outText[id].list = text.list;
     }
 }
 

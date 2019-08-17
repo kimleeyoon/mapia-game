@@ -491,6 +491,13 @@ function grun(g, member, io, room, curDecide, getText) {
                             io.to(tempSocket.socket).emit("UPDATE_LIST", x.value.nameList);
                         }
                         // 방에 있는 모든 유저에게 살아있는 사람들 목록 전송
+                        const it = getText(room, 'allAfterList');
+                        console.log("이터레이터 실행");
+                        console.log(it);
+                        console.log(it.next());
+                        it.next({
+                            list: x.value.nameList
+                        });
                         setTimeout(iterate, 0, x.value);
                     } else if (x.value.do === "Assassinate") { // 암살 명령 오면
 
