@@ -51,12 +51,6 @@
         </svg>
       </div>
       <div class="clouds"></div>
-      <div class="nick">
-        <div class="edit">마피아</div>
-        <h6>
-          <div class="goo">이현주</div>
-        </h6>
-      </div>
 
       <div class="container" v-if="isNotJoinedRoom">
         <div class="col-md-10 offset-md-1">
@@ -130,17 +124,13 @@
       </div>
       <div class="container" v-if="isStartGame">
         <div class="col-md-10 offset-md-1">
-          {{name}}님!
-          <br />!게임 시작!
-          <br />
-          당신의 역할 : {{role}}
-          <input
-            id="card-one"
-            class="hidden letter"
-            type="radio"
-            name="ok-button"
-            checked
-          />
+          <div class="nick">
+            <div class="edit">{{role}}</div>
+            <h6>
+              <div class="goo">{{name}}</div>
+            </h6>
+          </div>
+          <input id="card-one" class="hidden letter" type="radio" name="ok-button" checked />
           <input
             id="card-two"
             class="hidden letter"
@@ -365,7 +355,7 @@ export default {
     });
     this.socket.on("TURN_DAY", () => {
       this.isNight = !this.isNight;
-      this.tempAnnounce = "";
+      // this.tempAnnounce = "";
     });
     this.socket.on("START_GAME", data => {
       this.isStartGame = true;
@@ -378,9 +368,10 @@ export default {
     this.socket.on("ROLE_ALERT", data => {
       this.role = data;
       this.socket.emit("ROLE_FEEDBACK", { name: this.name, role: data });
-      this.roleView = true;
+      // this.roleView = true;
     });
     this.socket.on("ALERT", data => {
+      this.tempAnnounce = "";
       this.tempAnnounce += `${data.message}\n\n`;
     });
     this.socket.on("ASSASSINATE", () => {
@@ -1196,7 +1187,7 @@ svg {
 
 .containers {
   position: absolute;
-  top: 50%;
+  top: 32%;
   left: 50%;
   margin-left: -200px;
   margin-top: -200px;
@@ -1269,7 +1260,7 @@ svg {
 .forImage {
   position: absolute;
   top: -22%;
-  left: 65%;
+  left: 54%;
   transform: translate(-50%, -50%);
   width: 80%;
 }
