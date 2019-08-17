@@ -946,7 +946,7 @@ span.contact-button {
   transition: 0.3s ease-in-out;
   z-index: 300;
   margin: 0 auto;
-  /* width: 95%; */
+  width: 10%;
 }
 
 .inspiration {
