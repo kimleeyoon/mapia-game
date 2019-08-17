@@ -122,7 +122,7 @@
           <ul class="list-group" v-if="isNowSelect">
             <template v-for="member in members">
               <li
-                class="list-group-item d-flex justify-content-between align-items-center"
+                class="list-group-item"
                 v-bind:key="member.name"
               >
                 <button
@@ -166,7 +166,6 @@
             <template v-for="member in members">
               <li v-bind:key="member.name">
                 <button
-                  href="http://test.naver.com"
                   type="button"
                   class="contact-button list-group-item"
                   v-bind:content="badge[member.name]"
