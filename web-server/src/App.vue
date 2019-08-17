@@ -166,11 +166,11 @@
           </ul>
           <ul class="list-group" v-else-if="isDeciding">
             <template v-for="member in members">
-              <li v-bind:key="member.name">
+              <li v-bind:key="member.name" class="list-group-item" style="padding:0px;">
                 <button
                   type="button"
                   class="contact-button list-group-item"
-                  style="background-color: transparent; padding: 0px;"
+                  style="background-color: transparent;"
                   v-bind:content="badge[member.name]"
                   @click.prevent="decide($event, member.name)"
                 >
@@ -185,17 +185,6 @@
                 v-if="false"
               >
               </li>
-              <div class="list-group" v-bind:key="member.name" v-if="false">
-                <a href="#" class="list-group-item list-group-item-action">
-                  {{member.name}}
-                  <button
-                    type="button"
-                    @click.prevent="decide($event, member.name)"
-                    style="display:none"
-                    disabled
-                  ></button>
-                </a>
-              </div>
             </template>
             <template v-for="member in deadMember">
               <li
