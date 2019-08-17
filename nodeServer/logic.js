@@ -55,7 +55,7 @@ function takePlayerName(playerNum) { //입력한 플레이어 명수만큼 이�
 function allocatePlayerRole(roleArray, playerNameList, memberClass) {
     let afterList = {};
     let numOfPlayer = playerNameList.length;
-    shuffle(roleArray[numOfPlayer - 3]).map((role, index) => afterList[playerNameList[index]] = role);
+    shuffle(shuffle(shuffle(shuffle(roleArray[numOfPlayer - 3])))).map((role, index) => afterList[playerNameList[index]] = role);
     Object.keys(afterList).map(o => memberClass.setRole(o, afterList[o]));
     return afterList;
     //console.log(afterlist);
@@ -93,7 +93,6 @@ function savePlayer(mapiaPick, doctorPick, doctorAlive, afterList, memberClass) 
 
     console.log(`Doctor Pick : ${doctorPick}`);
     console.log(`Mapia Pick : ${mapiaPick}`);
-
     if (mapiaPick == "None" || !mapiaPick) { // 마피아가 사람을 죽이지 않는 경우
         mapiaVSdoctorResult = "NoneKill";
     } else if (!doctorPick || doctorAlive || doctorPick == "None") { // 의사가 아무도 치료하지 않는 경우
@@ -397,8 +396,12 @@ function* mainGame(member) {
     // alert("다시 고개를 숙여주십시오.");
     yield "다시 고개를 숙여주십시오.";
     // alert("첫째날 아침이 밝았습니다. 플레이어들은 모두 고개를 들어주시고 2분 동안 토의를 진행해주세요. 첫번째 아침은 아무도 사형대에 오르지 않습니다.");
-    yield "첫째날 아침이 밝았습니다. 플레이어들은 모두 고개를 들어주시고 2분 동안 토의를 진행해주세요. 첫번째 아침은 아무도 사형대에 오르지 않습니다.";
-
+    yield "첫째날 아침이 밝았습니다. \
+3분 동안 토의를 진행해주세요. \
+첫번째 아침은 아무도 사형대에 오르지 않습니다.";
+    yield {
+        do: "TURN_DAY"
+    };
     yield {
         do: "WAIT_FIRST_NIGHT"
     };
@@ -422,8 +425,15 @@ function* mainGame(member) {
             do: "WAIT_SECOND",
             time: 1
         };
+        yield {
+            do: "TURN_DAY"
+        };
         // alert("해가 저물고 밤이 되었습니다. 플레이어들은 모두 고개를 숙여주세요.");
+
+
         yield "해가 저물고 밤이 되었습니다. 플레이어들은 모두 고개를 숙여주세요.";
+
+
         // alert("지금부터 마피아는 고개를 들어 30초간 토의를 하시고 암살할 플레이어를 지목해주세요.");
         yield "지금부터 마피아는 고개를 들어 30초간 토의를 하시고 암살할 플레이어를 지목해주세요.";
 
@@ -472,7 +482,7 @@ function* mainGame(member) {
 
             // mapiaVSdoctorResult = savePlayer(mapiaPick, doctorPick, doctorAlive, afterList, memberClass.memberObj);
             // }
-        }else{
+        } else {
             yield {
                 do: "WAIT_SECOND",
                 time: 20
@@ -521,7 +531,7 @@ function* mainGame(member) {
                 };
             }
             // }
-        }else{
+        } else {
             yield {
                 do: "WAIT_SECOND",
                 time: 20
@@ -532,38 +542,42 @@ function* mainGame(member) {
         mapiaVSdoctorResult = savePlayer(mapiaPick, doctorPick, doctorAlive, afterList, memberClass.memberObj);
         //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        
+
         // alert("다시 고개를 숙여주십시오.");
-        yield "다시 고개를 숙여주십시오.";
-        
-        
+        // yield "다시 고개를 숙여주십시오.";
+
+
         let count = 0;
         for (var key in memberClass.getLiveAfterList()) {
             if (memberClass.getLiveAfterList()[key] === "마피아") {
                 count++;
             }
         }
-        
+
         let isCitizenWin = 0;
-        
+
         if (count >= Object.keys(memberClass.getLiveAfterList()).length / 2) {
             isCitizenWin = 0;
         } else if (count == 0) {
             isCitizenWin = 1;
-        }else{
+        } else {
             isCitizenWin = 2;
         }
-        
+
         yield {
             do: "AFTER_TEXT",
             text: `${mapiaVSdoctorResult}`,
             win: `${isCitizenWin}`
         };
-        
+
         yield {
             do: "WAIT_CHECK"
         };
-        
+
+        yield {
+            do: "TURN_DAY"
+        };
+
         // alert(mapiaVSdoctorResult);
 
         if (mapiaVSdoctorResult == "NoneKill") { // 마피아가 사람을 죽이지 않음
@@ -630,17 +644,24 @@ function* mainGame(member) {
                 do: "WAIT_CHECK"
             };
         } else { // 사람이 죽는 경우
-            afterList = killPlayer(id, afterList, memberClass.memberObj);
             yield {
                 do: "VOTE_TEXT",
                 text: `${id}`,
                 isDeath: 1
             };
-            yield {
-                do: "WAIT_CHECK"
+            const goDie = yield {
+                do: "VOTE_CHECK"
             };
-            yield `${id}가 투표로 죽었습니다.`
-            memberClass.setLive(id, false);
+            console.log("goDie");
+            console.log(goDie);
+            if (goDie == 'true') {
+                const nameJosa = Josa(`${id}`, '가');
+                yield `${nameJosa} 투표로 죽었습니다.`
+                memberClass.setLive(id, false);
+                afterList = killPlayer(id, afterList, memberClass.memberObj);
+            } else {
+                // yield '아무도 안죽음~';
+            }
         }
 
         idOfPolicePick = 0; //다음날을 위한 초기화
@@ -658,6 +679,22 @@ function* mainGame(member) {
                 count++;
             }
         }
+
+        isCitizenWin = 0;
+
+        if (count >= Object.keys(memberClass.getLiveAfterList()).length / 2) {
+            isCitizenWin = 0;
+        } else if (count == 0) {
+            isCitizenWin = 1;
+        } else {
+            isCitizenWin = 2;
+        }
+
+        yield {
+            do: "AFTER_TEXT",
+            text: `${mapiaVSdoctorResult}`,
+            win: `${isCitizenWin}`
+        };
 
         yield {
             do: "DAY_TEXT",
@@ -691,5 +728,33 @@ function* mainGame(member) {
 
 }
 // mainGame();
+
+function Josa(txt, josa) {
+    var code = txt.charCodeAt(txt.length - 1) - 44032;
+    var cho = 19,
+        jung = 21,
+        jong = 28;
+    var i1, i2, code1, code2;
+
+    // 원본 문구가 없을때는 빈 문자열 반환
+    if (txt.length == 0) return '';
+
+    // 한글이 아닐때
+    if (code < 0 || code > 11171) return txt;
+
+    if (code % 28 == 0) return txt + Josa.get(josa, false);
+    else return txt + Josa.get(josa, true);
+}
+Josa.get = function (josa, jong) {
+    // jong : true면 받침있음, false면 받침없음
+
+    if (josa == '을' || josa == '를') return (jong ? '을' : '를');
+    if (josa == '이' || josa == '가') return (jong ? '이' : '가');
+    if (josa == '은' || josa == '는') return (jong ? '은' : '는');
+    if (josa == '와' || josa == '과') return (jong ? '와' : '과');
+
+    // 알 수 없는 조사
+    return '**';
+}
 
 module.exports = mainGame;

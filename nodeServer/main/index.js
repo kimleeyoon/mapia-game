@@ -201,7 +201,7 @@ class Request {
                 }, sendData);
                 break;
             }
-
+            case "NoOneDeadAction2":
             case "NoOneDeadAction": {
                 const number_one = '1';
                 response.setParameters({
@@ -210,7 +210,7 @@ class Request {
                 }, sendData);
                 break;
             }
-
+            case "FinalArgumentAciton2":
             case "FinalArgumentAction": {
                 const number_one = '1';
 
@@ -259,19 +259,19 @@ class Request {
                 }, sendData);
                 break;
             }
-
+            case "HeIsSavedAction2":
             case "HeIsSavedAction": {
                 const number_one = '1';
-                let yesOrNoVoteResultPrompt = '${outText[contextId[this.context.session.id]].text}님은 찬반투표에서 과반수 이상이 반대를 하여 최종적으로 사형대에 오르지 않습니다.'
+                let yesOrNoVoteResultPrompt = `${outText[contextId[this.context.session.id]].text}님은 찬반투표에서 과반수 이상이 반대를 하여 최종적으로 사형대에 오르지 않습니다.`
                 response.setParameters({
                     number1: number_one,
                     yesOrNoVoteResult: yesOrNoVoteResultPrompt,
                 }, sendData);
                 break;
             }
-
+            case "HeIsDiedAction2":
             case "HeIsDiedAction": {
-                let yesOrNoVoteResultPrompt = '${outText[contextId[this.context.session.id]].text}님은 찬반투표에서 과반수 이상이 찬성을 하여 최종적으로 사형당하셨습니다.'
+                let yesOrNoVoteResultPrompt = `${outText[contextId[this.context.session.id]].text}님은 찬반투표에서 과반수 이상이 찬성을 하여 최종적으로 사형당하셨습니다.`
                 const number_one = '1';
                 response.setParameters({
                     number1: number_one,
@@ -281,44 +281,54 @@ class Request {
             }
             case "LetMeOut3Action2":
             case "LetMeOut3Action": {
+                const number_one = '1';
+                console.log("outtext:");
+                console.log(outText[contextId[this.context.session.id]].isCitizenWin);
+                // let temp = `1`;
+                // if (outText[contextId[this.context.session.id]].isCitizenWin == '0' || outText[contextId[this.context.session.id]].isCitizenWin == '1') {
+                //     temp = `0`;
+                // }
                 response.setParameters({
-
+                    number1: number_one,
+                    mapiaOrCitizenWinNum: `${outText[contextId[this.context.session.id]].isCitizenWin}`
                 }, sendData);
                 break;
             }
-
+            case "GameEndCitizenAction2":
             case "GameEndCitizenAction": {
                 const number_one = '1';
                 const mapia_Or_CitizenWin = '1'; //지금은 시민이 이긴 상황
-                if (mapia_Or_CitizenWin = '0') {
-                    let mapiaOrCitizenWinPrompt = '마피아가 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.';
-                } else if (mapia_Or_CitizenWin = '1') {
-                    let mapiaOrCitizenWinPrompt = '시민이 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.'
+                let mapiaOrCitizenWinPrompt = "";
+                if (mapia_Or_CitizenWin == '0') {
+                    mapiaOrCitizenWinPrompt = '마피아가 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.';
+                } else if (mapia_Or_CitizenWin == '1') {
+                    mapiaOrCitizenWinPrompt = '시민이 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.'
                 }
                 response.setParameters({
                     number1: number_one,
                     mapiaOrCitizenWinNum: '1',
-                    mapiaOrCitizenWin: mapiaOrCitizenWinPrompt,
+                    mapiaOrCitizenWinPrompt: mapiaOrCitizenWinPrompt,
                 }, sendData);
                 break;
             }
-
+            case "GameEndMapiaAction2":
             case "GameEndMapiaAction": {
                 const number_one = '1';
                 const mapia_Or_CitizenWin = '0'; //지금은 마피아가 이긴 상황
-                if (mapia_Or_CitizenWin = '0') {
-                    let mapiaOrCitizenWinPrompt = '마피아가 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.';
-                } else if (mapia_Or_CitizenWin = '1') {
-                    let mapiaOrCitizenWinPrompt = '시민이 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.'
+                let mapiaOrCitizenWinPrompt = "";
+                if (mapia_Or_CitizenWin == '0') {
+                    mapiaOrCitizenWinPrompt = '마피아가 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.';
+                } else if (mapia_Or_CitizenWin == '1') {
+                    mapiaOrCitizenWinPrompt = '시민이 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.'
                 }
                 response.setParameters({
                     number1: number_one,
                     mapiaOrCitizenWinNum: '0',
-                    mapiaOrCitizenWin: mapiaOrCitizenWinPrompt,
+                    mapiaOrCitizenWinPrompt: mapiaOrCitizenWinPrompt,
                 }, sendData);
                 break;
             }
-
+            case "TurnBackAction2":
             case "TurnBackAction": {
                 const number_one = '1';
                 response.setParameters({
@@ -349,6 +359,8 @@ function* getText(id, target) {
     } else if (target == 'after') {
         outText[id].after = text.text;
         outText[id].isCitizenWin = text.isCitizenWin;
+    } else if (target == 'vote_check') {
+        outText[id].vote_check = text.text;
     }
 }
 
