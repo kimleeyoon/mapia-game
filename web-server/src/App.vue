@@ -7,7 +7,7 @@
       <div class="clouds"></div>
       <div class="container" v-if="isNotJoinedRoom">
         <div class="col-md-10 offset-md-1">
-          <ul class="list-group">
+          <ul class="list-group" v-if="false">
             <li class="list-group-item" style="background-color: transparent;">
               <button
                 href="http://test.naver.com"
@@ -21,13 +21,7 @@
               </button>
             </li>
           </ul>
-          <button type="button" class="buttonWithTransparent">test</button>
-          <h1 class="text-center mb-1" v-if="false">
-            현주가 좋아하는
-            <br />마피아 게임!!
-          </h1>
-          <!-- <input type="text" class="form-control" v-model="roomID" />
-          <input type="text" class="form-control" v-model="name" />-->
+          <button type="button" class="buttonWithTransparent" v-if="false">test</button>
           <div class="start">
             <h2>Mapia</h2>
             <form>
@@ -51,45 +45,10 @@
             </form>
             <a href="#" class="link">forgot your password ?</a>
             <br />
-            <button class="btnk btn-1-non-border btn-1a" @click.prevent="roomConnect">Connect</button>
+            <!-- <button class="btnk btn-1-non-border btn-1a" @click.prevent="roomConnect">Connect</button> -->
             <br />
-            <button class="bttn-minimal bttn-md bttn-danger" @click.prevent="roomConnect">Connect</button>
+            <!-- <button class="bttn-minimal bttn-md bttn-danger" @click.prevent="roomConnect">Connect</button> -->
           </div>
-          <div class="form-group" v-if="false">
-            <label for="name">Name</label>
-            <input
-              type="text"
-              class="form-control"
-              id="name"
-              aria-describedby="nameHelp"
-              placeholder="Enter Name"
-              v-model="name"
-              @keyup.enter.prevent="roomConnect"
-            />
-            <small id="nameHelp" class="form-text text-muted">게임 내에서 사용할 이름을 입력하세요</small>
-          </div>
-          <div class="alert alert-primary" role="alert" v-if="warnNoName">이름으으으으을 입력하세요오오</div>
-          <div class="form-group" v-if="false">
-            <!-- <label for="name">Name</label> -->
-            <input
-              type="text"
-              class="form-control"
-              id="name"
-              aria-describedby="roomIdHelp"
-              placeholder="Enter RoomID"
-              v-model="roomID"
-              @keyup.enter.prevent="roomConnect"
-            />
-            <small id="roomIdHelp" class="form-text text-muted">NUGU가 알려준 방 ID를 입력하세요</small>
-          </div>
-          <button
-            type="button"
-            class="btn btn-danger btn-lg"
-            @click.prevent="roomConnect"
-            v-if="false"
-          >
-            <b>접속</b>
-          </button>
         </div>
         <p>{{ temp }}</p>
       </div>
@@ -106,13 +65,6 @@
           </div>
           <br />
           <br />
-          <!-- <ul class="list-group">
-            <li
-              class="list-group-item"
-              v-for="member in members"
-              v-bind:key="member.name"
-            ><button class="list-group-item">{{member.name}}</button></li>
-          </ul>-->
           <div class="list-group">
             <button
               type="button"
@@ -131,13 +83,6 @@
           <br />
           당신의 역할 : {{role}}
           <div class="list-group" v-if="!isNowSelect && !isDeciding">
-            <!-- <button
-              type="button"
-              class="list-group-item list-group-item-action list-group-item-dark"
-              v-for="member in members"
-              v-bind:key="member.name"
-              disabled
-            >{{member.name}}</button>-->
             <li
               class="buttonWithTransparent"
               v-for="member in members"
@@ -182,21 +127,14 @@
               >
                 <button
                   type="button"
-                  class="list-group-item list-group-item-action list-group-item-danger"
-                  @click.prevent="decide($event, member.name)"
-                  v-if="false"
-                >{{member.name}}</button>
-                <button
-                  href="http://test.naver.com"
-                  type="button"
                   class="contact-button list-group-item"
-                  v-bind:content="badge[member.name]"
+                  :content="badge[member.name]"
                   @click.prevent="decide($event, member.name)"
                 >
                   {{member.name}}
                   <!-- <img src="./13230195.png" class="icon icon-paperplane"> -->
                 </button>
-                <span class="badge badge-primary badge-pill">{{badge[member.name]}}</span>
+                <!-- <span class="badge badge-primary badge-pill">{{badge[member.name]}}</span> -->
               </li>
               <div class="list-group" v-bind:key="member.name" v-if="false">
                 <a href="#" class="list-group-item list-group-item-action" style="width:95%;">
@@ -226,18 +164,24 @@
           </ul>
           <ul class="list-group" v-else-if="isDeciding">
             <template v-for="member in members">
+              <li v-bind:key="member.name">
+                <button
+                  href="http://test.naver.com"
+                  type="button"
+                  class="contact-button list-group-item"
+                  v-bind:content="badge[member.name]"
+                  @click.prevent="decide($event, member.name)"
+                >
+                  {{member.name}}
+                  <!-- <img src="./13230195.png" class="icon icon-paperplane"> -->
+                </button>
+                <!-- <span class="badge badge-primary badge-pill">{{badge[member.name]}}</span> -->
+              </li>
               <li
                 class="list-group-item d-flex justify-content-between align-items-center"
                 v-bind:key="member.name"
-                v-if="true"
+                v-if="false"
               >
-                <button
-                  type="button"
-                  class="list-group-item list-group-item-action list-group-item-dark"
-                  @click.prevent="decide($event, member.name)"
-                  disabled
-                >{{member.name}}</button>
-                <span class="badge badge-primary badge-pill">{{badge[member.name]}}</span>
               </li>
               <div class="list-group" v-bind:key="member.name" v-if="false">
                 <a href="#" class="list-group-item list-group-item-action">
@@ -295,7 +239,7 @@
     </div>
   </div>
 </template>
-
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
 <script>
 import io from "socket.io-client";
 
@@ -442,6 +386,8 @@ export default {
     this.socket.on("DECIDE_BADGE", data => {
       if (!this.isVoting) {
         this.badge[data]++;
+        // $('.contact-button:before').attr('data-before',this.badge[data]);
+        
       }
     });
     this.socket.on("VOTE_BADGE", data => {
@@ -470,6 +416,7 @@ export default {
 @import url("https://fonts.googleapis.com/css?family=Open+Sans&display=swap");
 body {
   background-color: black;
+  width: 100%;
 }
 .list-group {
   background-color: transparent;
@@ -966,7 +913,7 @@ span.contact-button {
 
 .contact-button:before,
 .contact-button:after {
-  content: "";
+  content: '0';
   position: absolute;
   top: -14px;
   left: -12px;
@@ -980,7 +927,7 @@ span.contact-button {
   transition: 0.3s ease-in-out;
 }
 .contact-button:after {
-  content: "뱃지";
+  content: '0';
   font-size: 0.6em;
   top: -10px;
   left: -12px;
