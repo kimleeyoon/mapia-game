@@ -45,7 +45,7 @@
             </form>
             <a href="#" class="link">forgot your password ?</a>
             <br />
-            <!-- <button class="btnk btn-1-non-border btn-1a" @click.prevent="roomConnect">Connect</button> -->
+            <button class="btnk btn-1-non-border btn-1a" @click.prevent="roomConnect">Connect</button>
             <br />
             <!-- <button class="bttn-minimal bttn-md bttn-danger" @click.prevent="roomConnect">Connect</button> -->
           </div>
@@ -123,11 +123,12 @@
             <template v-for="member in members">
               <li
                 class="list-group-item"
+                style="background-color: transparent; padding: 0px;"
                 v-bind:key="member.name"
               >
                 <button
                   type="button"
-                  class="contact-button list-group-item"
+                  class="contact-button"
                   :content="badge[member.name]"
                   @click.prevent="decide($event, member.name)"
                 >
@@ -158,6 +159,7 @@
               </li>
               <li
                 class="list-group-item list-group-item-dark align-items-center"
+                style="background-color: transparent; padding: 0px;"
                 v-bind:key="member.name"
               >{{member.name}}</li>
             </template>
@@ -168,6 +170,7 @@
                 <button
                   type="button"
                   class="contact-button list-group-item"
+                  style="background-color: transparent; padding: 0px;"
                   v-bind:content="badge[member.name]"
                   @click.prevent="decide($event, member.name)"
                 >
