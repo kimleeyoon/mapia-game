@@ -397,7 +397,7 @@ function* mainGame(member) {
     // alert("다시 고개를 숙여주십시오.");
     yield "다시 고개를 숙여주십시오.";
     // alert("첫째날 아침이 밝았습니다. 플레이어들은 모두 고개를 들어주시고 2분 동안 토의를 진행해주세요. 첫번째 아침은 아무도 사형대에 오르지 않습니다.");
-    yield "첫째날 아침이 밝았습니다. 플레이어들은 모두 고개를 들어주시고 2분 동안 토의를 진행해주세요. 첫번째 아침은 아무도 사형대에 오르지 않습니다.";
+    yield "첫째날 아침이 밝았습니다. 3분 동안 토의를 진행해주세요. 첫번째 아침은 아무도 사형대에 오르지 않습니다.";
     yield {
         do: "TURN_DAY"
     };
@@ -432,7 +432,7 @@ function* mainGame(member) {
 
         yield "해가 저물고 밤이 되었습니다. 플레이어들은 모두 고개를 숙여주세요.";
 
-        
+
         // alert("지금부터 마피아는 고개를 들어 30초간 토의를 하시고 암살할 플레이어를 지목해주세요.");
         yield "지금부터 마피아는 고개를 들어 30초간 토의를 하시고 암살할 플레이어를 지목해주세요.";
 
@@ -658,7 +658,7 @@ function* mainGame(member) {
                 memberClass.setLive(id, false);
                 afterList = killPlayer(id, afterList, memberClass.memberObj);
             } else {
-                yield '아무도 안죽음~';
+                // yield '아무도 안죽음~';
             }
         }
 

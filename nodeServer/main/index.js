@@ -294,7 +294,7 @@ class Request {
                 }, sendData);
                 break;
             }
-
+            case "GameEndCitizenAction2":
             case "GameEndCitizenAction": {
                 const number_one = '1';
                 const mapia_Or_CitizenWin = '1'; //지금은 시민이 이긴 상황
@@ -311,7 +311,7 @@ class Request {
                 }, sendData);
                 break;
             }
-
+            case "GameEndMapiaAction2":
             case "GameEndMapiaAction": {
                 const number_one = '1';
                 const mapia_Or_CitizenWin = '0'; //지금은 마피아가 이긴 상황
@@ -328,7 +328,7 @@ class Request {
                 }, sendData);
                 break;
             }
-
+            case "TurnBackAction2":
             case "TurnBackAction": {
                 const number_one = '1';
                 response.setParameters({
@@ -384,7 +384,7 @@ class Response {
             yesOrNoVoteResult: result.yesOrNoVoteResult,
             dayOrderNum: result.dayOrderNum,
             doctorVsMapia: result.doctorVsMapiaPrompt,
-            mapiaOrCitizenWin: result.mapiaOrCitizenWinPrompt,
+            mapiaOrCitizenWin: result.mapiaOrCitizenWin,
             mapiaOrCitizenWinNum: result.mapiaOrCitizenWinNum,
             moreThanTwoExist: result.moreThanTwoExist,
             numOfPlayer2: result.numOfPlayer,
@@ -395,7 +395,7 @@ class Response {
             yesOrNoVoteResult2: result.yesOrNoVoteResult,
             dayOrderNum2: result.dayOrderNum,
             doctorVsMapia2: result.doctorVsMapiaPrompt,
-            mapiaOrCitizenWin2: result.mapiaOrCitizenWinPrompt,
+            mapiaOrCitizenWin2: result.mapiaOrCitizenWin,
             mapiaOrCitizenWinNum2: result.mapiaOrCitizenWinNum,
             moreThanTwoExist2: result.moreThanTwoExist
         }

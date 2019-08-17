@@ -250,10 +250,13 @@
               <li class="buttonWithTransparent dead" v-bind:key="member.name">{{member.name}}</li>
             </template>
           </ul>
-          <p
-            class="announce"
-            style="overflow:scroll;height:300px; padding:10px; white-space:pre; align:left;"
-          >{{tempAnnounce}}</p>
+          <div class="blockquote-wrapper">
+            <div class="blockquote">
+              <h1>
+                <span style="color:#ffffff">{{tempAnnounce}}</span>
+              </h1>
+            </div>
+          </div>
         </div>
       </div>
       <button
@@ -1168,7 +1171,7 @@ svg {
 }
 
 .nick {
-  padding: 7.5vh 100px 0 100px;
+  padding: 0px 50px 0 50px;
   font-family: var(--font);
 
   width: 50%;
@@ -1332,5 +1335,62 @@ img.inLetter {
 #card-three:checked ~ .containers .inner-one {
   transform: scale(0.85);
   transform: scale(1) translate(-20rem);
+}
+
+/* center the blockquote in the page */
+.blockquote-wrapper {
+  display: flex;
+  /* height: 100vh; */
+  padding: 0 20px;
+}
+
+/* Blockquote main style */
+.blockquote {
+  position: relative;
+  font-family: "Barlow Condensed", sans-serif;
+  max-width: 620px;
+  margin: 80px auto;
+  margin-top: 30px;
+  align-self: center;
+}
+
+/* Blockquote header */
+.blockquote h1 {
+  font-family: "Abril Fatface", cursive;
+  position: relative; /* for pseudos */
+  color: white;
+  font-size: 2.8rem;
+  font-weight: 600;
+  line-height: 1;
+  margin: 0;
+  border-radius: 20px;
+  padding: 12.5px 25px;
+  background-color: rgb(100, 100, 100);
+}
+
+/* increase header size after 600px */
+@media all and (min-width: 600px) {
+  .blockquote h1 {
+    font-size: 1.05rem;
+    line-height: 1.2;
+  }
+}
+
+/* Blockquote subheader */
+.blockquote h4 {
+  position: relative;
+  color: #ffffff;
+  font-size: 1.3rem;
+  font-weight: 400;
+  line-height: 1.2;
+  margin: 0;
+  padding-top: 15px;
+  z-index: 1;
+  margin-left: 150px;
+  padding-left: 12px;
+}
+
+.blockquote h4:first-letter {
+  margin-left: -12px;
 }
 </style>

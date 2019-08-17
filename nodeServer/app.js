@@ -193,14 +193,27 @@ router.route('/speaker/nugu/HeIsDiedAction').post((req, res, next) => {
     }
     console.log("HeIsDiedAction");
 });
+router.route('/speaker/nugu/GameEndMapiaAction2').post((req, res, next) => {
+    nugu(speakerCreateRoom, req, res, next);
+    console.log("GameEndMapiaAction2");
+});
 router.route('/speaker/nugu/GameEndMapiaAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
     console.log("GameEndMapiaAction");
+});
+router.route('/speaker/nugu/GameEndCitizenAction2').post((req, res, next) => {
+    nugu(speakerCreateRoom, req, res, next);
+    console.log("GameEndCitizenAction2");
 });
 router.route('/speaker/nugu/GameEndCitizenAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
     console.log("GameEndCitizenAction");
 });
+router.route('/speaker/nugu/TurnBackAction2').post((req, res, next) => {
+    nugu(speakerCreateRoom, req, res, next);
+    console.log("TurnBackAction2");
+});
+
 router.route('/speaker/nugu/TurnBackAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
     console.log("TurnBackAction");
