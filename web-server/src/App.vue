@@ -96,7 +96,7 @@
             <!-- <button class="bttn-minimal bttn-md bttn-danLger" @click.prevent="roomConnect">Connect</button> -->
           </div>
         </div>
-        <div class="blockquote-wrapper">
+        <div class="blockquote-wrapper" v-if="temp.length > 0">
           <div class="blockquote">
             <h1>
               <span style="color:#ffffff">{{temp}}</span>
@@ -1412,5 +1412,8 @@ img.inLetter {
 
 .blockquote h4:first-letter {
   margin-left: -12px;
+}
+.list-group-item:active {
+  border: none;
 }
 </style>
