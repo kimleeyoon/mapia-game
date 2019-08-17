@@ -1174,7 +1174,7 @@ svg {
   padding: 0px 50px 0 50px;
   font-family: var(--font);
 
-  width: 50%;
+  width: 60%;
   height: 50%;
   margin: 0 auto;
   /* background: var(--color-bg); */
@@ -1359,9 +1359,9 @@ img.inLetter {
   font-family: "Abril Fatface", cursive;
   position: relative; /* for pseudos */
   color: white;
-  font-size: 2.8rem;
+  font-size: small;
   font-weight: 600;
-  line-height: 1;
+  line-height: 1.65;
   margin: 0;
   border-radius: 20px;
   padding: 12.5px 25px;
