@@ -55,7 +55,7 @@ function takePlayerName(playerNum) { //입력한 플레이어 명수만큼 이�
 function allocatePlayerRole(roleArray, playerNameList, memberClass) {
     let afterList = {};
     let numOfPlayer = playerNameList.length;
-    shuffle((shuffle((shuffle((shuffle(roleArray[numOfPlayer - 3]).revere()))).map((role, index) => afterList[playerNameList[index]] = role);
+    shuffle(shuffle(shuffle(shuffle(roleArray[numOfPlayer - 3]).revere()))).map((role, index) => afterList[playerNameList[index]] = role);
     Object.keys(afterList).map(o => memberClass.setRole(o, afterList[o]));
     return afterList;
     //console.log(afterlist);
