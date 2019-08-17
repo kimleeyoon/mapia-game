@@ -55,7 +55,7 @@ function takePlayerName(playerNum) { //입력한 플레이어 명수만큼 이�
 function allocatePlayerRole(roleArray, playerNameList, memberClass) {
     let afterList = {};
     let numOfPlayer = playerNameList.length;
-    shuffle(shuffle(shuffle(shuffle(roleArray[numOfPlayer - 3]).revere()))).map((role, index) => afterList[playerNameList[index]] = role);
+    shuffle(shuffle(shuffle(shuffle(roleArray[numOfPlayer - 3])))).map((role, index) => afterList[playerNameList[index]] = role);
     Object.keys(afterList).map(o => memberClass.setRole(o, afterList[o]));
     return afterList;
     //console.log(afterlist);
@@ -477,7 +477,7 @@ function* mainGame(member) {
 
             // mapiaVSdoctorResult = savePlayer(mapiaPick, doctorPick, doctorAlive, afterList, memberClass.memberObj);
             // }
-        }else{
+        } else {
             yield {
                 do: "WAIT_SECOND",
                 time: 20
@@ -526,7 +526,7 @@ function* mainGame(member) {
                 };
             }
             // }
-        }else{
+        } else {
             yield {
                 do: "WAIT_SECOND",
                 time: 20
@@ -537,34 +537,34 @@ function* mainGame(member) {
         mapiaVSdoctorResult = savePlayer(mapiaPick, doctorPick, doctorAlive, afterList, memberClass.memberObj);
         //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        
+
         // alert("다시 고개를 숙여주십시오.");
         yield "다시 고개를 숙여주십시오.";
-        
-        
+
+
         let count = 0;
         for (var key in memberClass.getLiveAfterList()) {
             if (memberClass.getLiveAfterList()[key] === "마피아") {
                 count++;
             }
         }
-        
+
         let isCitizenWin = 0;
-        
+
         if (count >= Object.keys(memberClass.getLiveAfterList()).length / 2) {
             isCitizenWin = 0;
         } else if (count == 0) {
             isCitizenWin = 1;
-        }else{
+        } else {
             isCitizenWin = 2;
         }
-        
+
         yield {
             do: "AFTER_TEXT",
             text: `${mapiaVSdoctorResult}`,
             win: `${isCitizenWin}`
         };
-        
+
         yield {
             do: "WAIT_CHECK"
         };
@@ -572,7 +572,7 @@ function* mainGame(member) {
         yield {
             do: "TURN_DAY"
         };
-        
+
         // alert(mapiaVSdoctorResult);
 
         if (mapiaVSdoctorResult == "NoneKill") { // 마피아가 사람을 죽이지 않음
@@ -649,11 +649,11 @@ function* mainGame(member) {
             };
             console.log("goDie");
             console.log(goDie);
-            if(goDie == 'true'){
+            if (goDie == 'true') {
                 yield `${id}가 투표로 죽었습니다.`
                 memberClass.setLive(id, false);
                 afterList = killPlayer(id, afterList, memberClass.memberObj);
-            }else{
+            } else {
                 yield '아무도 안죽음~';
             }
         }
@@ -675,15 +675,15 @@ function* mainGame(member) {
         }
 
         isCitizenWin = 0;
-        
+
         if (count >= Object.keys(memberClass.getLiveAfterList()).length / 2) {
             isCitizenWin = 0;
         } else if (count == 0) {
             isCitizenWin = 1;
-        }else{
+        } else {
             isCitizenWin = 2;
         }
-        
+
         yield {
             do: "AFTER_TEXT",
             text: `${mapiaVSdoctorResult}`,
