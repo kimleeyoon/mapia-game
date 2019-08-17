@@ -1148,7 +1148,7 @@ svg {
   display: inline;
   box-decoration-break: clone;
   background: var(--color-highlight);
-  padding: 0.5rem 1rem;
+  padding: 4px 25px;
   color: black;
   filter: url("#goo");
 }
