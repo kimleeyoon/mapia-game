@@ -146,10 +146,10 @@
             class="hidden letter"
             type="radio"
             name="ok-button"
-            v-on:click="role=false;"
+            v-on:click="roleView=false;"
           />
 
-          <div class="containers" v-if="role">
+          <div class="containers" v-if="roleView">
             <div class="inner inner-one">
               <div class="box">
                 <div class="triangle"></div>
@@ -304,7 +304,7 @@ export default {
       isDeciding: false,
       isVoting: false,
       isNight: true,
-      role: false
+      roleView: false
     };
   },
   methods: {
