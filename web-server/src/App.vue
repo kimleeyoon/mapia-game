@@ -51,12 +51,18 @@
         </svg>
       </div>
       <div class="clouds"></div>
+      <div class="nick">
+        <div class="edit">마피아</div>
+        <h6>
+          <div class="goo">이현주</div>
+        </h6>
+      </div>
+
       <div class="container" v-if="isNotJoinedRoom">
         <div class="col-md-10 offset-md-1">
           <ul class="list-group" v-if="false">
             <li class="list-group-item" style="background-color: transparent;">
               <button
-                href="http://test.naver.com"
                 type="button"
                 class="contact-button"
                 style="color:white;"
@@ -128,6 +134,52 @@
           <br />!게임 시작!
           <br />
           당신의 역할 : {{role}}
+          <input
+            id="card-one"
+            class="hidden letter"
+            type="radio"
+            name="ok-button"
+            checked
+          />
+          <input
+            id="card-two"
+            class="hidden letter"
+            type="radio"
+            name="ok-button"
+            v-on:click="role=false;"
+          />
+
+          <div class="containers" v-if="role">
+            <div class="inner inner-one">
+              <div class="box">
+                <div class="triangle"></div>
+                <p class="number"></p>
+                <div class="text">
+                  <!-- <i class="start-quote fas fa-quote-left"></i> -->
+                  <p class="forImage" v-if="role=='시민'">
+                    <img src="./assets/citizen.jpeg" class="inLetter" />
+                  </p>
+                  <!-- <p class="credit">Anthony J. D'Angelo</p> -->
+                </div>
+                <label class="button" for="card-two">
+                  <p>next</p>
+                </label>
+              </div>
+            </div>
+
+            <div class="inner inner-two">
+              <div class="box">
+                <div class="triangle"></div>
+                <p class="number"></p>
+                <!-- <i class="start-quote fas fa-quote-left"></i> -->
+                <p class="quote">An investment in knowledge pays the best interest.</p>
+                <p class="credit">Benjamin Franklin</p>
+                <label class="button" for="card-three">
+                  <p>next</p>
+                </label>
+              </div>
+            </div>
+          </div>
           <div class="list-group" v-if="!isNowSelect && !isDeciding">
             <li
               class="buttonWithTransparent"
@@ -205,15 +257,12 @@
               </li>
             </template>
             <template v-for="member in deadMember">
-              <li
-                class="buttonWithTransparent dead"
-                v-bind:key="member.name"
-              >{{member.name}}</li>
+              <li class="buttonWithTransparent dead" v-bind:key="member.name">{{member.name}}</li>
             </template>
           </ul>
           <p
             class="announce"
-            style="overflow:scroll;height:300px; padding:10px; white-space:pre align:left;"
+            style="overflow:scroll;height:300px; padding:10px; white-space:pre; align:left;"
           >{{tempAnnounce}}</p>
         </div>
       </div>
@@ -227,6 +276,7 @@
   </div>
 </template>
 <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
+      <script src="https://codepen.io/fracturedNight/pen/exgzZg.js"></script>
 <script>
 import io from "socket.io-client";
 
@@ -253,7 +303,8 @@ export default {
       badge: {},
       isDeciding: false,
       isVoting: false,
-      isNight: true
+      isNight: true,
+      role: false
     };
   },
   methods: {
@@ -327,6 +378,7 @@ export default {
     this.socket.on("ROLE_ALERT", data => {
       this.role = data;
       this.socket.emit("ROLE_FEEDBACK", { name: this.name, role: data });
+      this.role = true;
     });
     this.socket.on("ALERT", data => {
       this.tempAnnounce += `${data.message}\n\n`;
@@ -841,7 +893,7 @@ img {
   top: 20px;
 }
 
-@import url(https://fonts.googleapis.com/css?family=Raleway:400,300,500,700);
+@import url(https://fonts.googleapis.com/css?family=Raleway:400, 300, 500, 700);
 
 html {
   display: flex;
@@ -1089,5 +1141,205 @@ svg {
   right: 0px;
   bottom: 0px;
   height: 150%;
+}
+
+:root {
+  --color-bg: #34304c;
+  --color-bg2: #534d7a;
+  --color-highlight: #fff;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+.goo {
+  font-size: 1rem;
+  line-height: 1.35;
+  display: inline;
+  box-decoration-break: clone;
+  background: var(--color-highlight);
+  padding: 0.5rem 1rem;
+  color: black;
+  filter: url("#goo");
+}
+
+.goo:focus {
+  outline: 0;
+}
+
+.edit {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: var(--color-bg2);
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  color: var(--color-highlight);
+  border-radius: 1em;
+}
+
+.nick {
+  padding: 7.5vh 100px 0 100px;
+  font-family: var(--font);
+
+  width: 50%;
+  height: 50%;
+  margin: 0 auto;
+  /* background: var(--color-bg); */
+}
+
+@import url("https://fonts.googleapis.com/css?family=Dancing+Script|Josefin+Sans:600");
+
+:root {
+  --main-color: #643a7a;
+  --secondary-color: #741caf;
+  --sans: "josefin sans", sans serif;
+}
+
+.containers {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -200px;
+  margin-top: -200px;
+  width: 400px;
+  height: 400px;
+  border-radius: 5px;
+  font-family: "dancing script", cursive;
+  overflow: hidden;
+  color: rgb(121, 125, 127);
+  letter-spacing: 0.5px;
+}
+
+.hidden {
+  display: none;
+}
+
+.inner {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  transition: 1s;
+  visibility: hidden;
+}
+
+.box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 70%;
+  height: 60%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 0 0 1.5rem rgba(0, 0, 0, 0.5);
+  font-size: 1.3rem;
+}
+
+.number::before {
+  content: "";
+  position: absolute;
+  top: -130px;
+  right: -30px;
+  width: 90px;
+  height: 180px;
+  background: var(--secondary-color);
+  transform: rotate(-45deg);
+  z-index: -1;
+  box-shadow: 0 0 0.7rem rgba(0, 0, 0, 0.5);
+}
+
+.number {
+  font-family: var(--sans);
+  position: absolute;
+  margin: 0;
+  top: 15px;
+  right: 15px;
+  color: fade-out(#fff, 0.3);
+  z-index: 50;
+}
+
+.quote {
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+}
+.forImage {
+  position: absolute;
+  top: -22%;
+  left: 65%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+}
+
+.credit {
+  position: absolute;
+  top: 60%;
+  right: 5%;
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+.credit::before {
+  content: "⸛ ";
+  vertical-align: middle;
+  font-size: 1.4rem;
+}
+
+.fas {
+  font-size: 3.5rem;
+  position: absolute;
+  top: 12%;
+  left: 7%;
+  color: rgba(100, 58, 122, 0.2);
+}
+
+input.letter {
+  width: 100%;
+  transition: 0.3s;
+}
+
+img.inLetter {
+  height: 20vh;
+  width: 25vh;
+  position: absolute;
+  z-index: -2;
+  right: 20px;
+  top: 20px;
+}
+
+.button p {
+  background: #802bbc;
+  text-align: center;
+  color: #fff;
+  padding: 1rem 0;
+  width: 100%;
+  font-family: var(--sans);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  margin: 0;
+  transition: 0.2s ease-out;
+}
+
+.button p:hover {
+  background: var(--secondary-color);
+  cursor: pointer;
+}
+
+#card-one:checked ~ .containers .inner-one,
+#card-two:checked ~ .containers .inner-two,
+#card-three:checked ~ .containers .inner-three {
+  opacity: 1;
+  visibility: visible;
+}
+
+#card-one:checked ~ .containers .inner-two,
+#card-two:checked ~ .containers .inner-three,
+#card-three:checked ~ .containers .inner-one {
+  transform: scale(0.85);
+  transform: scale(1) translate(-20rem);
 }
 </style>
