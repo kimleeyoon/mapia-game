@@ -417,15 +417,15 @@ function* mainGame(member) {
         // TODO: 작동할걸?????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
 
         // yield {
-        //     do: "WAIT_SECOND",
-        //     time: 21.5
-        // };
-        yield {
-            do: "WAIT_SECOND",
-            time: 1
-        };
+            //     do: "WAIT_SECOND",
+            //     time: 1
+            // };
         yield {
             do: "TURN_DAY"
+        };
+        yield {
+            do: "WAIT_SECOND",
+            time: 20
         };
         // alert("해가 저물고 밤이 되었습니다. 플레이어들은 모두 고개를 숙여주세요.");
 
@@ -455,11 +455,11 @@ function* mainGame(member) {
 
         // yield {
         //     do: "WAIT_SECOND",
-        //     time: 12
+        //     time: 20
         // };
         yield {
             do: "WAIT_SECOND",
-            time: 1
+            time: 10.5
         };
 
         // alert("다시 고개를 숙여주십시오.");
@@ -492,10 +492,10 @@ function* mainGame(member) {
         // mapiaVSdoctorResult = savePlayer(mapiaPick, doctorPick, doctorAlive, afterList, memberClass.memberObj);
         ///////////////////////////////////
 
-        // yield {
-        //     do: "WAIT_SECOND",
-        //     time: 10
-        // };
+        yield {
+            do: "WAIT_SECOND",
+            time: 10
+        };
 
         yield {
             do: "WAIT_SECOND",
@@ -577,6 +577,7 @@ function* mainGame(member) {
             do: "TURN_DAY"
         };
 
+
         // alert(mapiaVSdoctorResult);
 
         if (mapiaVSdoctorResult == "NoneKill") { // 마피아가 사람을 죽이지 않음
@@ -630,11 +631,14 @@ function* mainGame(member) {
 
         // alert("플레이어들은 모두 고개를 들어주시고 3분 동안 토의를 진행하여 사형대에 올릴 플레이어를 골라주십시오.");
         yield "플레이어들은 모두 고개를 들어주시고 3분 동안 토의를 진행하여 사형대에 올릴 플레이어를 골라주십시오.";
-
         yield {
             do: "WAIT_SECOND",
-            time: 5
+            time: 190
         };
+        // yield {
+        //     do: "WAIT_SECOND",
+        //     time: 5
+        // };
         // yield {
         //     do: "WAIT_SECOND",
         //     time: 180

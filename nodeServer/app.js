@@ -542,7 +542,7 @@ function grun(g, member, io, inRoom, curDecide, getText) {
 
                     } else if (x.value.do === "Vote") { // 투표 받으면
 
-                        const c = sendSocket(io, member, x, curDecide) // 해당 명령 보낸 후 Countdown 리턴 받음
+                        const c = sendSocket(io, member, x, curDecide, 10) // 해당 명령 보낸 후 Countdown 리턴 받음
                         c.go(curDecide)
                             .then(() => { // 다 받으면
                                 io.to(inRoom).emit("END_DECIDE");
@@ -583,13 +583,13 @@ function grun(g, member, io, inRoom, curDecide, getText) {
     })();
 }
 
-function sendSocket(io, member, x, decide, time) { // 사용자에게 결정 받는 소켓 전송 함수
+function sendSocket(io, member, x, decide, time=20) { // 사용자에게 결정 받는 소켓 전송 함수
 
     let num = x.value.nameList.length; // 보낼 사람 수
     decide.reset();
     decide.setNum(num)
     // 결정 초기화
-    const c = new Countdown(10);
+    const c = new Countdown(time);
     c.on('tick', (total, i) => { // 작업 진행 바 조절을 위한 tick 이벤트 발생
         for (let name of x.value.nameList) {
             let tempSocket = member.find(o => o.name == name);
