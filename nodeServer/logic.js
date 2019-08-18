@@ -307,7 +307,7 @@ function* mainGame(member) {
 
     var afterList = {};
 
-    let dayOrder = 0;
+    let dayOrder = 1;
 
     var roleArray = [
         ["마피아", "시민", "시민"],
@@ -796,7 +796,7 @@ Josa.get = function (josa, jong) {
     return '**';
 }
 
-function mainGameExport(){
+function mainGameExport() {
     return mainGame;
 }
 

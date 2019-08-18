@@ -239,8 +239,9 @@
                 <button
                   type="button"
                   class="contact-button"
-                  style="background-color: transparent;"
+                  style="background-color: white; color: black;"
                   v-bind:content="badge[member.name]"
+                  disabled
                 >
                   {{member.name}}
                   <!-- <img src="./13230195.png" class="icon icon-paperplane"> -->
