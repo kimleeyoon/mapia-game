@@ -377,7 +377,6 @@ function* mainGame(member) {
         day: `${dayOrder}`
     };
 
-    console.log("스피커한테 day 보냄");
 
     // alert("지금부터 역할배정을 시작하겠습니다.");
     yield "지금부터 역할배정을 시작하겠습니다.";
@@ -596,6 +595,16 @@ function* mainGame(member) {
         if (count >= Object.keys(memberClass.getLiveAfterList()).length / 2) {
             // alert("마피아가 승리하였습니다. 모든 player들의 정체를 공개합니다.");
             yield "마피아가 승리하였습니다. 모든 player들의 정체를 공개합니다.";
+            yield {
+                do: "DEATH_UPDATE",
+                nameList: memberClass.memberObj
+            };
+            yield {
+                do: 'GAME_END'
+            }
+            yield {
+                do: "WAIT_CHECK"
+            };
             for (key in initialPlayerNameList) {
                 // document.write("player명 : " + key + " 역할 : " + initialPlayerNameList[key] + "<br />");
             }
@@ -603,6 +612,16 @@ function* mainGame(member) {
         } else if (count == 0) {
             // alert("시민이 승리하였습니다.");
             yield "시민이 승리하였습니다.";
+            yield {
+                do: "DEATH_UPDATE",
+                nameList: memberClass.memberObj
+            };
+            yield {
+                do: 'GAME_END'
+            }
+            yield {
+                do: "WAIT_CHECK"
+            };
             for (key in initialPlayerNameList) {
                 // document.write("player명 : " + key + " 역할 : " + initialPlayerNameList[key] + "<br />");
             }
@@ -708,6 +727,16 @@ function* mainGame(member) {
         if (count >= Object.keys(memberClass.getLiveAfterList()).length / 2) {
             // alert("마피아가 승리하였습니다. 모든 player들의 정체를 공개합니다.");
             yield "마피아가 승리하였습니다. 모든 player들의 정체를 공개합니다.";
+            yield {
+                do: "DEATH_UPDATE",
+                nameList: memberClass.memberObj
+            };
+            yield {
+                do: 'GAME_END'
+            }
+            yield {
+                do: "WAIT_CHECK"
+            };
             for (key in initialPlayerNameList) {
                 // document.write("player명 : " + key + " 역할 : " + initialPlayerNameList[key] + "<br />");
             }
@@ -715,6 +744,16 @@ function* mainGame(member) {
         } else if (count == 0) {
             // alert("시민이 승리하였습니다.");
             yield "시민이 승리하였습니다.";
+            yield {
+                do: "DEATH_UPDATE",
+                nameList: memberClass.memberObj
+            };
+            yield {
+                do: 'GAME_END'
+            }
+            yield {
+                do: "WAIT_CHECK"
+            };
             for (key in initialPlayerNameList) {
                 // document.write("player명 : " + key + " 역할 : " + initialPlayerNameList[key] + "<br />");
             }
@@ -757,4 +796,8 @@ Josa.get = function (josa, jong) {
     return '**';
 }
 
-module.exports = mainGame;
+function mainGameExport(){
+    return mainGame;
+}
+
+module.exports = mainGameExport;

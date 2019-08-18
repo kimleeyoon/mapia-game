@@ -156,10 +156,12 @@ router.route('/speaker/nugu/LetMeOut3Action2').post((req, res, next) => {
 router.route('/speaker/nugu/MaybeMapiaWinActions').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
     console.log("MaybeMapiaWinActions");
+    gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
 });
 router.route('/speaker/nugu/MaybeMapiaWinActions2').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
     console.log("MaybeMapiaWinActions2");
+    gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
 });
 router.route('/speaker/nugu/HeIsSavedAction2').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
@@ -196,18 +198,22 @@ router.route('/speaker/nugu/HeIsDiedAction').post((req, res, next) => {
 router.route('/speaker/nugu/GameEndMapiaAction2').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
     console.log("GameEndMapiaAction2");
+    gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
 });
 router.route('/speaker/nugu/GameEndMapiaAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
     console.log("GameEndMapiaAction");
+    gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
 });
 router.route('/speaker/nugu/GameEndCitizenAction2').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
     console.log("GameEndCitizenAction2");
+    gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
 });
 router.route('/speaker/nugu/GameEndCitizenAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
     console.log("GameEndCitizenAction");
+    gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
 });
 router.route('/speaker/nugu/TurnBackAction2').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
@@ -303,9 +309,6 @@ class gameStartInformationClass {
         this.getT = getT;
         this.data = data;
         this.first = false;
-        this.mapiaDo = false;
-        this.doctorDo = false;
-        this.policeDo = false;
         this.goDie = false;
     }
     run() {
@@ -385,7 +388,8 @@ io.on('connection', (socket) => { // 사용자 접속 오면
                     // io.to(`${data.room}`).emit('START_GAME', data);
                     console.log("게임 시작");
                     // 해당 방 정보 재설정 후 게임이 시작함을 방에 있는 모든 유저들에게 알림
-                    gameStartInformation[`${data.room}`] = new gameStartInformationClass(system, curRoom.member, io, `${data.room}`, curDecide, getT, data);
+                    let tempSystem = system();
+                    gameStartInformation[`${data.room}`] = new gameStartInformationClass(tempSystem, curRoom.member, io, `${data.room}`, curDecide, getT, data);
                     // grun(system, curRoom.member, io, `${data.room}`, curDecide, getT);
 
                     // 게임 메인 프로토콜 실행
@@ -395,7 +399,7 @@ io.on('connection', (socket) => { // 사용자 접속 오면
     });
 });
 
-function grun(g, member, io, room, curDecide, getText) {
+function grun(g, member, io, inRoom, curDecide, getText) {
     // 게임 메인 로직을 실행하기위한 제너레이터 실행 함수
     // 마피아 게임은 이 위에서 돌아감
 
@@ -411,13 +415,13 @@ function grun(g, member, io, room, curDecide, getText) {
                 if (x.value instanceof Object) { // Object가 메시지로 왔다며
                     if (x.value.do === "AnnounceRole") { // 역할 공지라면
                         io.to(member.find(o => o.name == x.value.name).socket).emit("ROLE_ALERT", `${x.value.role}`);
-                        console.log("역할 공지 완료");
+                        console.log(`${inRoom}번 방에 역할 공지 완료`);
                         setTimeout(iterate, 0, x.value);
                         // 모든 사용자에게 역할 공지하고 다음 명령 실행
                     } else if (x.value.do === "WAIT_FIRST_NIGHT") {
                         (function k() {
-                            if (gameStartInformation[room].first) {
-                                gameStartInformation[room].first = false;
+                            if (gameStartInformation[inRoom].first) {
+                                gameStartInformation[inRoom].first = false;
                                 setTimeout(iterate, 0, x.value);
                             } else {
                                 setTimeout(k, 0.5);
@@ -425,8 +429,8 @@ function grun(g, member, io, room, curDecide, getText) {
                         })();
                     } else if (x.value.do === "WAIT_CHECK") {
                         (function k() {
-                            if (gameStartInformation[room].first) {
-                                gameStartInformation[room].first = false;
+                            if (gameStartInformation[inRoom].first) {
+                                gameStartInformation[inRoom].first = false;
                                 setTimeout(iterate, 0, x.value);
                             } else {
                                 setTimeout(k, 0.5);
@@ -434,14 +438,14 @@ function grun(g, member, io, room, curDecide, getText) {
                         })();
                     } else if (x.value.do === "VOTE_CHECK") {
                         (function k() {
-                            if (gameStartInformation[room].first) {
-                                gameStartInformation[room].first = false;
-                                const it = getText(room, 'vote_check');
+                            if (gameStartInformation[inRoom].first) {
+                                gameStartInformation[inRoom].first = false;
+                                const it = getText(inRoom, 'vote_check');
                                 console.log("이터레이터 실행");
                                 console.log(it);
                                 console.log(it.next());
-                                it.next(`${gameStartInformation[room].goDie}`);
-                                setTimeout(iterate, 0, `${gameStartInformation[room].goDie}`);
+                                it.next(`${gameStartInformation[inRoom].goDie}`);
+                                setTimeout(iterate, 0, `${gameStartInformation[inRoom].goDie}`);
                             } else {
                                 setTimeout(k, 0.5);
                             }
@@ -450,7 +454,7 @@ function grun(g, member, io, room, curDecide, getText) {
                         console.log(`${x.value.time} 기다리기`);
                         setTimeout(iterate, x.value.time * 1000, x.value);
                     } else if (x.value.do === "VOTE_TEXT") {
-                        const it = getText(room, 'vote');
+                        const it = getText(inRoom, 'vote');
                         it.next();
                         if (x.value.isDeath == 0) { // 죽은 사람이 없는 경우
                             it.next('None');
@@ -459,11 +463,12 @@ function grun(g, member, io, room, curDecide, getText) {
                         }
                         setTimeout(iterate, 0, x.value);
                     } else if (x.value.do === "DAY_TEXT") {
-                        console.log("스피커한테 day 보낼 준비 from app.js");
-                        const it = getText(room, 'day');
-                        console.log("이터레이터 실행");
-                        console.log(it);
-                        console.log(it.next());
+                        // console.log("스피커한테 day 보낼 준비 from app.js");
+                        const it = getText(inRoom, 'day');
+                        // console.log("이터레이터 실행");
+                        // console.log(it);
+                        it.next();
+                        // console.log(it.next());
                         it.next(x.value.day);
                         setTimeout(iterate, 0, x.value);
                     } else if (x.value.do === "ResultOfInvestigation") { // 경찰 조사 결과 전송
@@ -475,11 +480,9 @@ function grun(g, member, io, room, curDecide, getText) {
                         } // 경찰 찾아서 조사 결과 전송
                         setTimeout(iterate, 0, x.value);
                     } else if (x.value.do === "AFTER_TEXT") {
-                        console.log("스피커한테 after 보낼 준비 from app.js");
-                        const it = getText(room, 'after');
-                        console.log("이터레이터 실행");
-                        console.log(it);
-                        console.log(it.next());
+                        // console.log("스피커한테 after 보낼 준비 from app.js");
+                        const it = getText(inRoom, 'after');
+                        it.next();
                         it.next({
                             text: x.value.text,
                             isCitizenWin: x.value.win
@@ -491,10 +494,10 @@ function grun(g, member, io, room, curDecide, getText) {
                             io.to(tempSocket.socket).emit("UPDATE_LIST", x.value.nameList);
                         }
                         // 방에 있는 모든 유저에게 살아있는 사람들 목록 전송
-                        const it = getText(room, 'allAfterList');
-                        console.log("이터레이터 실행");
-                        console.log(it);
-                        console.log(it.next());
+                        const it = getText(inRoom, 'allAfterList');
+                        // console.log("이터레이터 실행");
+                        // console.log(it);
+                        it.next();
                         it.next({
                             list: x.value.nameList
                         });
@@ -504,11 +507,11 @@ function grun(g, member, io, room, curDecide, getText) {
                         const c = sendSocket(io, member, x, curDecide) // 해당 명령 보낸 후 Countdown 리턴 받음
                         c.go(curDecide)
                             .then(() => { // 사용자 결정 다 받으면
-                                io.to(room).emit("END_DECIDE");
+                                io.to(inRoom).emit("END_DECIDE");
                                 setTimeout(iterate, 0, curDecide.decides)
                             })
                             .catch(() => { // 시간 초과
-                                io.to(room).emit("END_DECIDE");
+                                io.to(inRoom).emit("END_DECIDE");
                                 setTimeout(iterate, 0, curDecide.decides)
                             });
 
@@ -517,11 +520,11 @@ function grun(g, member, io, room, curDecide, getText) {
                         const c = sendSocket(io, member, x, curDecide) // 해당 명령 보낸 후 Countdown 리턴 받음
                         c.go(curDecide)
                             .then(() => { // 결정 다 받으면
-                                io.to(room).emit("END_DECIDE");
+                                io.to(inRoom).emit("END_DECIDE");
                                 setTimeout(iterate, 0, curDecide.decides)
                             })
                             .catch(() => { // 시간 초과
-                                io.to(room).emit("END_DECIDE");
+                                io.to(inRoom).emit("END_DECIDE");
                                 setTimeout(iterate, 0, curDecide.decides)
                             });
                     } else if (x.value.do === "Investigation") { // 경찰 조사
@@ -529,11 +532,11 @@ function grun(g, member, io, room, curDecide, getText) {
                         const c = sendSocket(io, member, x, curDecide) // // 해당 명령 보낸 후 Countdown 리턴 받음
                         c.go(curDecide)
                             .then(() => { // 결정 다 받으면
-                                io.to(room).emit("END_DECIDE");
+                                io.to(inRoom).emit("END_DECIDE");
                                 setTimeout(iterate, 0, curDecide.decides)
                             })
                             .catch(() => {
-                                io.to(room).emit("END_DECIDE");
+                                io.to(inRoom).emit("END_DECIDE");
                                 setTimeout(iterate, 0, curDecide.decides)
                             });
 
@@ -542,21 +545,34 @@ function grun(g, member, io, room, curDecide, getText) {
                         const c = sendSocket(io, member, x, curDecide) // 해당 명령 보낸 후 Countdown 리턴 받음
                         c.go(curDecide)
                             .then(() => { // 다 받으면
-                                io.to(room).emit("END_DECIDE");
+                                io.to(inRoom).emit("END_DECIDE");
                                 setTimeout(iterate, 0, curDecide.decides)
                             })
                             .catch(() => { // 시간 다됨
                                 console.log("투표 타임아웃");
-                                io.to(room).emit("END_DECIDE");
+                                io.to(inRoom).emit("END_DECIDE");
                                 setTimeout(iterate, 0, curDecide.decides)
                             });
                     } else if (x.value.do === "TURN_DAY") {
-                        io.to(room).emit("TURN_DAY");
-                        console.log("Turn Day 실행");
+                        io.to(inRoom).emit("TURN_DAY");
                         setTimeout(iterate, 0, x.value);
+                    } else if (x.value.do === 'GAME_END') {
+                        let index = room.findIndex((o) => o.id == inRoom);
+                        if (index) {
+                            room.splice(index, 1);
+                        } else {
+                            console.error(`Room 삭제 실패 : ${inRoom}`);
+                            console.error(room);
+                        }
+                        if (gameStartInformation.hasOwnProperty('inRoom')) {
+                            delete gameStartInformation[inRoom];
+                        } else {
+                            console.error(`gameStartInformation 삭제 실패 : ${inRoom}`);
+                            console.error(gameStartInformation);
+                        }
                     }
                 } else { // 단순한 메시지 전송용
-                    io.to(room).emit("ALERT", {
+                    io.to(inRoom).emit("ALERT", {
                         message: x.value
                     });
                     setTimeout(iterate, 0, x.value);
