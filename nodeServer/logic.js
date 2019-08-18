@@ -425,7 +425,7 @@ function* mainGame(member) {
         };
         yield {
             do: "WAIT_SECOND",
-            time: 20 
+            time: 20
         };
         // alert("해가 저물고 밤이 되었습니다. 플레이어들은 모두 고개를 숙여주세요.");
 
@@ -633,7 +633,7 @@ function* mainGame(member) {
         yield "플레이어들은 모두 고개를 들어주시고 3분 동안 토의를 진행하여 사형대에 올릴 플레이어를 골라주십시오.";
         yield {
             do: "WAIT_SECOND",
-            time: 190
+            time: 130
         };
         // yield {
         //     do: "WAIT_SECOND",
