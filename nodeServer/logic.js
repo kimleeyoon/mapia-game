@@ -438,7 +438,7 @@ function* mainGame(member) {
 
         idOfMapiaPick = 0;
         let tempMapiaPick = [];
-
+ 
         // while (idOfMapiaPick == 0) {
         tempMapiaPick = yield {
             do: "Assassinate",
