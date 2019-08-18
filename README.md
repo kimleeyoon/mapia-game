@@ -8,3 +8,6 @@
 
 <img src="./icon.png">
 
+<img src="./KakaoTalk_Photo_2019-08-19-01-01-26.png">
+
+<img src="./KakaoTalk_Photo_2019-08-19-01-01-36.png">
