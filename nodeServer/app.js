@@ -1,12 +1,12 @@
 const express = require(`express`); // 익스프레스 프레임워크
 const cookieParser = require('cookie-parser');
-var session = require("express-session")({
-    secret: "my-secret",
-    resave: true,
-    saveUninitialized: true
-});
+// var session = require("express-session")({
+//     secret: "my-secret",
+//     resave: true,
+//     saveUninitialized: true
+// });
 // var session = require("express-session");
-var RedisStore = require("connect-redis")(session);
+// var RedisStore = require("connect-redis")(session);
 // var sharedsession = require("express-socket.io-session");
 const http = require('http'); // http
 // const server = require('http').Server(app);
@@ -26,29 +26,30 @@ const app = express();
 let router = express.Router();
 const server = http.Server(app); // 익스프레스 사용해서 서버 생성 및 할당
 const io = require('socket.io')(server); // socket.io 서버 생성
+var SessionSockets = require('session.socket.io'),
+    sessionSockets = new SessionSockets(io, sessionStore, cookieParser, 'key');
+// var sessionMiddleware = session({
+//     store: new RedisStore({}), // XXX redis server config
+//     secret: "keyboard cat",
+// });
 
-var sessionMiddleware = session({
-    store: new RedisStore({}), // XXX redis server config
-    secret: "keyboard cat",
-});
 
 
-
-io.use(function (socket, next) {
-    //     sessionMiddleware(socket.request, socket.request.res, next);
-    // sessionMiddleware(socket.request, {}, next);
-    // var socket_subdomain = socket.handshake.headers.host.split('.')[0]
-    // // console.log('socket subdomain: ' + socket_subdomain)
-    // sessionMiddleware(socket.handshake, {}, err => {
-    //     var session = socket.handshake.session
-    //     session.user_id = 1125
-    //     session.save()
-    //     session.reload(err => {
-    //         app.sio.sockets.in('room_' + session.id).emit('auth', session)
-    //     })
-    // })
-    sessionMiddleware(socket.request, {}, next)
-});
+// io.use(function (socket, next) {
+//     //     sessionMiddleware(socket.request, socket.request.res, next);
+//     // sessionMiddleware(socket.request, {}, next);
+//     // var socket_subdomain = socket.handshake.headers.host.split('.')[0]
+//     // // console.log('socket subdomain: ' + socket_subdomain)
+//     // sessionMiddleware(socket.handshake, {}, err => {
+//     //     var session = socket.handshake.session
+//     //     session.user_id = 1125
+//     //     session.save()
+//     //     session.reload(err => {
+//     //         app.sio.sockets.in('room_' + session.id).emit('auth', session)
+//     //     })
+//     // })
+//     sessionMiddleware(socket.request, {}, next)
+// });
 
 
 app.use('/', static(path.join(__dirname, 'public/dist'))); // public/dist 폴더를 클라이언트가 루트경로로 접근하도록 해줌
@@ -58,7 +59,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
-app.use(sessionMiddleware);
+// app.use(sessionMiddleware);
 // app.use(session);
 
 app.use((err, req, res, next) => next());
@@ -424,7 +425,7 @@ io.on('connection', (socket) => { // 사용자 접속 오면
     let curDecide; // 소켓이 접속중인 방을 관리할 decide
 
     console.log(`${socket.id} 접속함`);
-    console.log(`session : ${socket.request.session}`);
+    // console.log(`session : ${socket.request.session}`);
 
     socket.on('disconnect', () => { // 접속 끊기면
 
