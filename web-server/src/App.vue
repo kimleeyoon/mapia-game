@@ -458,6 +458,11 @@ export default {
           return o;
         });
     });
+    this.socket.on('REQUEST_NAME', () => {
+      if(this.isStartGame){
+        this.socket.emit("RESPONSE_NAME", {name: this.name, room: this.roomID});
+      }
+    });
   }
 };
 </script>

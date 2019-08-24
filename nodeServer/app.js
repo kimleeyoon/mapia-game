@@ -404,6 +404,12 @@ class gameStartInformationClass {
     setDie(bool) {
         this.goDie = bool;
     }
+    returnMember() {
+        return this.member;
+    }
+    updateMember(member){
+        this.member = member;
+    }
 }
 
 
@@ -427,6 +433,12 @@ io.on('connection', (socket) => { // 사용자 접속 오면
     console.log(`${socket.id} 접속함`);
     // console.log(`session : ${socket.request.session}`);
 
+    socket.emit('REQUEST_NAME');
+
+    socket.on('RESPONSE_NAME', data => {
+        // gameStartInformation[`${data.room}`].upd
+    })
+
     socket.on('disconnect', () => { // 접속 끊기면
 
     });
@@ -445,6 +457,8 @@ io.on('connection', (socket) => { // 사용자 접속 오면
             io.to(o.socket).emit("VOTE_BADGE", data.message);
         });
     });
+
+
 
     socket.on('ROOM_CONNECT', (data) => { // 사용자가 방에 들어오면
         if (!room.some(x => x.id == data.room)) { // 없는 방이라면
@@ -491,7 +505,7 @@ io.on('connection', (socket) => { // 사용자 접속 오면
     });
 });
 
-function grun(g, member, io, inRoom, curDecide, getText) {
+function grun(g, member, io, inRoom, curDecide, getText, getMember) {
     // 게임 메인 로직을 실행하기위한 제너레이터 실행 함수
     // 마피아 게임은 이 위에서 돌아감
 
@@ -499,6 +513,8 @@ function grun(g, member, io, inRoom, curDecide, getText) {
 
     (function iterate(val) {
         const x = it.next(val);
+        member = gameStartInformation[`${inRoom}`].returnMember();
+        console.log(member);
         if (!x.done) { // 제너레이터 아직 안끝났다면
             if (x.value instanceof Promise) { // 프라미스 종류라면
                 x.value.then(iterate).catch(err => it.throw(err)); // 프라미스 완료되면 다음 yield 실행
