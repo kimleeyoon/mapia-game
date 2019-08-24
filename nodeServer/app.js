@@ -401,6 +401,7 @@ io.on('connection', (socket) => { // 사용자 접속 오면
     let curRoom; // 소켓이 접속중인 방
     let curDecide; // 소켓이 접속중인 방을 관리할 decide
 
+    console.log(`${socket.id} 접속함`);
 
     socket.on('disconnect', () => { // 접속 끊기면
         
@@ -423,6 +424,9 @@ io.on('connection', (socket) => { // 사용자 접속 오면
 
     if(socket.handshake.session.io){
         console.log("Session 저장된 유저 접속함");
+        console.log(socket.id);
+    }else{
+        console.log('Session 없음');
         console.log(socket.id);
     }
 

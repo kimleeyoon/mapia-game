@@ -314,9 +314,9 @@ export default {
       }
       if (this.onceClick == false) {
         this.onceClick = true;
-        setTimeout(() => {
-          this.onceClick = false;
-        }, 1000);
+        // setTimeout(() => {
+        //   this.onceClick = false;
+        // }, 1000);
         this.warnNoName = false;
         this.room = io();
         e.preventDefault();
@@ -357,14 +357,17 @@ export default {
     });
     this.socket.on("WRONG_ROOM", () => {
       this.temp += `${this.roomID}는 존재하지 않는 방입니다.`;
+      this.onceClick = false;
     });
     this.socket.on("ENTER_ROOM", () => {
       this.isNotJoinedRoom = !this.isNotJoinedRoom;
       this.isStartGame = false;
       this.temp = "";
+      this.onceClick = false;
     });
     this.socket.on("FULL_OF_ROOM", () => {
       this.temp += `${this.roomID}번 방은 자리가 없어여어엉`;
+      this.onceClick = false;
     });
     this.socket.on("TURN_DAY", () => {
       this.isNight = !this.isNight;
