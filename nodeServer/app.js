@@ -393,6 +393,9 @@ class gameStartInformationClass {
         this.data = data;
         this.first = false;
         this.goDie = false;
+        this.list = [];
+        this.message = "";
+        this.isNight = true;
     }
     run() {
         io.to(`${this.room}`).emit('START_GAME', this.data);
@@ -418,6 +421,28 @@ class gameStartInformationClass {
     }
     clearAllMemberAction() {
         this.member.map(o => o.clearAction());
+    }
+    setList(list) {
+        this.list = list;
+    }
+    getList() {
+        return this.list;
+    }
+    setMg(text) {
+        this.message = text;
+    }
+    getMg() {
+        return this.message;
+    }
+    setNight(night) {
+        if (night == 'NIGHT') {
+            this.isNight = true;
+        } else {
+            this.isNight = false;
+        }
+    }
+    getNight() {
+        return this.isNight;
     }
 }
 
@@ -446,9 +471,14 @@ io.on('connection', (socket) => { // 사용자 접속 오면
 
     socket.on('RESPONSE_NAME', data => {
         console.log(`name 옴 : ${data.name} : ${data.room} : ${socket.id}`);
+        curRoom = room.find(o => o.id == data.room); // 사용자가 접속중인 현재 방
+        curDecide = decides.find(o => `${o.id}` === `${data.room}`); // 사용자가 접속중인 방의 decide
         if (Object.keys(gameStartInformation).indexOf(`${data.room}`) != -1) {
             gameStartInformation[`${data.room}`].updateMember(data.name, socket.id);
             socket.join(`${data.room}`, () => {});
+            socket.emit("UPDATE_LIST", gameStartInformation[`${data.room}`].getList());
+            socket.emit("ALERT", gameStartInformation[`${data.room}`].getMg());
+            socket.emit("TURN_DAY", gameStartInformation[`${data.room}`].getNight());
             if (gameStartInformation[`${data.room}`].member.find(o => o.name == data.name).getAction() == "Assassinate") {
                 gameStartInformation[`${data.room}`].member.find(o => o.name == data.name).countDown.on('tick', (total, i) => { // 작업 진행 바 조절을 위한 tick 이벤트 발생
                     socket.emit("TICK", total, i);
@@ -637,6 +667,7 @@ function grun(g, member, io, inRoom, curDecide, getText, getMember) {
                             let tempSocket = member.find(o => o.name == tempMember.name);
                             io.to(tempSocket.socket).emit("UPDATE_LIST", x.value.nameList);
                         }
+                        gameStartInformation[inRoom].setList(x.value.nameList);
                         // 방에 있는 모든 유저에게 살아있는 사람들 목록 전송
                         const it = getText(inRoom, 'allAfterList');
                         // console.log("이터레이터 실행");
@@ -723,6 +754,7 @@ function grun(g, member, io, inRoom, curDecide, getText, getMember) {
                             });
                     } else if (x.value.do === "TURN_DAY") {
                         io.to(inRoom).emit("TURN_DAY", x.value.set);
+                        gameStartInformation[inRoom].setNight(x.value.set);
                         setTimeout(iterate, 0, x.value);
                     } else if (x.value.do === 'GAME_END') {
                         let index = room.findIndex((o) => o.id == Number(inRoom));
@@ -743,6 +775,7 @@ function grun(g, member, io, inRoom, curDecide, getText, getMember) {
                     io.to(inRoom).emit("ALERT", {
                         message: x.value
                     });
+                    gameStartInformation[inRoom].setMg(x.value);
                     setTimeout(iterate, 0, x.value);
                 }
                 // setTimeout(iterate, 0, x.value);
