@@ -688,6 +688,7 @@ function sendSocket(io, member, x, decide, time = 20) { // 사용자에게 결�
         for (let name of x.value.nameList) {
             let tempSocket = member.find(o => o.name == name);
             io.to(tempSocket.socket).emit("TICK", total, i);
+            io.to(tempSocket.socket).emit(x.value.do.toUpperCase());
         }
     })
     for (let name of x.value.nameList) {
