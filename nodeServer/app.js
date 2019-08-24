@@ -1,11 +1,11 @@
 const express = require(`express`); // 익스프레스 프레임워크
 const cookieParser = require('cookie-parser');
-// var session = require("express-session")({
-//     secret: "my-secret",
-//     resave: true,
-//     saveUninitialized: true
-// });
-var session = require("express-session");
+var session = require("express-session")({
+    secret: "my-secret",
+    resave: true,
+    saveUninitialized: true
+});
+// var session = require("express-session");
 var RedisStore = require("connect-redis")(session);
 // var sharedsession = require("express-socket.io-session");
 const http = require('http'); // http
