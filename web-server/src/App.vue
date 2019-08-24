@@ -369,8 +369,13 @@ export default {
       this.temp += `${this.roomID}번 방은 자리가 없어여어엉`;
       this.onceClick = false;
     });
-    this.socket.on("TURN_DAY", () => {
-      this.isNight = !this.isNight;
+    this.socket.on("TURN_DAY", (data) => {
+      if(data == 'NIGHT'){
+        this.isNight = true;
+      }else{
+        this.isNight = false;
+      }
+      // this.isNight = !this.isNight;
       // this.tempAnnounce = "";
     });
     this.socket.on("START_GAME", data => {
@@ -457,6 +462,9 @@ export default {
           o.name += "  ";
           return o;
         });
+      this.isDeciding = false;
+      this.isVoting = false;
+      this.isNowSelect = false;
     });
     this.socket.on('REQUEST_NAME', () => {
       if(this.isStartGame){

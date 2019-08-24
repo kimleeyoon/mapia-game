@@ -439,6 +439,9 @@ io.on('connection', (socket) => { // 사용자 접속 오면
         console.log(`name 옴 : ${data.name} : ${data.room} : ${socket.id}`);
         if(Object.keys(gameStartInformation).indexOf(`${data.room}`) != -1){
             gameStartInformation[`${data.room}`].updateMember(data.name, socket.id);
+            socket.join(`${data.room}`, () => {
+
+            });
         }
     })
 
@@ -667,7 +670,7 @@ function grun(g, member, io, inRoom, curDecide, getText, getMember) {
                                 setTimeout(iterate, 0, curDecide.decides)
                             });
                     } else if (x.value.do === "TURN_DAY") {
-                        io.to(inRoom).emit("TURN_DAY");
+                        io.to(inRoom).emit("TURN_DAY", x.value.set);
                         setTimeout(iterate, 0, x.value);
                     } else if (x.value.do === 'GAME_END') {
                         let index = room.findIndex((o) => o.id == Number(inRoom));

@@ -401,7 +401,8 @@ function* mainGame(member) {
 3분 동안 토의를 진행해주세요. \
 첫번째 아침은 아무도 사형대에 오르지 않습니다.";
     yield {
-        do: "TURN_DAY"
+        do: "TURN_DAY",
+        set: 'DAY'
     };
     yield {
         do: "WAIT_FIRST_NIGHT"
@@ -421,8 +422,10 @@ function* mainGame(member) {
         //     do: "WAIT_SECOND",
         //     time: 1
         // };x
+        yield "해가 저물고 밤이 되었습니다. 플레이어들은 모두 고개를 숙여주세요.";
         yield {
-            do: "TURN_DAY"
+            do: "TURN_DAY",
+            set: 'NIGHT'
         };
         yield {
             do: "WAIT_SECOND",
@@ -431,7 +434,7 @@ function* mainGame(member) {
         // alert("해가 저물고 밤이 되었습니다. 플레이어들은 모두 고개를 숙여주세요.");
 
 
-        yield "해가 저물고 밤이 되었습니다. 플레이어들은 모두 고개를 숙여주세요.";
+
 
 
         // alert("지금부터 마피아는 고개를 들어 30초간 토의를 하시고 암살할 플레이어를 지목해주세요.");
@@ -592,7 +595,8 @@ function* mainGame(member) {
         };
 
         yield {
-            do: "TURN_DAY"
+            do: "TURN_DAY",
+            set: 'DAY'
         };
 
 
