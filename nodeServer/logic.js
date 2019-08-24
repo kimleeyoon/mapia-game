@@ -672,7 +672,7 @@ function* mainGame(member) {
             do: "Vote",
             nameList: memberClass.getLiveList()
         };
-
+        
 
         id = handelDecide(tempId, false);
 

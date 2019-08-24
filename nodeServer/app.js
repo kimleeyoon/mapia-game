@@ -1,4 +1,12 @@
 const express = require(`express`); // 익스프레스 프레임워크
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
+var session = require("express-session")({
+    secret: "my-secret",
+    resave: true,
+    saveUninitialized: true
+});
+var sharedsession = require("express-socket.io-session");
 const http = require('http'); // http
 // const server = require('http').Server(app);
 const static = require('serve-static'); // 서버 경로 재지정 해주는
@@ -22,6 +30,10 @@ app.use(bodyParser.urlencoded({
     extended: false
 }));
 app.use(bodyParser.json());
+
+
+app.use(session);
+
 app.use((err, req, res, next) => next());
 
 // router.route('/speaker/nugu').post((req, res) => {
@@ -30,6 +42,13 @@ app.use((err, req, res, next) => next());
 // router.route('/speaker/nugu/TakePlayerNumAction').post((req, res) => {
 //     console.log("asdfdasfasfdsafdsaf");
 // });
+
+const server = http.Server(app); // 익스프레스 사용해서 서버 생성 및 할당
+const io = require('socket.io')(server); // socket.io 서버 생성
+
+io.use(sharedsession(session, {
+    autoSave:true
+})); 
 
 router.route('/speaker/nugu/TakePlayerNumAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, setPin, next);
@@ -249,8 +268,7 @@ router.route('/speaker/nugu/TurnBackAction').post((req, res, next) => {
     console.log("TurnBackAction");
 });
 
-const server = http.Server(app); // 익스프레스 사용해서 서버 생성 및 할당
-const io = require('socket.io')(server); // socket.io 서버 생성
+
 
 app.use('/', router);
 
@@ -383,8 +401,10 @@ io.on('connection', (socket) => { // 사용자 접속 오면
 
     let curRoom; // 소켓이 접속중인 방
     let curDecide; // 소켓이 접속중인 방을 관리할 decide
-    socket.on('disconnect', () => { // 접속 끊기면
 
+
+    socket.on('disconnect', () => { // 접속 끊기면
+        
     });
     socket.on('ROLE_FEEDBACK', (data) => { // 사용자가 역할 할당받고 다시 서버에 보내준거 받는 프로토콜
         curRoom.member[curRoom.member.findIndex(o => o.name == data.name)].role = data.role; // curRoom 멤버에서 해당 멤버 찾아서 역할 저장
@@ -402,6 +422,11 @@ io.on('connection', (socket) => { // 사용자 접속 오면
         });
     });
 
+    if(socket.handshake.session.io){
+        console.log("Session 저장된 유저 접속함");
+        console.log(socket.id);
+    }
+
     socket.on('ROOM_CONNECT', (data) => { // 사용자가 방에 들어오면
         if (!room.some(x => x.id == data.room)) { // 없는 방이라면
             console.log(`사용자가 없는 방에 접속 시도 : ${data.room}`);
@@ -411,6 +436,14 @@ io.on('connection', (socket) => { // 사용자 접속 오면
             curRoom = room.find(o => o.id == data.room); // 사용자가 접속중인 현재 방
             curDecide = decides.find(o => `${o.id}` === `${data.room}`); // 사용자가 접속중인 방의 decide
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            if(socket.handshake.session.io){
+
+            }else{
+                console.log("Session 저장함");
+                console.log(socket.id);
+                socket.handshake.session.io = io;
+                socket.handshake.session.save();
+            }
 
             if (curRoom.size <= curRoom.member.length) { // 방 꽉차면
                 io.to(socket.id).emit("FULL_OF_ROOM");
