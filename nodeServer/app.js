@@ -21,36 +21,12 @@ const system = require('./logic'); // 로직 프로그램
 const getT = require('./main/index').getText;
 
 let nugu = require('./main'); // 스피커 서버에서 실행할 프로그램 받아오는 것 -> index.js
+let logger= require('./logger');
 
 const app = express();
 let router = express.Router();
 const server = http.Server(app); // 익스프레스 사용해서 서버 생성 및 할당
 const io = require('socket.io')(server); // socket.io 서버 생성
-// var SessionSockets = require('session.socket.io'),
-// sessionSockets = new SessionSockets(io, sessionStore, cookieParser, 'key');
-// var sessionMiddleware = session({
-//     store: new RedisStore({}), // XXX redis server config
-//     secret: "keyboard cat",
-// });
-
-
-
-// io.use(function (socket, next) {
-//     //     sessionMiddleware(socket.request, socket.request.res, next);
-//     // sessionMiddleware(socket.request, {}, next);
-//     // var socket_subdomain = socket.handshake.headers.host.split('.')[0]
-//     // // console.log('socket subdomain: ' + socket_subdomain)
-//     // sessionMiddleware(socket.handshake, {}, err => {
-//     //     var session = socket.handshake.session
-//     //     session.user_id = 1125
-//     //     session.save()
-//     //     session.reload(err => {
-//     //         app.sio.sockets.in('room_' + session.id).emit('auth', session)
-//     //     })
-//     // })
-//     sessionMiddleware(socket.request, {}, next)
-// });
-
 
 app.use('/', static(path.join(__dirname, 'public/dist'))); // public/dist 폴더를 클라이언트가 루트경로로 접근하도록 해줌
 
@@ -296,22 +272,13 @@ router.route('/speaker/nugu/TurnBackAction').post((req, res, next) => {
 app.use('/', router);
 
 server.listen(3000, () => { // 3000포트에서 서버 열음
-    console.log('Server Open 3000');
+    logger.warn('Server Open 3000')
     // createRoom(room, 4);
     // createRoom(room, 6);
     // createRoom(room, 5);
     // 3개의 방 생성
 });
 
-
-// app.get('/', (req, res) => {
-//     res.sendFile(__dirname + '/public/dist/index.html');
-// });
-
-// io.on('connection', function (socket) {
-//     console.log(socket.id)
-//     console.log("Someone connected to server without namespace");
-// });
 class Countdown extends EventEmitter { // 제한시간 초과시 프라미스 실패내기위한 클래스
     constructor(seconds) {
         super();
@@ -347,8 +314,8 @@ class dMessage { // decide 관리를 위한 class
         this.count++;
         this.decides.push(data);
         // count 증가 후 decides에 응답 온 결정 추가
-        console.log(this.decides);
-        console.log(`num : ${this.num} count = ${this.count}`);
+        // console.log(this.decides);
+        // console.log(`num : ${this.num} count = ${this.count}`);
     }
     setNum(n) {
         this.num = n; //  받아야하는 결정 수 설정
@@ -464,13 +431,10 @@ io.on('connection', (socket) => { // 사용자 접속 오면
     let curRoom; // 소켓이 접속중인 방
     let curDecide; // 소켓이 접속중인 방을 관리할 decide
 
-    console.log(`${socket.id} 접속함`);
-    // console.log(`session : ${socket.request.session}`);
-
     socket.emit('REQUEST_NAME');
 
     socket.on('RESPONSE_NAME', data => {
-        console.log(`name 옴 : ${data.name} : ${data.room} : ${socket.id}`);
+        logger.info(`${data.room}번 방에 'Server Open 3000' 재접속 : ${socket.id}`);
         curRoom = room.find(o => o.id == data.room); // 사용자가 접속중인 현재 방
         curDecide = decides.find(o => `${o.id}` === `${data.room}`); // 사용자가 접속중인 방의 decide
         if (Object.keys(gameStartInformation).indexOf(`${data.room}`) != -1) {
@@ -526,22 +490,21 @@ io.on('connection', (socket) => { // 사용자 접속 오면
 
     socket.on('ROOM_CONNECT', (data) => { // 사용자가 방에 들어오면
         if (!room.some(x => x.id == data.room)) { // 없는 방이라면
-            console.log(`사용자가 없는 방에 접속 시도 : ${data.room}`);
+            logger.warn(`사용자가 없는 방에 접속 시도 : ${data.room}`);
             io.to(socket.id).emit("WRONG_ROOM");
         } else { // 맞는 방이라면
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             curRoom = room.find(o => o.id == data.room); // 사용자가 접속중인 현재 방
             curDecide = decides.find(o => `${o.id}` === `${data.room}`); // 사용자가 접속중인 방의 decide
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            console.log(`${socket.id} 접속함`);
-            console.log(`session : ${socket.request.session}`);
+            logger.info(`${data.room}번 방에 ${socket.id} 접속함`);
 
             if (curRoom.size <= curRoom.member.length) { // 방 꽉차면
                 io.to(socket.id).emit("FULL_OF_ROOM");
             } else { // 방 비어있으면
                 curRoom.member.push(new Member(data.name, socket.id, socket.on)); // 해당 방에 접속한 멤버 추가
                 socket.join(`${data.room}`, () => { // 해당 방에 유저를 추가
-                    console.log(`${data.name}이 방(${data.room})에 들어옴`);
+                    logger.info(`${data.name}이 방(${data.room})에 들어옴`);
                     data.member = curRoom.member;
                     data.size = curRoom.size;
                     // 해당 방에 접속중인 멤버와 사람 수 설정 후 방에 있는 모든 사용자에게 유저가 접속했음을 알림
@@ -556,7 +519,7 @@ io.on('connection', (socket) => { // 사용자 접속 오면
                     data.member = curRoom.member;
                     data.size = curRoom.size;
                     // io.to(`${data.room}`).emit('START_GAME', data);
-                    console.log("게임 시작");
+                    logger.info(`${data.room}번방 게임 시작`);
                     // 해당 방 정보 재설정 후 게임이 시작함을 방에 있는 모든 유저들에게 알림
                     let tempSystem = system();
                     gameStartInformation[`${data.room}`] = new gameStartInformationClass(tempSystem, curRoom.member, io, `${data.room}`, curDecide, getT, data);
@@ -578,7 +541,6 @@ function grun(g, member, io, inRoom, curDecide, getText, getMember) {
     (function iterate(val) {
         const x = it.next(val);
         member = gameStartInformation[`${inRoom}`].returnMember();
-        console.log(member);
         if (!x.done) { // 제너레이터 아직 안끝났다면
             if (x.value instanceof Promise) { // 프라미스 종류라면
                 x.value.then(iterate).catch(err => it.throw(err)); // 프라미스 완료되면 다음 yield 실행
@@ -587,7 +549,7 @@ function grun(g, member, io, inRoom, curDecide, getText, getMember) {
                 if (x.value instanceof Object) { // Object가 메시지로 왔다며
                     if (x.value.do === "AnnounceRole") { // 역할 공지라면
                         io.to(member.find(o => o.name == x.value.name).socket).emit("ROLE_ALERT", `${x.value.role}`);
-                        console.log(`${inRoom}번 방에 역할 공지 완료`);
+                        logger.info(`${inRoom}번 방에 역할 공지 완료`);
                         setTimeout(iterate, 0, x.value);
                         // 모든 사용자에게 역할 공지하고 다음 명령 실행
                     } else if (x.value.do === "WAIT_FIRST_NIGHT") {
@@ -613,9 +575,6 @@ function grun(g, member, io, inRoom, curDecide, getText, getMember) {
                             if (gameStartInformation[inRoom].first) {
                                 gameStartInformation[inRoom].first = false;
                                 const it = getText(inRoom, 'vote_check');
-                                // console.log("이터레이터 실행");
-                                // console.log(it);
-                                // console.log(it.next());
                                 it.next();
                                 it.next(`${gameStartInformation[inRoom].goDie}`);
                                 setTimeout(iterate, 0, `${gameStartInformation[inRoom].goDie}`);
@@ -624,11 +583,11 @@ function grun(g, member, io, inRoom, curDecide, getText, getMember) {
                             }
                         })();
                     } else if (x.value.do === "WAIT_SECOND") {
-                        console.log(`${x.value.time} 기다리기`);
+                        logger.info(`${inRoom}번방 ${x.value.time} 기다리기`);
                         setTimeout(iterate, x.value.time * 1000, x.value);
                     } else if (x.value.do === "VOTE_TEXT") {
                         const it = getText(inRoom, 'vote');
-                        console.log(`${inRoom}에서 VOTE_TEXT app.js에 도착 isDeath : ${x.value.isDeath}`);
+                        logger.info(`${inRoom}에서 VOTE_TEXT app.js에 도착 isDeath : ${x.value.isDeath}`);
                         it.next();
                         if (x.value.isDeath == 0) { // 죽은 사람이 없는 경우
                             it.next('None');
@@ -637,12 +596,8 @@ function grun(g, member, io, inRoom, curDecide, getText, getMember) {
                         }
                         setTimeout(iterate, 0, x.value);
                     } else if (x.value.do === "DAY_TEXT") {
-                        // console.log("스피커한테 day 보낼 준비 from app.js");
                         const it = getText(inRoom, 'day');
-                        // console.log("이터레이터 실행");
-                        // console.log(it);
                         it.next();
-                        // console.log(it.next());
                         it.next(x.value.day);
                         setTimeout(iterate, 0, x.value);
                     } else if (x.value.do === "ResultOfInvestigation") { // 경찰 조사 결과 전송
@@ -654,7 +609,6 @@ function grun(g, member, io, inRoom, curDecide, getText, getMember) {
                         } // 경찰 찾아서 조사 결과 전송
                         setTimeout(iterate, 0, x.value);
                     } else if (x.value.do === "AFTER_TEXT") {
-                        // console.log("스피커한테 after 보낼 준비 from app.js");
                         const it = getText(inRoom, 'after');
                         it.next();
                         it.next({
@@ -670,8 +624,6 @@ function grun(g, member, io, inRoom, curDecide, getText, getMember) {
                         gameStartInformation[inRoom].setList(x.value.nameList);
                         // 방에 있는 모든 유저에게 살아있는 사람들 목록 전송
                         const it = getText(inRoom, 'allAfterList');
-                        // console.log("이터레이터 실행");
-                        // console.log(it);
                         it.next();
                         it.next({
                             list: x.value.nameList
@@ -747,7 +699,6 @@ function grun(g, member, io, inRoom, curDecide, getText, getMember) {
                                 setTimeout(iterate, 0, curDecide.decides)
                             })
                             .catch(() => { // 시간 다됨
-                                console.log("투표 타임아웃");
                                 io.to(inRoom).emit("END_DECIDE");
                                 gameStartInformation[inRoom].clearAllMemberAction();
                                 setTimeout(iterate, 0, curDecide.decides)
@@ -758,17 +709,18 @@ function grun(g, member, io, inRoom, curDecide, getText, getMember) {
                         setTimeout(iterate, 0, x.value);
                     } else if (x.value.do === 'GAME_END') {
                         let index = room.findIndex((o) => o.id == Number(inRoom));
+                        logger.info(`${inRoom}번 방에서 Index : ${index}`);
                         if (index) {
                             room.splice(index, 1);
                         } else {
-                            console.error(`Room 삭제 실패 : ${inRoom} index : ${index}`);
-                            console.error(room);
+                            logger.error(`${inRoom}번방 Room 삭제 실패 : ${inRoom} index : ${index}`);
+                            logger.error(room);
                         }
                         if (gameStartInformation.hasOwnProperty(`${inRoom}`)) {
                             delete gameStartInformation[inRoom];
                         } else {
-                            console.error(`gameStartInformation 삭제 실패 : ${inRoom} index : ${index}`);
-                            console.error(gameStartInformation);
+                            logger.error(`${inRoom}번방 gameStartInformation 삭제 실패 : ${inRoom} index : ${index}`);
+                            logger.error(gameStartInformation);
                         }
                     }
                 } else { // 단순한 메시지 전송용
@@ -839,8 +791,8 @@ function createRoom(rooms, size) { // 특정 사이즈의 방 생성
     decides.push(new dMessage(id));
     // rooms와 decide에 할당
 
-    console.log(`${rooms[rooms.length - 1].id} room 생성`);
-    console.log(rooms);
+    logger.info(`${rooms[rooms.length - 1].id} room 생성`);
+    logger.info(rooms);
 
     return id;
 }

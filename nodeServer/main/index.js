@@ -4,7 +4,7 @@ class Request {
         this.action = httpReq.body.action;
         this.func = f;
         this.func2 = f2;
-        console.log(`NPKRequest: ${JSON.stringify(this.context)}, ${JSON.stringify(this.action)}`)
+        // console.log(`NPKRequest: ${JSON.stringify(this.context)}, ${JSON.stringify(this.action)}`)
     }
     actionRequest(response, sendData) {
         let actionName = this.action.actionName;
@@ -449,8 +449,8 @@ class Response {
         this.directives = [];
     }
     setParameters(result, sendData) {
-        console.log("result :");
-        console.log(result);
+        // console.log("result :");
+        // console.log(result);
         this.output = {
             numOfPlayer: result.numOfPlayer,
             pinNum: result.pinNum,
@@ -475,7 +475,7 @@ class Response {
             mapiaOrCitizenWinNum2: result.mapiaOrCitizenWinNum,
             moreThanTwoExist2: result.moreThanTwoExist
         }
-        console.log(this.output);
+        // console.log(this.output);
 
         sendData(this);
     }
@@ -485,10 +485,10 @@ const reqObject = (f, req, res, f2, next) => {
     response = new Response();
     request = new Request(req, f, f2);
     request.actionRequest(response, (r) => {
-        console.log(r);
+        // console.log(r);
         res.send(r)
     });
-    console.log(`NPKResponse: ${JSON.stringify(response)}`);
+    // console.log(`NPKResponse: ${JSON.stringify(response)}`);
 };
 
 module.exports = reqObject;

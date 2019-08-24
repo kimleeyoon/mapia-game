@@ -1207,10 +1207,10 @@ svg {
 }
 
 .nick {
-  padding: 0px 50px 0 50px;
+  padding: 0px 0px 0px 0px;
   font-family: var(--font);
 
-  width: 60%;
+  /* width: 60%; */
   height: 50%;
   margin: 0 auto;
   white-space: pre;
