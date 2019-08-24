@@ -407,8 +407,8 @@ class gameStartInformationClass {
     returnMember() {
         return this.member;
     }
-    updateMember(member){
-        this.member = member;
+    updateMember(name, socket){
+        this.member.find((o) => o.name === name).socket = socket;
     }
 }
 
@@ -436,7 +436,8 @@ io.on('connection', (socket) => { // 사용자 접속 오면
     socket.emit('REQUEST_NAME');
 
     socket.on('RESPONSE_NAME', data => {
-        // gameStartInformation[`${data.room}`].upd
+        console.log(`name 옴 : ${data.name} : ${data.room} : ${socket.id}`);
+        gameStartInformation[`${data.room}`].updateMember(data.name, socket.id);
     })
 
     socket.on('disconnect', () => { // 접속 끊기면
