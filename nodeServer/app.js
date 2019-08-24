@@ -600,9 +600,6 @@ function grun(g, member, io, inRoom, curDecide, getText) {
 
                         const c = sendSocket(io, member, x, curDecide) // 해당 명령 보낸 후 Countdown 리턴 받음
                         c.go(curDecide)
-                            .on('refresh', ()=>{
-                                c.updateMember(member);
-                            })
                             .then(() => { // 사용자 결정 다 받으면
                                 io.to(inRoom).emit("END_DECIDE");
                                 setTimeout(iterate, 0, curDecide.decides)
@@ -699,15 +696,12 @@ function sendSocket(io, member, x, decide, time = 20) { // 사용자에게 결�
     decide.reset();
     decide.setNum(num)
     // 결정 초기화
-    const c = new MemberCountdown(time);
-    c.updateMember(member);
+    const c = new Countdown(time);
     c.on('tick', (total, i) => { // 작업 진행 바 조절을 위한 tick 이벤트 발생
         for (let name of x.value.nameList) {
-            let tempSocket = c.getMember().find(o => o.name == name);
+            let tempSocket = member.find(o => o.name == name);
             io.to(tempSocket.socket).emit("TICK", total, i);
-            io.to(tempSocket.socket).emit(x.value.do.toUpperCase());
         }
-        c.emit('refresh');
     })
     for (let name of x.value.nameList) {
         let tempSocket = member.find(o => o.name == name);
