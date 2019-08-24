@@ -477,10 +477,16 @@ function* mainGame(member) {
         doctorAlive = isThereAnyDoctor(afterList);
         if (doctorAlive == 0) {
             // while (mapiaVSdoctorResult == "Error" || mapiaVSdoctorResult == "None") {
+            // tempDoctorPick = yield {
+            //     do: "Treatment",
+            //     nameList: Object.keys(memberClass.getLiveAfterList()).filter(o => afterList[o] == "의사")
+            // };
             tempDoctorPick = yield {
                 do: "Treatment",
-                nameList: Object.keys(memberClass.getLiveAfterList()).filter(o => afterList[o] == "의사")
+                nameList:  memberClass.getLiveAfterListByRole(afterList, '의사')
             };
+
+            
 
             doctorPick = handelDecide(tempDoctorPick, true);
 
@@ -527,12 +533,19 @@ function* mainGame(member) {
             if (idOfPolicePick != "None") { // 경찰이 조사를 하면
 
                 idOfPolicePick = idOfPolicePick == "마피아" ? "마피아" : "시민";
+                // yield {
+                //     name: policePick,
+                //     nameList: Object.keys(memberClass.getLiveAfterList()).filter(o => memberClass.getAfterList()[o] == "경찰"),
+                //     role: idOfPolicePick,
+                //     do: "ResultOfInvestigation"
+                // };
                 yield {
                     name: policePick,
-                    nameList: Object.keys(memberClass.getLiveAfterList()).filter(o => memberClass.getAfterList()[o] == "경찰"),
+                    nameList: memberClass.getLiveAfterListByRole(afterList, '경찰'),
                     role: idOfPolicePick,
                     do: "ResultOfInvestigation"
                 };
+                
             }
             // }
         } else {
@@ -543,7 +556,7 @@ function* mainGame(member) {
         }
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////
-        mapiaVSdoctorResult = savePlayer(mapiaPick, doctorPick, doctorAlive, afterList, memberClass.memberObj);
+        mapiaVSdoctorResult = savePlayer(mapiaPick, doctorPick, doctorAlive, afterList, memberClass);
         //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
