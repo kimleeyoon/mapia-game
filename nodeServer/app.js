@@ -441,7 +441,7 @@ io.on('connection', (socket) => { // 사용자 접속 오면
                 console.log("Session 저장함");
                 console.log(socket.id);
                 socket.handshake.session.io = io;
-                socket.handshake.session.save();
+                // socket.handshake.session.save();
             }
 
             if (curRoom.size <= curRoom.member.length) { // 방 꽉차면
