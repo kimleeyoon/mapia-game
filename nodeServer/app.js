@@ -605,17 +605,17 @@ function grun(g, member, io, inRoom, curDecide, getText) {
                         io.to(inRoom).emit("TURN_DAY");
                         setTimeout(iterate, 0, x.value);
                     } else if (x.value.do === 'GAME_END') {
-                        let index = room.findIndex((o) => o.id == inRoom);
+                        let index = room.findIndex((o) => o.id == Number(inRoom));
                         if (index) {
                             room.splice(index, 1);
                         } else {
-                            console.error(`Room 삭제 실패 : ${inRoom}`);
+                            console.error(`Room 삭제 실패 : ${inRoom} index : ${index}`);
                             console.error(room);
                         }
-                        if (gameStartInformation.hasOwnProperty('inRoom')) {
+                        if (gameStartInformation.hasOwnProperty(`${inRoom}`)) {
                             delete gameStartInformation[inRoom];
                         } else {
-                            console.error(`gameStartInformation 삭제 실패 : ${inRoom}`);
+                            console.error(`gameStartInformation 삭제 실패 : ${inRoom} index : ${index}`);
                             console.error(gameStartInformation);
                         }
                     }
@@ -657,7 +657,7 @@ function speakerCreateRoom(size) {
         let id = createRoom(room, size);
         if (id == -1) {
             reject();
-        } else {
+    } else {
             resolve(id);
         }
     });
