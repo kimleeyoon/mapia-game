@@ -447,7 +447,7 @@ function* mainGame(member) {
 
         tempMapiaPick = yield {
             do: "Assassinate",
-            nameList: memberClass.getLiveAfterListByRole('마피아')
+            nameList: memberClass.getLiveAfterListByRole(afterList, '마피아')
         };
 
         mapiaPick = handelDecide(tempMapiaPick, true);
