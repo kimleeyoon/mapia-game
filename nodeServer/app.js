@@ -684,9 +684,10 @@ function sendSocket(io, member, x, decide, time = 20) { // 사용자에게 결�
     decide.setNum(num)
     // 결정 초기화
     const c = new Countdown(time);
+    c.member = member;
     c.on('tick', (total, i) => { // 작업 진행 바 조절을 위한 tick 이벤트 발생
         for (let name of x.value.nameList) {
-            let tempSocket = member.find(o => o.name == name);
+            let tempSocket = this.member.find(o => o.name == name);
             io.to(tempSocket.socket).emit("TICK", total, i);
             io.to(tempSocket.socket).emit(x.value.do.toUpperCase());
         }
