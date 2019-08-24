@@ -78,30 +78,34 @@ router.route('/speaker/nugu/LetsStartGameAction').post((req, res, next) => { // 
 router.route('/speaker/nugu/KillNightAction').post((req, res, next) => { // 본격적인 활동 시작
     nugu(speakerCreateRoom, req, res, next);
     console.log("KillNightAction");
-    if (Object.keys(gameStartInformation).indexOf(`${contextId[req.body.context.session.id]}`) != -1) {
-        gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
-    }
+    // if (Object.keys(gameStartInformation).indexOf(`${contextId[req.body.context.session.id]}`) != -1) {
+    //     gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
+    // }
+    CheckGameGameStartInformationClass.resume(req.body.context.session.id);
 });
 router.route('/speaker/nugu/KillNightAction2').post((req, res, next) => { // 본격적인 활동 시작
     nugu(speakerCreateRoom, req, res, next);
     console.log("KillNightAction2");
-    if (Object.keys(gameStartInformation).indexOf(`${contextId[req.body.context.session.id]}`) != -1) {
-        gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
-    }
+    // if (Object.keys(gameStartInformation).indexOf(`${contextId[req.body.context.session.id]}`) != -1) {
+    //     gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
+    // }
+    CheckGameGameStartInformationClass.resume(req.body.context.session.id);
 });
 router.route('/speaker/nugu/CheckWhoDiedActions').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
     console.log("CheckWhoDiedActions");
-    if (Object.keys(gameStartInformation).indexOf(`${contextId[req.body.context.session.id]}`) != -1) {
-        gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
-    }
+    // if (Object.keys(gameStartInformation).indexOf(`${contextId[req.body.context.session.id]}`) != -1) {
+    //     gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
+    // }
+    CheckGameGameStartInformationClass.resume(req.body.context.session.id);
 });
 router.route('/speaker/nugu/CheckWhoDiedActions2').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
     console.log("CheckWhoDiedActions2");
-    if (Object.keys(gameStartInformation).indexOf(`${contextId[req.body.context.session.id]}`) != -1) {
-        gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
-    }
+    // if (Object.keys(gameStartInformation).indexOf(`${contextId[req.body.context.session.id]}`) != -1) {
+    //     gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
+    // }
+    CheckGameGameStartInformationClass.resume(req.body.context.session.id);
 });
 router.route('/speaker/nugu/FinalArgumentAciton2').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
@@ -115,16 +119,18 @@ router.route('/speaker/nugu/FinalArgumentAction').post((req, res, next) => {
 });
 router.route('/speaker/nugu/NoOneDeadAction2').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
-    if (Object.keys(gameStartInformation).indexOf(`${contextId[req.body.context.session.id]}`) != -1) {
-        gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
-    }
+    // if (Object.keys(gameStartInformation).indexOf(`${contextId[req.body.context.session.id]}`) != -1) {
+    //     gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
+    // }
+    CheckGameGameStartInformationClass.resume(req.body.context.session.id);
     console.log("NoOneDeadAction2");
 });
 router.route('/speaker/nugu/NoOneDeadAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
-    if (Object.keys(gameStartInformation).indexOf(`${contextId[req.body.context.session.id]}`) != -1) {
-        gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
-    }
+    // if (Object.keys(gameStartInformation).indexOf(`${contextId[req.body.context.session.id]}`) != -1) {
+    //     gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
+    // }
+    CheckGameGameStartInformationClass.resume(req.body.context.session.id);
     console.log("NoOneDeadAction");
 });
 router.route('/speaker/nugu/LetMeOutAction').post((req, res, next) => {
@@ -156,64 +162,82 @@ router.route('/speaker/nugu/LetMeOut3Action2').post((req, res, next) => {
 router.route('/speaker/nugu/MaybeMapiaWinActions').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
     console.log("MaybeMapiaWinActions");
-    gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
+    // gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
+    CheckGameGameStartInformationClass.resume(req.body.context.session.id);
 });
 router.route('/speaker/nugu/MaybeMapiaWinActions2').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
     console.log("MaybeMapiaWinActions2");
-    gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
+    // gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
+    CheckGameGameStartInformationClass.resume(req.body.context.session.id);
 });
 router.route('/speaker/nugu/HeIsSavedAction2').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
-    if (Object.keys(gameStartInformation).indexOf(`${contextId[req.body.context.session.id]}`) != -1) {
-        gameStartInformation[`${contextId[req.body.context.session.id]}`].goDie = false;
-        gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
-    }
+    // if (Object.keys(gameStartInformation).indexOf(`${contextId[req.body.context.session.id]}`) != -1) {
+    //     gameStartInformation[`${contextId[req.body.context.session.id]}`].goDie = false;
+    //     gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
+    // }
+    CheckGameGameStartInformationClass.setDie(req.body.context.session.id,false);
+    CheckGameGameStartInformationClass.resume(req.body.context.session.id);
     console.log("HeIsSavedAction2");
 });
 router.route('/speaker/nugu/HeIsSavedAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
-    if (Object.keys(gameStartInformation).indexOf(`${contextId[req.body.context.session.id]}`) != -1) {
-        gameStartInformation[`${contextId[req.body.context.session.id]}`].goDie = false;
-        gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
-    }
+    // if (Object.keys(gameStartInformation).indexOf(`${contextId[req.body.context.session.id]}`) != -1) {
+    //     gameStartInformation[`${contextId[req.body.context.session.id]}`].goDie = false;
+    //     gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
+    // }
+
+    CheckGameGameStartInformationClass.setDie(req.body.context.session.id,false);
+    CheckGameGameStartInformationClass.resume(req.body.context.session.id);
     console.log("HeIsSavedAction");
 });
 router.route('/speaker/nugu/HeIsDiedAction2').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
-    if (Object.keys(gameStartInformation).indexOf(`${contextId[req.body.context.session.id]}`) != -1) {
-        gameStartInformation[`${contextId[req.body.context.session.id]}`].goDie = true;
-        gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
-    }
+    // if (Object.keys(gameStartInformation).indexOf(`${contextId[req.body.context.session.id]}`) != -1) {
+    //     gameStartInformation[`${contextId[req.body.context.session.id]}`].goDie = true;
+    //     gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
+    // }
+
+    CheckGameGameStartInformationClass.setDie(req.body.context.session.id,true);
+    CheckGameGameStartInformationClass.resume(req.body.context.session.id);
     console.log("HeIsDiedAction2");
 });
 router.route('/speaker/nugu/HeIsDiedAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
-    if (Object.keys(gameStartInformation).indexOf(`${contextId[req.body.context.session.id]}`) != -1) {
-        gameStartInformation[`${contextId[req.body.context.session.id]}`].goDie = true;
-        gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
-    }
+    // if (Object.keys(gameStartInformation).indexOf(`${contextId[req.body.context.session.id]}`) != -1) {
+    //     gameStartInformation[`${contextId[req.body.context.session.id]}`].goDie = true;
+    //     gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
+    // }
+
+    CheckGameGameStartInformationClass.setDie(req.body.context.session.id,true);
+    CheckGameGameStartInformationClass.resume(req.body.context.session.id);
+
     console.log("HeIsDiedAction");
 });
 router.route('/speaker/nugu/GameEndMapiaAction2').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
     console.log("GameEndMapiaAction2");
-    gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
+    // gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
+    CheckGameGameStartInformationClass.resume(req.body.context.session.id);
 });
 router.route('/speaker/nugu/GameEndMapiaAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
     console.log("GameEndMapiaAction");
-    gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
+    // gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
+    CheckGameGameStartInformationClass.resume(req.body.context.session.id);
 });
 router.route('/speaker/nugu/GameEndCitizenAction2').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
     console.log("GameEndCitizenAction2");
-    gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
+    // gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
+    CheckGameGameStartInformationClass.resume(req.body.context.session.id);
 });
 router.route('/speaker/nugu/GameEndCitizenAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
     console.log("GameEndCitizenAction");
-    gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
+    // gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
+    CheckGameGameStartInformationClass.resume(req.body.context.session.id);
 });
 router.route('/speaker/nugu/TurnBackAction2').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
@@ -299,6 +323,25 @@ class dMessage { // decide 관리를 위한 class
     }
 }
 
+class CheckGameGameStartInformationClass{
+    constructor(){
+    }
+    static resume(id){
+        if (Object.keys(gameStartInformation).indexOf(`${contextId[id]}`) != -1) {
+            gameStartInformation[`${contextId[req.body.context.session.id]}`].resume();
+        }else{
+            console.error('gameStart 없음')
+        }
+    }
+    static setDie(id, bool){
+        if (Object.keys(gameStartInformation).indexOf(`${contextId[id]}`) != -1) {
+            gameStartInformation[`${contextId[req.body.context.session.id]}`].setDie(bool);
+        }else{
+            console.error('gameStart 없음')
+        }
+    }
+}
+
 class gameStartInformationClass {
     constructor(system, member, io, room, curDecide, getT, data) {
         this.system = system;
@@ -315,6 +358,12 @@ class gameStartInformationClass {
         io.to(`${this.room}`).emit('START_GAME', this.data);
         grun(this.system, this.member, this.io, this.room, this.decide, this.getT);
     }
+    resume(){
+        this.first = true;
+    }
+    setDie(bool){
+        this.goDie = bool;
+    }
 }
 
 
@@ -330,7 +379,6 @@ function setPin(session, pin) {
     contextId[session] = `${pin}`;
 }
 
-
 io.on('connection', (socket) => { // 사용자 접속 오면
 
     let curRoom; // 소켓이 접속중인 방
@@ -339,9 +387,7 @@ io.on('connection', (socket) => { // 사용자 접속 오면
 
     });
     socket.on('ROLE_FEEDBACK', (data) => { // 사용자가 역할 할당받고 다시 서버에 보내준거 받는 프로토콜
-
         curRoom.member[curRoom.member.findIndex(o => o.name == data.name)].role = data.role; // curRoom 멤버에서 해당 멤버 찾아서 역할 저장
-
     });
     socket.on("DECIDE", data => { // 사용자가 결정하면
 
@@ -441,9 +487,10 @@ function grun(g, member, io, inRoom, curDecide, getText) {
                             if (gameStartInformation[inRoom].first) {
                                 gameStartInformation[inRoom].first = false;
                                 const it = getText(inRoom, 'vote_check');
-                                console.log("이터레이터 실행");
-                                console.log(it);
-                                console.log(it.next());
+                                // console.log("이터레이터 실행");
+                                // console.log(it);
+                                // console.log(it.next());
+                                it.next();
                                 it.next(`${gameStartInformation[inRoom].goDie}`);
                                 setTimeout(iterate, 0, `${gameStartInformation[inRoom].goDie}`);
                             } else {

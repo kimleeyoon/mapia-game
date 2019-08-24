@@ -23,7 +23,6 @@ class Request {
                     if (isNaN(playerNum)) {
                         playerNum = 4;
                     }
-                    // const throwResult = throwDice(diceCount);
 
                     let pin = this.func(playerNum).then(
                         (pin) => {

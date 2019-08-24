@@ -11,9 +11,6 @@ function parse(str) { //변수에 변수를 포함하는 문자열을 넣기 위
 //가능 플레이어수는 min 3, max 10
 //역할 분배 시 인원이 5명 이상일 경우 의사와 경찰의 합친 수는 같되 그 둘의 개수는 랜덤으로 후에 바꿔도 좋음. 예를 들어 6명이 플레이 할 시 의사 1명, 경찰 1명이 아닌 맞의, 맞경일수도 있다는 말.
 
-//shuffle(roleArray[numOfPlayer - 3]).map((role, index) => afterList[playerNameList[index]] = role);
-//console.log(afterList);
-
 function shuffle(a) {
     for (let i = a.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -58,7 +55,6 @@ function allocatePlayerRole(roleArray, playerNameList, memberClass) {
     shuffle(shuffle(shuffle(shuffle(roleArray[numOfPlayer - 3])))).map((role, index) => afterList[playerNameList[index]] = role);
     Object.keys(afterList).map(o => memberClass.setRole(o, afterList[o]));
     return afterList;
-    //console.log(afterlist);
 }
 
 function allocateSocket(member, playerNameList) {
@@ -67,7 +63,6 @@ function allocateSocket(member, playerNameList) {
         socketList[k] = member[k].socket;
     }
     return socketList;
-    //console.log(afterlist);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -97,13 +92,15 @@ function savePlayer(mapiaPick, doctorPick, doctorAlive, afterList, memberClass) 
         mapiaVSdoctorResult = "NoneKill";
     } else if (!doctorPick || doctorAlive || doctorPick == "None") { // 의사가 아무도 치료하지 않는 경우
         mapiaVSdoctorResult = parse('의사가 플레이어를 살리지 못했습니다. 마피아가 죽인 플레이어는 %s님 입니다.', mapiaPick);
-        memberClass.find(o => o.name === mapiaPick).isAlive = false;
+        // memberClass.find(o => o.name === mapiaPick).isAlive = false;
+        memberClass.setLive(mapiaPick, false)
         delete afterList[mapiaPick];
     } else if (mapiaPick == doctorPick) { // 의사가 플레이어를 살린 경우
         mapiaVSdoctorResult = parse('의사가 플레이어를 살렸습니다.');
     } else { // 의사가 틀린 경우
         mapiaVSdoctorResult = parse('의사가 플레이어를 살리지 못했습니다. 마피아가 죽인 플레이어는 %s님 입니다.', mapiaPick);
-        memberClass.find(o => o.name === mapiaPick).isAlive = false;
+        // memberClass.find(o => o.name === mapiaPick).isAlive = false;
+        memberClass.setLive(mapiaPick, false)
         delete afterList[mapiaPick];
     }
     return mapiaVSdoctorResult;
@@ -175,7 +172,9 @@ function killPlayer(playerName, afterList, memberClass) { //아래 함수는 '�
 
     //playerNameList.splice(playerNameList.indexOf(playerName),1);
 
-    memberClass.find(o => o.name === playerName).isAlive = false;
+    // memberClass.find(o => o.name === playerName).isAlive = false;
+
+    memberClass.setLive(playerName, false)
 
     delete afterList[playerName];
     // alert(playerName + "님이 죽었습니다. 생존자를 공개합니다.");
@@ -262,6 +261,9 @@ class Members {
             }
         }
         return temp;
+    }
+    getLiveAfterListByRole(afterList, role){
+        return Object.keys(this.getLiveAfterList()).filter(o => afterList[o] == `${role}`)
     }
 }
 
@@ -414,7 +416,6 @@ function* mainGame(member) {
         };
         console.log("스피커한테 day 보냄g");
         dayOrder++;
-        // TODO: 작동할걸?????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
 
         // yield {
         //     do: "WAIT_SECOND",
@@ -439,11 +440,15 @@ function* mainGame(member) {
         idOfMapiaPick = 0;
         let tempMapiaPick = [];
 
-        // while (idOfMapiaPick == 0) {
+        // tempMapiaPick = yield {
+        //     do: "Assassinate",
+        //     nameList: Object.keys(memberClass.getLiveAfterList()).filter(o => afterList[o] == "마피아")
+        // };
+
         tempMapiaPick = yield {
             do: "Assassinate",
-            nameList: Object.keys(memberClass.getLiveAfterList()).filter(o => afterList[o] == "마피아")
-        }; // 마피아로부터 암살할 사람 고르라고 함
+            nameList: memberClass.getLiveAfterListByRole('마피아')
+        };
 
         mapiaPick = handelDecide(tempMapiaPick, true);
 
@@ -633,7 +638,7 @@ function* mainGame(member) {
         yield "플레이어들은 모두 고개를 들어주시고 3분 동안 토의를 진행하여 사형대에 올릴 플레이어를 골라주십시오.";
         yield {
             do: "WAIT_SECOND",
-            time: 130
+            time: 190
         };
         // yield {
         //     do: "WAIT_SECOND",
