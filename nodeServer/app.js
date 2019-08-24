@@ -775,7 +775,7 @@ function grun(g, member, io, inRoom, curDecide, getText, getMember) {
                     io.to(inRoom).emit("ALERT", {
                         message: x.value
                     });
-                    gameStartInformation[inRoom].setMg(x.value);
+                    gameStartInformation[inRoom].setMg(x.value.message);
                     setTimeout(iterate, 0, x.value);
                 }
                 // setTimeout(iterate, 0, x.value);
