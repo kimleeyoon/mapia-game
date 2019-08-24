@@ -502,6 +502,7 @@ function grun(g, member, io, inRoom, curDecide, getText) {
                         setTimeout(iterate, x.value.time * 1000, x.value);
                     } else if (x.value.do === "VOTE_TEXT") {
                         const it = getText(inRoom, 'vote');
+                        console.log(`${inRoom}에서 VOTE_TEXT app.js에 도착 isDeath : ${x.value.isDeath}`);
                         it.next();
                         if (x.value.isDeath == 0) { // 죽은 사람이 없는 경우
                             it.next('None');

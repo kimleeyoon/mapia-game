@@ -649,14 +649,18 @@ function* mainGame(member) {
 
         // alert("플레이어들은 모두 고개를 들어주시고 3분 동안 토의를 진행하여 사형대에 올릴 플레이어를 골라주십시오.");
         yield "플레이어들은 모두 고개를 들어주시고 3분 동안 토의를 진행하여 사형대에 올릴 플레이어를 골라주십시오.";
-        yield {
-            do: "WAIT_SECOND",
-            time: 190
-        };
         // yield {
         //     do: "WAIT_SECOND",
-        //     time: 5
+        //     time: 190
         // };
+        // TODO:위에가 진또배기
+
+
+
+        yield {
+            do: "WAIT_SECOND",
+            time: 5
+        };
         // yield {
         //     do: "WAIT_SECOND",
         //     time: 180
