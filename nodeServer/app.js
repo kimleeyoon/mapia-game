@@ -1,5 +1,4 @@
 const express = require(`express`); // 익스프레스 프레임워크
-const session = require('express-session');
 const cookieParser = require('cookie-parser');
 var session = require("express-session")({
     secret: "my-secret",
