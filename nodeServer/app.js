@@ -685,6 +685,9 @@ class MemberCountdown extends Countdown{
     updateMember(member){
         this.member = member;
     }
+    getMember(){
+        return this.member;
+    }
 }
 
 function sendSocket(io, member, x, decide, time = 20) { // 사용자에게 결정 받는 소켓 전송 함수
@@ -697,7 +700,7 @@ function sendSocket(io, member, x, decide, time = 20) { // 사용자에게 결�
     c.updateMember(member);
     c.on('tick', (total, i) => { // 작업 진행 바 조절을 위한 tick 이벤트 발생
         for (let name of x.value.nameList) {
-            let tempSocket = this.member.find(o => o.name == name);
+            let tempSocket = c.getMember().find(o => o.name == name);
             io.to(tempSocket.socket).emit("TICK", total, i);
             io.to(tempSocket.socket).emit(x.value.do.toUpperCase());
         }
@@ -719,7 +722,6 @@ function speakerCreateRoom(size) {
             resolve(id);
         }
     });
-    // return createRoom(room, size);
 }
 
 function createRoom(rooms, size) { // 특정 사이즈의 방 생성
@@ -736,40 +738,6 @@ function createRoom(rooms, size) { // 특정 사이즈의 방 생성
     console.log(rooms);
 
     return id;
-
-    // createSocket(rooms, rooms.length - 1);
 }
-
-function createSocket(rooms, index) {
-    // nameSpaces[index].io = io.of(`/namespace${nameSpaces[index].id}`);
-    // console.log(`${nameSpaces[index].id} namespace 생성`);
-    console.log(`${rooms[index].id} room 생성`);
-    console.log(rooms);
-
-    // nameSpaces[index].io.on('connection', (socket) => {
-    //     console.log("Someone Connected");
-    //     // nameSpaces[index].io.emit('connect', {hello: `Someone connected at id : ${nameSpaces[index].id}`});
-    //     nameSpaces[index].io.emit('announce', "");
-    //     socket.on('message', (data) => {
-    //         console.log(data);
-    //         nameSpaces[index].io.emit('announce', `${data}`);
-    //     });
-    // });
-}
-
-
-
-// // NameSpace 1번
-// const namespace1 = io.of('/namespace1');
-// // connection을 받으면, news 이벤트에 hello 객체를 담아 보낸다
-// namespace1.on('connection', (socket) => {
-//     namespace1.emit('news', { hello: "Someone connected at namespace1"});
-// });
-// // NameSpace 2번
-// const namespace2 = io.of('/namespace2');
-// // connection을 받으면, news 이벤트에 hello 객체를 담아 보낸다
-// namespace2.on('connection', (socket) => {
-//     namespace2.emit('news', { hello: "Someone connected at Namespace2"});
-// }); 
 
 module.exports = speakerCreateRoom;
