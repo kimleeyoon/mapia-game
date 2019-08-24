@@ -437,7 +437,9 @@ io.on('connection', (socket) => { // 사용자 접속 오면
 
     socket.on('RESPONSE_NAME', data => {
         console.log(`name 옴 : ${data.name} : ${data.room} : ${socket.id}`);
-        gameStartInformation[`${data.room}`].updateMember(data.name, socket.id);
+        if(Object.keys(gameStartInformation).indexOf(`${data.room}`) != -1){
+            gameStartInformation[`${data.room}`].updateMember(data.name, socket.id);
+        }
     })
 
     socket.on('disconnect', () => { // 접속 끊기면
