@@ -440,7 +440,7 @@ io.on('connection', (socket) => { // 사용자 접속 오면
             }else{
                 console.log("Session 저장함");
                 console.log(socket.id);
-                socket.handshake.session.io = io;
+                socket.handshake.session.io = socket.id;
                 // socket.handshake.session.save();
             }
 
