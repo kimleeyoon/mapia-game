@@ -26,8 +26,8 @@ const app = express();
 let router = express.Router();
 const server = http.Server(app); // 익스프레스 사용해서 서버 생성 및 할당
 const io = require('socket.io')(server); // socket.io 서버 생성
-var SessionSockets = require('session.socket.io'),
-    sessionSockets = new SessionSockets(io, sessionStore, cookieParser, 'key');
+// var SessionSockets = require('session.socket.io'),
+    // sessionSockets = new SessionSockets(io, sessionStore, cookieParser, 'key');
 // var sessionMiddleware = session({
 //     store: new RedisStore({}), // XXX redis server config
 //     secret: "keyboard cat",
