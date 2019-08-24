@@ -328,14 +328,14 @@ class CheckGameGameStartInformationClass{
     }
     static resume(id){
         if (Object.keys(gameStartInformation).indexOf(`${contextId[id]}`) != -1) {
-            gameStartInformation[`${contextId[req.body.context.session.id]}`].resume();
+            gameStartInformation[`${contextId[id]}`].resume();
         }else{
             console.error('gameStart 없음')
         }
     }
     static setDie(id, bool){
         if (Object.keys(gameStartInformation).indexOf(`${contextId[id]}`) != -1) {
-            gameStartInformation[`${contextId[req.body.context.session.id]}`].setDie(bool);
+            gameStartInformation[`${contextId[id]}`].setDie(bool);
         }else{
             console.error('gameStart 없음')
         }
