@@ -1,11 +1,13 @@
 const express = require(`express`); // 익스프레스 프레임워크
 const cookieParser = require('cookie-parser');
-var session = require("express-session")({
-    secret: "my-secret",
-    resave: true,
-    saveUninitialized: true
-});
-var sharedsession = require("express-socket.io-session");
+// var session = require("express-session")({
+//     secret: "my-secret",
+//     resave: true,
+//     saveUninitialized: true
+// });
+var session = require("express-session");
+var RedisStore = require("connect-redis")(session);
+// var sharedsession = require("express-socket.io-session");
 const http = require('http'); // http
 // const server = require('http').Server(app);
 const static = require('serve-static'); // 서버 경로 재지정 해주는
@@ -22,6 +24,32 @@ let nugu = require('./main'); // 스피커 서버에서 실행할 프로그램 �
 
 const app = express();
 let router = express.Router();
+const server = http.Server(app); // 익스프레스 사용해서 서버 생성 및 할당
+const io = require('socket.io')(server); // socket.io 서버 생성
+
+var sessionMiddleware = session({
+    store: new RedisStore({}), // XXX redis server config
+    secret: "keyboard cat",
+});
+
+
+
+io.use(function (socket, next) {
+    //     sessionMiddleware(socket.request, socket.request.res, next);
+    // sessionMiddleware(socket.request, {}, next);
+    // var socket_subdomain = socket.handshake.headers.host.split('.')[0]
+    // // console.log('socket subdomain: ' + socket_subdomain)
+    // sessionMiddleware(socket.handshake, {}, err => {
+    //     var session = socket.handshake.session
+    //     session.user_id = 1125
+    //     session.save()
+    //     session.reload(err => {
+    //         app.sio.sockets.in('room_' + session.id).emit('auth', session)
+    //     })
+    // })
+    sessionMiddleware(socket.request, {}, next)
+});
+
 
 app.use('/', static(path.join(__dirname, 'public/dist'))); // public/dist 폴더를 클라이언트가 루트경로로 접근하도록 해줌
 
@@ -30,8 +58,8 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
-
-app.use(session);
+app.use(sessionMiddleware);
+// app.use(session);
 
 app.use((err, req, res, next) => next());
 
@@ -42,12 +70,7 @@ app.use((err, req, res, next) => next());
 //     console.log("asdfdasfasfdsafdsaf");
 // });
 
-const server = http.Server(app); // 익스프레스 사용해서 서버 생성 및 할당
-const io = require('socket.io')(server); // socket.io 서버 생성
 
-io.use(sharedsession(session, {
-    autoSave:true
-})); 
 
 router.route('/speaker/nugu/TakePlayerNumAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, setPin, next);
@@ -195,7 +218,7 @@ router.route('/speaker/nugu/HeIsSavedAction2').post((req, res, next) => {
     //     gameStartInformation[`${contextId[req.body.context.session.id]}`].goDie = false;
     //     gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
     // }
-    CheckGameGameStartInformationClass.setDie(req.body.context.session.id,false);
+    CheckGameGameStartInformationClass.setDie(req.body.context.session.id, false);
     CheckGameGameStartInformationClass.resume(req.body.context.session.id);
     console.log("HeIsSavedAction2");
 });
@@ -206,7 +229,7 @@ router.route('/speaker/nugu/HeIsSavedAction').post((req, res, next) => {
     //     gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
     // }
 
-    CheckGameGameStartInformationClass.setDie(req.body.context.session.id,false);
+    CheckGameGameStartInformationClass.setDie(req.body.context.session.id, false);
     CheckGameGameStartInformationClass.resume(req.body.context.session.id);
     console.log("HeIsSavedAction");
 });
@@ -217,7 +240,7 @@ router.route('/speaker/nugu/HeIsDiedAction2').post((req, res, next) => {
     //     gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
     // }
 
-    CheckGameGameStartInformationClass.setDie(req.body.context.session.id,true);
+    CheckGameGameStartInformationClass.setDie(req.body.context.session.id, true);
     CheckGameGameStartInformationClass.resume(req.body.context.session.id);
     console.log("HeIsDiedAction2");
 });
@@ -228,7 +251,7 @@ router.route('/speaker/nugu/HeIsDiedAction').post((req, res, next) => {
     //     gameStartInformation[`${contextId[req.body.context.session.id]}`].first = true;
     // }
 
-    CheckGameGameStartInformationClass.setDie(req.body.context.session.id,true);
+    CheckGameGameStartInformationClass.setDie(req.body.context.session.id, true);
     CheckGameGameStartInformationClass.resume(req.body.context.session.id);
 
     console.log("HeIsDiedAction");
@@ -340,20 +363,19 @@ class dMessage { // decide 관리를 위한 class
     }
 }
 
-class CheckGameGameStartInformationClass{
-    constructor(){
-    }
-    static resume(id){
+class CheckGameGameStartInformationClass {
+    constructor() {}
+    static resume(id) {
         if (Object.keys(gameStartInformation).indexOf(`${contextId[id]}`) != -1) {
             gameStartInformation[`${contextId[id]}`].resume();
-        }else{
+        } else {
             console.error('gameStart 없음')
         }
     }
-    static setDie(id, bool){
+    static setDie(id, bool) {
         if (Object.keys(gameStartInformation).indexOf(`${contextId[id]}`) != -1) {
             gameStartInformation[`${contextId[id]}`].setDie(bool);
-        }else{
+        } else {
             console.error('gameStart 없음')
         }
     }
@@ -375,10 +397,10 @@ class gameStartInformationClass {
         io.to(`${this.room}`).emit('START_GAME', this.data);
         grun(this.system, this.member, this.io, this.room, this.decide, this.getT);
     }
-    resume(){
+    resume() {
         this.first = true;
     }
-    setDie(bool){
+    setDie(bool) {
         this.goDie = bool;
     }
 }
@@ -402,9 +424,10 @@ io.on('connection', (socket) => { // 사용자 접속 오면
     let curDecide; // 소켓이 접속중인 방을 관리할 decide
 
     console.log(`${socket.id} 접속함`);
+    console.log(`session : ${socket.request.session}`);
 
     socket.on('disconnect', () => { // 접속 끊기면
-        
+
     });
     socket.on('ROLE_FEEDBACK', (data) => { // 사용자가 역할 할당받고 다시 서버에 보내준거 받는 프로토콜
         curRoom.member[curRoom.member.findIndex(o => o.name == data.name)].role = data.role; // curRoom 멤버에서 해당 멤버 찾아서 역할 저장
@@ -422,14 +445,6 @@ io.on('connection', (socket) => { // 사용자 접속 오면
         });
     });
 
-    if(socket.handshake.session.io){
-        console.log("Session 저장된 유저 접속함");
-        console.log(socket.id);
-    }else{
-        console.log('Session 없음');
-        console.log(socket.id);
-    }
-
     socket.on('ROOM_CONNECT', (data) => { // 사용자가 방에 들어오면
         if (!room.some(x => x.id == data.room)) { // 없는 방이라면
             console.log(`사용자가 없는 방에 접속 시도 : ${data.room}`);
@@ -439,14 +454,8 @@ io.on('connection', (socket) => { // 사용자 접속 오면
             curRoom = room.find(o => o.id == data.room); // 사용자가 접속중인 현재 방
             curDecide = decides.find(o => `${o.id}` === `${data.room}`); // 사용자가 접속중인 방의 decide
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            if(socket.handshake.session.io){
-
-            }else{
-                console.log("Session 저장함");
-                console.log(socket.id);
-                socket.handshake.session.io = socket.id;
-                // socket.handshake.session.save();
-            }
+            console.log(`${socket.id} 접속함`);
+            console.log(`session : ${socket.request.session}`);
 
             if (curRoom.size <= curRoom.member.length) { // 방 꽉차면
                 io.to(socket.id).emit("FULL_OF_ROOM");
@@ -667,7 +676,7 @@ function grun(g, member, io, inRoom, curDecide, getText) {
     })();
 }
 
-function sendSocket(io, member, x, decide, time=20) { // 사용자에게 결정 받는 소켓 전송 함수
+function sendSocket(io, member, x, decide, time = 20) { // 사용자에게 결정 받는 소켓 전송 함수
 
     let num = x.value.nameList.length; // 보낼 사람 수
     decide.reset();
@@ -693,7 +702,7 @@ function speakerCreateRoom(size) {
         let id = createRoom(room, size);
         if (id == -1) {
             reject();
-    } else {
+        } else {
             resolve(id);
         }
     });
