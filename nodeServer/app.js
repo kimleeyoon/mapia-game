@@ -792,7 +792,10 @@ function createRoom(rooms, size) { // 특정 사이즈의 방 생성
     // rooms와 decide에 할당
 
     logger.info(`${rooms[rooms.length - 1].id} room 생성`);
-    logger.info(rooms);
+    logger.info('방 리스트')
+    logger.info('================')
+    logger.info(room.map(o => o.id));
+    logger.info('================')
 
     return id;
 }
