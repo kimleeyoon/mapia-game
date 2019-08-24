@@ -288,6 +288,7 @@ class Request {
             case "LetMeOut3Action": {
                 const number_one = '1';
                 console.log("outtext:");
+                // TODO: 이거 존재하는지 체크하는 함수 만들어야함
                 console.log(outText[contextId[this.context.session.id]].isCitizenWin);
                 // let temp = `1`;
                 // if (outText[contextId[this.context.session.id]].isCitizenWin == '0' || outText[contextId[this.context.session.id]].isCitizenWin == '1') {

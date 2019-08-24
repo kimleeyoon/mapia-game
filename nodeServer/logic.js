@@ -703,7 +703,7 @@ function* mainGame(member) {
                 const nameJosa = Josa(`${id}`, '가');
                 yield `${nameJosa} 투표로 죽었습니다.`
                 memberClass.setLive(id, false);
-                afterList = killPlayer(id, afterList, memberClass.memberObj);
+                afterList = killPlayer(id, afterList, memberClass);
             } else {
                 // yield '아무도 안죽음~';
             }
