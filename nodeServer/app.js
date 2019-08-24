@@ -27,7 +27,7 @@ let router = express.Router();
 const server = http.Server(app); // 익스프레스 사용해서 서버 생성 및 할당
 const io = require('socket.io')(server); // socket.io 서버 생성
 // var SessionSockets = require('session.socket.io'),
-    // sessionSockets = new SessionSockets(io, sessionStore, cookieParser, 'key');
+// sessionSockets = new SessionSockets(io, sessionStore, cookieParser, 'key');
 // var sessionMiddleware = session({
 //     store: new RedisStore({}), // XXX redis server config
 //     secret: "keyboard cat",
@@ -407,8 +407,17 @@ class gameStartInformationClass {
     returnMember() {
         return this.member;
     }
-    updateMember(name, socket){
+    updateMember(name, socket) {
         this.member.find((o) => o.name === name).socket = socket;
+    }
+    setCountdown(name, c) {
+        this.member.find(o => o.name == name).setCountdown(c);
+    }
+    setAction(name, action) {
+        this.member.find(o => o.name == name).setAction(action);
+    }
+    clearAllMemberAction() {
+        this.member.map(o => o.clearAction());
     }
 }
 
@@ -437,11 +446,30 @@ io.on('connection', (socket) => { // 사용자 접속 오면
 
     socket.on('RESPONSE_NAME', data => {
         console.log(`name 옴 : ${data.name} : ${data.room} : ${socket.id}`);
-        if(Object.keys(gameStartInformation).indexOf(`${data.room}`) != -1){
+        if (Object.keys(gameStartInformation).indexOf(`${data.room}`) != -1) {
             gameStartInformation[`${data.room}`].updateMember(data.name, socket.id);
-            socket.join(`${data.room}`, () => {
-
-            });
+            socket.join(`${data.room}`, () => {});
+            if (gameStartInformation[`${data.room}`].find(o => o.name == data.name).getAction() == "Assassinate") {
+                gameStartInformation[`${data.room}`].find(o => o.name == data.name).countDown.on('tick', (total, i) => { // 작업 진행 바 조절을 위한 tick 이벤트 발생
+                    socket.emit("TICK", total, i);
+                })
+                socket.emit(gameStartInformation[`${data.room}`].find(o => o.name == data.name).getAction().toUpperCase());
+            } else if (gameStartInformation[`${data.room}`].find(o => o.name == data.name).getAction() == "Treatment") {
+                gameStartInformation[`${data.room}`].find(o => o.name == data.name).countDown.on('tick', (total, i) => { // 작업 진행 바 조절을 위한 tick 이벤트 발생
+                    socket.emit("TICK", total, i);
+                })
+                socket.emit(gameStartInformation[`${data.room}`].find(o => o.name == data.name).getAction().toUpperCase());
+            } else if (gameStartInformation[`${data.room}`].find(o => o.name == data.name).getAction() == "Investigation") {
+                gameStartInformation[`${data.room}`].find(o => o.name == data.name).countDown.on('tick', (total, i) => { // 작업 진행 바 조절을 위한 tick 이벤트 발생
+                    socket.emit("TICK", total, i);
+                })
+                socket.emit(gameStartInformation[`${data.room}`].find(o => o.name == data.name).getAction().toUpperCase());
+            } else if (gameStartInformation[`${data.room}`].find(o => o.name == data.name).getAction() == "Vote") {
+                gameStartInformation[`${data.room}`].find(o => o.name == data.name).countDown.on('tick', (total, i) => { // 작업 진행 바 조절을 위한 tick 이벤트 발생
+                    socket.emit("TICK", total, i);
+                })
+                socket.emit(gameStartInformation[`${data.room}`].find(o => o.name == data.name).getAction().toUpperCase());
+            }
         }
     })
 
@@ -621,52 +649,76 @@ function grun(g, member, io, inRoom, curDecide, getText, getMember) {
                     } else if (x.value.do === "Assassinate") { // 암살 명령 오면
 
                         const c = sendSocket(io, member, x, curDecide) // 해당 명령 보낸 후 Countdown 리턴 받음
+                        for (let name of x.value.nameList) {
+                            gameStartInformation[inRoom].setAction(name, 'Assassinate');
+                            gameStartInformation[inRoom].setCountdown(name, c)
+                        }
                         c.go(curDecide)
                             .then(() => { // 사용자 결정 다 받으면
                                 io.to(inRoom).emit("END_DECIDE");
+                                gameStartInformation[inRoom].clearAllMemberAction();
                                 setTimeout(iterate, 0, curDecide.decides)
                             })
                             .catch(() => { // 시간 초과
                                 io.to(inRoom).emit("END_DECIDE");
+                                gameStartInformation[inRoom].clearAllMemberAction();
                                 setTimeout(iterate, 0, curDecide.decides)
                             });
 
                     } else if (x.value.do === "Treatment") { // 의사 명령
 
                         const c = sendSocket(io, member, x, curDecide) // 해당 명령 보낸 후 Countdown 리턴 받음
+                        for (let name of x.value.nameList) {
+                            gameStartInformation[inRoom].setAction(name, 'Treatment');
+                            gameStartInformation[inRoom].setCountdown(name, c)
+                        }
                         c.go(curDecide)
                             .then(() => { // 결정 다 받으면
                                 io.to(inRoom).emit("END_DECIDE");
+                                gameStartInformation[inRoom].clearAllMemberAction();
                                 setTimeout(iterate, 0, curDecide.decides)
                             })
                             .catch(() => { // 시간 초과
                                 io.to(inRoom).emit("END_DECIDE");
+                                gameStartInformation[inRoom].clearAllMemberAction();
                                 setTimeout(iterate, 0, curDecide.decides)
                             });
                     } else if (x.value.do === "Investigation") { // 경찰 조사
 
                         const c = sendSocket(io, member, x, curDecide) // // 해당 명령 보낸 후 Countdown 리턴 받음
+                        for (let name of x.value.nameList) {
+                            gameStartInformation[inRoom].setAction(name, 'Investigation');
+                            gameStartInformation[inRoom].setCountdown(name, c)
+                        }
                         c.go(curDecide)
                             .then(() => { // 결정 다 받으면
                                 io.to(inRoom).emit("END_DECIDE");
+                                gameStartInformation[inRoom].clearAllMemberAction();
                                 setTimeout(iterate, 0, curDecide.decides)
                             })
                             .catch(() => {
                                 io.to(inRoom).emit("END_DECIDE");
+                                gameStartInformation[inRoom].clearAllMemberAction();
                                 setTimeout(iterate, 0, curDecide.decides)
                             });
 
                     } else if (x.value.do === "Vote") { // 투표 받으면
 
                         const c = sendSocket(io, member, x, curDecide, 10) // 해당 명령 보낸 후 Countdown 리턴 받음
+                        for (let name of x.value.nameList) {
+                            gameStartInformation[inRoom].setAction(name, 'Vote');
+                            gameStartInformation[inRoom].setCountdown(name, c)
+                        }
                         c.go(curDecide)
                             .then(() => { // 다 받으면
                                 io.to(inRoom).emit("END_DECIDE");
+                                gameStartInformation[inRoom].clearAllMemberAction();
                                 setTimeout(iterate, 0, curDecide.decides)
                             })
                             .catch(() => { // 시간 다됨
                                 console.log("투표 타임아웃");
                                 io.to(inRoom).emit("END_DECIDE");
+                                gameStartInformation[inRoom].clearAllMemberAction();
                                 setTimeout(iterate, 0, curDecide.decides)
                             });
                     } else if (x.value.do === "TURN_DAY") {
@@ -699,15 +751,15 @@ function grun(g, member, io, inRoom, curDecide, getText, getMember) {
     })();
 }
 
-class MemberCountdown extends Countdown{
-    constructor(seconds, member){
+class MemberCountdown extends Countdown {
+    constructor(seconds, member) {
         super(seconds);
         this.member = member;
     }
-    updateMember(member){
+    updateMember(member) {
         this.member = member;
     }
-    getMember(){
+    getMember() {
         return this.member;
     }
 }
