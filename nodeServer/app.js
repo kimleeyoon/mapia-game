@@ -434,7 +434,7 @@ io.on('connection', (socket) => { // 사용자 접속 오면
     socket.emit('REQUEST_NAME');
 
     socket.on('RESPONSE_NAME', data => {
-        logger.info(`${data.room}번 방에 'Server Open 3000' 재접속 : ${socket.id}`);
+        logger.info(`${data.room}번 방에 재접속 : ${socket.id} : ${data.name}`);
         curRoom = room.find(o => o.id == data.room); // 사용자가 접속중인 현재 방
         curDecide = decides.find(o => `${o.id}` === `${data.room}`); // 사용자가 접속중인 방의 decide
         if (Object.keys(gameStartInformation).indexOf(`${data.room}`) != -1) {
@@ -448,22 +448,28 @@ io.on('connection', (socket) => { // 사용자 접속 오면
                     socket.emit("TICK", total, i);
                 })
                 socket.emit(gameStartInformation[`${data.room}`].member.find(o => o.name == data.name).getAction().toUpperCase());
+                logger.info(`${data.name}에 ${gameStartInformation[`${data.room}`].member.find(o => o.name == data.name).getAction().toUpperCase()} 전송`);
             } else if (gameStartInformation[`${data.room}`].member.find(o => o.name == data.name).getAction() == "Treatment") {
                 gameStartInformation[`${data.room}`].member.find(o => o.name == data.name).countDown.on('tick', (total, i) => { // 작업 진행 바 조절을 위한 tick 이벤트 발생
                     socket.emit("TICK", total, i);
                 })
                 socket.emit(gameStartInformation[`${data.room}`].member.find(o => o.name == data.name).getAction().toUpperCase());
+                logger.info(`${data.name}에 ${gameStartInformation[`${data.room}`].member.find(o => o.name == data.name).getAction().toUpperCase()} 전송`);
             } else if (gameStartInformation[`${data.room}`].member.find(o => o.name == data.name).getAction() == "Investigation") {
                 gameStartInformation[`${data.room}`].member.find(o => o.name == data.name).countDown.on('tick', (total, i) => { // 작업 진행 바 조절을 위한 tick 이벤트 발생
                     socket.emit("TICK", total, i);
                 })
                 socket.emit(gameStartInformation[`${data.room}`].member.find(o => o.name == data.name).getAction().toUpperCase());
+                logger.info(`${data.name}에 ${gameStartInformation[`${data.room}`].member.find(o => o.name == data.name).getAction().toUpperCase()} 전송`);
             } else if (gameStartInformation[`${data.room}`].member.find(o => o.name == data.name).getAction() == "Vote") {
                 gameStartInformation[`${data.room}`].member.find(o => o.name == data.name).countDown.on('tick', (total, i) => { // 작업 진행 바 조절을 위한 tick 이벤트 발생
                     socket.emit("TICK", total, i);
                 })
                 socket.emit(gameStartInformation[`${data.room}`].member.find(o => o.name == data.name).getAction().toUpperCase());
+                logger.info(`${data.name}에 ${gameStartInformation[`${data.room}`].member.find(o => o.name == data.name).getAction().toUpperCase()} 전송`);
             }
+        }else{
+            logger.warn(`${data.room}번 방이 존재하지 않음`)
         }
     })
 
