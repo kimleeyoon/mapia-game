@@ -21,7 +21,7 @@ const system = require('./logic'); // 로직 프로그램
 const getT = require('./main/index').getText;
 
 let nugu = require('./main'); // 스피커 서버에서 실행할 프로그램 받아오는 것 -> index.js
-let logger= require('./logger');
+let logger = require('./logger');
 
 const app = express();
 let router = express.Router();
@@ -378,7 +378,7 @@ class gameStartInformationClass {
         return this.member;
     }
     updateMember(name, socket) {
-        this.member.find((o) => o.name === name).socket = socket;
+        this.member.find((o) => o.name == name).socket = socket;
     }
     setCountdown(name, c) {
         this.member.find(o => o.name == name).setCountdown(c);
@@ -438,7 +438,15 @@ io.on('connection', (socket) => { // 사용자 접속 오면
         curRoom = room.find(o => o.id == data.room); // 사용자가 접속중인 현재 방
         curDecide = decides.find(o => `${o.id}` === `${data.room}`); // 사용자가 접속중인 방의 decide
         if (Object.keys(gameStartInformation).indexOf(`${data.room}`) != -1) {
+            logger.info(gameStartInformation[`${data.room}`])
+            logger.info(`${data.room}번방 전`)
+            logger.info(gameStartInformation[`${data.room}`].member)
             gameStartInformation[`${data.room}`].updateMember(data.name, socket.id);
+            logger.info(gameStartInformation[`${data.room}`].member)
+            logger.info(`${data.room}번방 후`)
+
+            logger.info(`${gameStartInformation[`${data.room}`].member.find(o => o.name == data.name)} 해당 사람`);
+
             socket.join(`${data.room}`, () => {});
             // socket.emit("UPDATE_LIST", gameStartInformation[`${data.room}`].getList());
             socket.emit("ALERT", gameStartInformation[`${data.room}`].getMg());
@@ -468,7 +476,7 @@ io.on('connection', (socket) => { // 사용자 접속 오면
                 socket.emit(gameStartInformation[`${data.room}`].member.find(o => o.name == data.name).getAction().toUpperCase());
                 logger.info(`${data.name}에 ${gameStartInformation[`${data.room}`].member.find(o => o.name == data.name).getAction().toUpperCase()} 전송`);
             }
-        }else{
+        } else {
             logger.warn(`${data.room}번 방이 존재하지 않음`)
         }
     })
