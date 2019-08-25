@@ -440,7 +440,7 @@ io.on('connection', (socket) => { // 사용자 접속 오면
         if (Object.keys(gameStartInformation).indexOf(`${data.room}`) != -1) {
             gameStartInformation[`${data.room}`].updateMember(data.name, socket.id);
             socket.join(`${data.room}`, () => {});
-            socket.emit("UPDATE_LIST", gameStartInformation[`${data.room}`].getList());
+            // socket.emit("UPDATE_LIST", gameStartInformation[`${data.room}`].getList());
             socket.emit("ALERT", gameStartInformation[`${data.room}`].getMg());
             socket.emit("TURN_DAY", gameStartInformation[`${data.room}`].getNight());
             if (gameStartInformation[`${data.room}`].member.find(o => o.name == data.name).getAction() == "Assassinate") {
