@@ -457,7 +457,7 @@ io.on('connection', (socket) => { // 사용자 접속 오면
                 gameStartInformation[`${data.room}`].member.find(o => o.name == data.name).countDown.on('tick', (total, i) => { // 작업 진행 바 조절을 위한 tick 이벤트 발생
                     socket.emit("TICK", total, i);
                 })
-                socket.emit(gameStartInformation[`${data.room}`].find(o => o.name == data.name).getAction().toUpperCase());
+                socket.emit(gameStartInformation[`${data.room}`].member.find(o => o.name == data.name).getAction().toUpperCase());
             } else if (gameStartInformation[`${data.room}`].member.find(o => o.name == data.name).getAction() == "Vote") {
                 gameStartInformation[`${data.room}`].member.find(o => o.name == data.name).countDown.on('tick', (total, i) => { // 작업 진행 바 조절을 위한 tick 이벤트 발생
                     socket.emit("TICK", total, i);
