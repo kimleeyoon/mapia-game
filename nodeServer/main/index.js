@@ -4,7 +4,7 @@ class Request {
         this.action = httpReq.body.action;
         this.func = f;
         this.func2 = f2;
-        console.log(`NPKRequest: ${JSON.stringify(this.context)}, ${JSON.stringify(this.action)}`)
+        // console.log(`NPKRequest: ${JSON.stringify(this.context)}, ${JSON.stringify(this.action)}`)
     }
     actionRequest(response, sendData) {
         let actionName = this.action.actionName;
@@ -23,7 +23,6 @@ class Request {
                     if (isNaN(playerNum)) {
                         playerNum = 4;
                     }
-                    // const throwResult = throwDice(diceCount);
 
                     let pin = this.func(playerNum).then(
                         (pin) => {
@@ -97,7 +96,6 @@ class Request {
 
             case "LetsStartGameAction": {
                 const number_one = '1';
-                console.log(outText);
                 response.setParameters({
                     number1: number_one,
                     dayOrder: 0
@@ -109,6 +107,12 @@ class Request {
             case "KillNightAction" || "KillNightAction2": {
                 let number_one = '1';
                 console.log("KillNight Action 실행함");
+                if (Object.keys(contextId).indexOf(`${this.context.session.id}`) == -1) {
+                    break;
+                }
+                if (Object.keys(outText).indexOf(`${contextId[this.context.session.id]}`) == -1) {
+                    break;
+                }
                 response.setParameters({
                     number1: number_one,
                     dayOrderNum: outText[contextId[this.context.session.id]].day,
@@ -120,6 +124,12 @@ class Request {
             case "LetMeOutAction": {
                 let doctor_Vs_Mapia = 0; //지금은 의사가 이긴 상황
                 let doctorVsMapiaPrompt = "";
+                if (Object.keys(contextId).indexOf(`${this.context.session.id}`) == -1) {
+                    break;
+                }
+                if (Object.keys(outText).indexOf(`${contextId[this.context.session.id]}`) == -1) {
+                    break;
+                }
                 if (outText[contextId[this.context.session.id]].after === "NoneKill") { // 마피아가 아무도 안죽인 경우
                     doctor_Vs_Mapia = 2;
                     doctorVsMapiaPrompt = "";
@@ -149,6 +159,12 @@ class Request {
                 let moreThanTwoExist = 0; // 사형대에 오르는 사람이 있는 경우
                 let deadMan = "";
                 let tieVoteExist = "";
+                if (Object.keys(contextId).indexOf(`${this.context.session.id}`) == -1) {
+                    break;
+                }
+                if (Object.keys(outText).indexOf(`${contextId[this.context.session.id]}`) == -1) {
+                    break;
+                }
                 console.log("VOTE TEXt");
                 console.log(outText[contextId[this.context.session.id]].text);
                 if (outText[contextId[this.context.session.id]].text == "None" || outText[contextId[this.context.session.id]].text == "") { // 사형대에 아무도 오르지 않는 경우
@@ -213,11 +229,14 @@ class Request {
             case "FinalArgumentAciton2":
             case "FinalArgumentAction": {
                 const number_one = '1';
-
+                if (Object.keys(contextId).indexOf(`${this.context.session.id}`) == -1) {
+                    break;
+                }
+                if (Object.keys(outText).indexOf(`${contextId[this.context.session.id]}`) == -1) {
+                    break;
+                }
                 let tieVoteExistPrompt = `${outText[contextId[this.context.session.id]].text}님이 사형대에 올랐습니다.
-                  1분동안 최후 변론을 진행해주세요. <pause time = "60000"> 최후 변론이 종료되었습니다.
-                  플레이어들은 10초동안 찬반투표를 진행해주세요. <pause time = "10000">
-                  ${outText[contextId[this.context.session.id]].text}님을 죽이시려면 죽이자고, 살리시려면 살리자고 말씀해주세요.`
+                  1분동안 최후 변론을 진행해주세요. `;
 
                 response.setParameters({
                     number1: number_one,
@@ -233,6 +252,12 @@ class Request {
 
                 let doctor_Vs_Mapia = 0; //지금은 의사가 이긴 상황
                 let doctorVsMapiaPrompt = "";
+                if (Object.keys(contextId).indexOf(`${this.context.session.id}`) == -1) {
+                    break;
+                }
+                if (Object.keys(outText).indexOf(`${contextId[this.context.session.id]}`) == -1) {
+                    break;
+                }
                 if (outText[contextId[this.context.session.id]].after === "NoneKill") { // 마피아가 아무도 안죽인 경우
                     doctor_Vs_Mapia = 2;
                     doctorVsMapiaPrompt = "";
@@ -247,11 +272,19 @@ class Request {
                 //   }
                 const mapia_Or_CitizenWin = outText[contextId[this.context.session.id]].isCitizenWin; //지금은 시민이 이긴 상황
                 let mapiaOrCitizenWinPrompt;
+
+                let postFix = "";
+
+                outText[contextId[this.context.session.id]].list.map((o) => {
+                    postFix += `${o.name}의 역할은 ${o.role}입니다.`
+                });
+
                 if (mapia_Or_CitizenWin == 0) {
                     mapiaOrCitizenWinPrompt = '마피아가 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.';
                 } else if (mapia_Or_CitizenWin == 1) {
                     mapiaOrCitizenWinPrompt = '시민이 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.'
                 }
+                mapiaOrCitizenWinPrompt += postFix;
                 response.setParameters({
                     number1: number_one,
                     doctorVsMapiaPrompt: doctorVsMapiaPrompt,
@@ -262,6 +295,12 @@ class Request {
             case "HeIsSavedAction2":
             case "HeIsSavedAction": {
                 const number_one = '1';
+                if (Object.keys(contextId).indexOf(`${this.context.session.id}`) == -1) {
+                    break;
+                }
+                if (Object.keys(outText).indexOf(`${contextId[this.context.session.id]}`) == -1) {
+                    break;
+                }
                 let yesOrNoVoteResultPrompt = `${outText[contextId[this.context.session.id]].text}님은 찬반투표에서 과반수 이상이 반대를 하여 최종적으로 사형대에 오르지 않습니다.`
                 response.setParameters({
                     number1: number_one,
@@ -271,6 +310,12 @@ class Request {
             }
             case "HeIsDiedAction2":
             case "HeIsDiedAction": {
+                if (Object.keys(contextId).indexOf(`${this.context.session.id}`) == -1) {
+                    break;
+                }
+                if (Object.keys(outText).indexOf(`${contextId[this.context.session.id]}`) == -1) {
+                    break;
+                }
                 let yesOrNoVoteResultPrompt = `${outText[contextId[this.context.session.id]].text}님은 찬반투표에서 과반수 이상이 찬성을 하여 최종적으로 사형당하셨습니다.`
                 const number_one = '1';
                 response.setParameters({
@@ -281,8 +326,15 @@ class Request {
             }
             case "LetMeOut3Action2":
             case "LetMeOut3Action": {
+                if (Object.keys(contextId).indexOf(`${this.context.session.id}`) == -1) {
+                    break;
+                }
+                if (Object.keys(outText).indexOf(`${contextId[this.context.session.id]}`) == -1) {
+                    break;
+                }
                 const number_one = '1';
                 console.log("outtext:");
+                // TODO: 이거 존재하는지 체크하는 함수 만들어야함
                 console.log(outText[contextId[this.context.session.id]].isCitizenWin);
                 // let temp = `1`;
                 // if (outText[contextId[this.context.session.id]].isCitizenWin == '0' || outText[contextId[this.context.session.id]].isCitizenWin == '1') {
@@ -298,12 +350,23 @@ class Request {
             case "GameEndCitizenAction": {
                 const number_one = '1';
                 const mapia_Or_CitizenWin = '1'; //지금은 시민이 이긴 상황
+                let postFix = "";
+                if (Object.keys(contextId).indexOf(`${this.context.session.id}`) == -1) {
+                    break;
+                }
+                if (Object.keys(outText).indexOf(`${contextId[this.context.session.id]}`) == -1) {
+                    break;
+                }
+                outText[contextId[this.context.session.id]].list.map((o) => {
+                    postFix += `${o.name}의 역할은 ${o.role}입니다.`
+                });
                 let mapiaOrCitizenWinPrompt = "";
                 if (mapia_Or_CitizenWin == '0') {
                     mapiaOrCitizenWinPrompt = '마피아가 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.';
                 } else if (mapia_Or_CitizenWin == '1') {
                     mapiaOrCitizenWinPrompt = '시민이 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.'
                 }
+                mapiaOrCitizenWinPrompt += postFix;
                 response.setParameters({
                     number1: number_one,
                     mapiaOrCitizenWinNum: '1',
@@ -316,11 +379,22 @@ class Request {
                 const number_one = '1';
                 const mapia_Or_CitizenWin = '0'; //지금은 마피아가 이긴 상황
                 let mapiaOrCitizenWinPrompt = "";
+                let postFix = "";
+                if (Object.keys(contextId).indexOf(`${this.context.session.id}`) == -1) {
+                    break;
+                }
+                if (Object.keys(outText).indexOf(`${contextId[this.context.session.id]}`) == -1) {
+                    break;
+                }
+                outText[contextId[this.context.session.id]].list.map((o) => {
+                    postFix += `${o.name}의 역할은 ${o.role}입니다.`
+                });
                 if (mapia_Or_CitizenWin == '0') {
                     mapiaOrCitizenWinPrompt = '마피아가 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.';
                 } else if (mapia_Or_CitizenWin == '1') {
                     mapiaOrCitizenWinPrompt = '시민이 승리하였습니다. 모든 플레이어들의 정체를 공개합니다.'
                 }
+                mapiaOrCitizenWinPrompt += postFix;
                 response.setParameters({
                     number1: number_one,
                     mapiaOrCitizenWinNum: '0',
@@ -361,6 +435,8 @@ function* getText(id, target) {
         outText[id].isCitizenWin = text.isCitizenWin;
     } else if (target == 'vote_check') {
         outText[id].vote_check = text.text;
+    } else if (target == 'allAfterList') {
+        outText[id].list = text.list;
     }
 }
 
@@ -373,8 +449,8 @@ class Response {
         this.directives = [];
     }
     setParameters(result, sendData) {
-        console.log("result :");
-        console.log(result);
+        // console.log("result :");
+        // console.log(result);
         this.output = {
             numOfPlayer: result.numOfPlayer,
             pinNum: result.pinNum,
@@ -399,7 +475,7 @@ class Response {
             mapiaOrCitizenWinNum2: result.mapiaOrCitizenWinNum,
             moreThanTwoExist2: result.moreThanTwoExist
         }
-        console.log(this.output);
+        // console.log(this.output);
 
         sendData(this);
     }
@@ -409,10 +485,10 @@ const reqObject = (f, req, res, f2, next) => {
     response = new Response();
     request = new Request(req, f, f2);
     request.actionRequest(response, (r) => {
-        console.log(r);
+        // console.log(r);
         res.send(r)
     });
-    console.log(`NPKResponse: ${JSON.stringify(response)}`);
+    // console.log(`NPKResponse: ${JSON.stringify(response)}`);
 };
 
 module.exports = reqObject;

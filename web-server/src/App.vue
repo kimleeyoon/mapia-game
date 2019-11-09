@@ -96,7 +96,13 @@
             <!-- <button class="bttn-minimal bttn-md bttn-danLger" @click.prevent="roomConnect">Connect</button> -->
           </div>
         </div>
-        <p>{{ temp }}</p>
+        <div class="blockquote-wrapper" v-if="temp.length > 0">
+          <div class="blockquote">
+            <h1>
+              <span style="color:#ffffff">{{temp}}</span>
+            </h1>
+          </div>
+        </div>
       </div>
       <div class="container" v-else-if="!isStartGame">
         <div class="col-md-10 offset-md-1">
@@ -233,8 +239,9 @@
                 <button
                   type="button"
                   class="contact-button"
-                  style="background-color: transparent;"
+                  style="background-color: white; color: black;"
                   v-bind:content="badge[member.name]"
+                  disabled
                 >
                   {{member.name}}
                   <!-- <img src="./13230195.png" class="icon icon-paperplane"> -->
@@ -268,6 +275,7 @@
       <script src="https://codepen.io/fracturedNight/pen/exgzZg.js"></script>
 <script>
 import io from "socket.io-client";
+import { setTimeout } from "timers";
 
 export default {
   name: "app",
@@ -293,7 +301,8 @@ export default {
       isDeciding: false,
       isVoting: false,
       isNight: true,
-      roleView: false
+      roleView: false,
+      onceClick: false
     };
   },
   methods: {
@@ -303,14 +312,19 @@ export default {
         this.warnNoName = true;
         return;
       }
-
-      this.warnNoName = false;
-      this.room = io();
-      e.preventDefault();
-      this.socket.emit("ROOM_CONNECT", {
-        name: this.name,
-        room: this.roomID
-      });
+      if (this.onceClick == false) {
+        this.onceClick = true;
+        // setTimeout(() => {
+        //   this.onceClick = false;
+        // }, 1000);
+        this.warnNoName = false;
+        this.room = io();
+        e.preventDefault();
+        this.socket.emit("ROOM_CONNECT", {
+          name: this.name,
+          room: this.roomID
+        });
+      }
     },
     sendMessage(e) {
       e.preventDefault();
@@ -343,17 +357,25 @@ export default {
     });
     this.socket.on("WRONG_ROOM", () => {
       this.temp += `${this.roomID}는 존재하지 않는 방입니다.`;
+      this.onceClick = false;
     });
     this.socket.on("ENTER_ROOM", () => {
       this.isNotJoinedRoom = !this.isNotJoinedRoom;
       this.isStartGame = false;
       this.temp = "";
+      this.onceClick = false;
     });
     this.socket.on("FULL_OF_ROOM", () => {
       this.temp += `${this.roomID}번 방은 자리가 없어여어엉`;
+      this.onceClick = false;
     });
-    this.socket.on("TURN_DAY", () => {
-      this.isNight = !this.isNight;
+    this.socket.on("TURN_DAY", (data) => {
+      if(data == 'NIGHT'){
+        this.isNight = true;
+      }else{
+        this.isNight = false;
+      }
+      // this.isNight = !this.isNight;
       // this.tempAnnounce = "";
     });
     this.socket.on("START_GAME", data => {
@@ -440,6 +462,14 @@ export default {
           o.name += "  ";
           return o;
         });
+      this.isDeciding = false;
+      this.isVoting = false;
+      this.isNowSelect = false;
+    });
+    this.socket.on('REQUEST_NAME', () => {
+      if(this.isStartGame){
+        this.socket.emit("RESPONSE_NAME", {name: this.name, room: this.roomID});
+      }
     });
   }
 };
@@ -884,6 +914,15 @@ img {
   top: 20px;
 }
 
+#woolf {
+  height: 15vh;
+  width: 15vh;
+  position: absolute;
+  z-index: -2;
+  right: 20px;
+  top: 20px;
+}
+
 @import url(https://fonts.googleapis.com/css?family=Raleway:400, 300, 500, 700);
 
 html {
@@ -1168,10 +1207,10 @@ svg {
 }
 
 .nick {
-  padding: 0px 50px 0 50px;
+  padding: 0px 0px 0px 0px;
   font-family: var(--font);
 
-  width: 60%;
+  /* width: 60%; */
   height: 50%;
   margin: 0 auto;
   white-space: pre;
@@ -1390,5 +1429,8 @@ img.inLetter {
 
 .blockquote h4:first-letter {
   margin-left: -12px;
+}
+.list-group-item:active {
+  border: none;
 }
 </style>

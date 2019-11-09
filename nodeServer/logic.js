@@ -1,3 +1,5 @@
+let logger = require('./logger');
+
 function parse(str) { //변수에 변수를 포함하는 문자열을 넣기 위한 함수
     var args = [].slice.call(arguments, 1)
     var i = 0;
@@ -10,9 +12,6 @@ function parse(str) { //변수에 변수를 포함하는 문자열을 넣기 위
 
 //가능 플레이어수는 min 3, max 10
 //역할 분배 시 인원이 5명 이상일 경우 의사와 경찰의 합친 수는 같되 그 둘의 개수는 랜덤으로 후에 바꿔도 좋음. 예를 들어 6명이 플레이 할 시 의사 1명, 경찰 1명이 아닌 맞의, 맞경일수도 있다는 말.
-
-//shuffle(roleArray[numOfPlayer - 3]).map((role, index) => afterList[playerNameList[index]] = role);
-//console.log(afterList);
 
 function shuffle(a) {
     for (let i = a.length - 1; i > 0; i--) {
@@ -56,9 +55,9 @@ function allocatePlayerRole(roleArray, playerNameList, memberClass) {
     let afterList = {};
     let numOfPlayer = playerNameList.length;
     shuffle(shuffle(shuffle(shuffle(roleArray[numOfPlayer - 3])))).map((role, index) => afterList[playerNameList[index]] = role);
+    // roleArray[numOfPlayer - 3].map((role, index) => afterList[playerNameList[index]] = role);
     Object.keys(afterList).map(o => memberClass.setRole(o, afterList[o]));
     return afterList;
-    //console.log(afterlist);
 }
 
 function allocateSocket(member, playerNameList) {
@@ -67,7 +66,6 @@ function allocateSocket(member, playerNameList) {
         socketList[k] = member[k].socket;
     }
     return socketList;
-    //console.log(afterlist);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -90,20 +88,23 @@ function takePlayerNum(playerNum) { //게임 플레이어 명 수를 입력받�
 function savePlayer(mapiaPick, doctorPick, doctorAlive, afterList, memberClass) { //의사가 사람을 살리는 함수
     //doctorPick = prompt('의사는 살릴 사람을 선택해주세요.');   //의사가 살릴 사람을 지목
     let mapiaVSdoctorResult = "None";
-
+    console.log("=======================================")
     console.log(`Doctor Pick : ${doctorPick}`);
     console.log(`Mapia Pick : ${mapiaPick}`);
+    console.log("=======================================")
     if (mapiaPick == "None" || !mapiaPick) { // 마피아가 사람을 죽이지 않는 경우
         mapiaVSdoctorResult = "NoneKill";
     } else if (!doctorPick || doctorAlive || doctorPick == "None") { // 의사가 아무도 치료하지 않는 경우
         mapiaVSdoctorResult = parse('의사가 플레이어를 살리지 못했습니다. 마피아가 죽인 플레이어는 %s님 입니다.', mapiaPick);
-        memberClass.find(o => o.name === mapiaPick).isAlive = false;
+        // memberClass.find(o => o.name === mapiaPick).isAlive = false;
+        memberClass.setLive(mapiaPick, false)
         delete afterList[mapiaPick];
     } else if (mapiaPick == doctorPick) { // 의사가 플레이어를 살린 경우
         mapiaVSdoctorResult = parse('의사가 플레이어를 살렸습니다.');
     } else { // 의사가 틀린 경우
         mapiaVSdoctorResult = parse('의사가 플레이어를 살리지 못했습니다. 마피아가 죽인 플레이어는 %s님 입니다.', mapiaPick);
-        memberClass.find(o => o.name === mapiaPick).isAlive = false;
+        // memberClass.find(o => o.name === mapiaPick).isAlive = false;
+        memberClass.setLive(mapiaPick, false)
         delete afterList[mapiaPick];
     }
     return mapiaVSdoctorResult;
@@ -130,10 +131,10 @@ function savePlayer(mapiaPick, doctorPick, doctorAlive, afterList, memberClass) 
 
 function assassinatePlayer(playerName, afterList) { //마피아가 사람을 암살하는 함수
     //mapiaPick = prompt('마피아는 죽일 사람을 선택해주세요.');
-    console.log("죽일 이름");
-    console.log(playerName);
-    console.log("사람 목록");
-    console.log(afterList);
+    // console.log("죽일 이름");
+    // console.log(playerName);
+    // console.log("사람 목록");
+    // console.log(afterList);
 
     let idOfMapiaPick = 0;
     if (afterList[playerName] == '경찰') {
@@ -175,7 +176,9 @@ function killPlayer(playerName, afterList, memberClass) { //아래 함수는 '�
 
     //playerNameList.splice(playerNameList.indexOf(playerName),1);
 
-    memberClass.find(o => o.name === playerName).isAlive = false;
+    // memberClass.find(o => o.name === playerName).isAlive = false;
+
+    memberClass.setLive(playerName, false)
 
     delete afterList[playerName];
     // alert(playerName + "님이 죽었습니다. 생존자를 공개합니다.");
@@ -263,6 +266,9 @@ class Members {
         }
         return temp;
     }
+    getLiveAfterListByRole(afterList, role){
+        return Object.keys(this.getLiveAfterList()).filter(o => afterList[o] == `${role}`)
+    }
 }
 
 function handelDecide(tempPick, forceData) {
@@ -281,9 +287,9 @@ function handelDecide(tempPick, forceData) {
             return o;
         }
     });
-    console.log(`MaxF : ${tempPick.count}`);
+    // console.log(`MaxF : ${tempPick.count}`);
     if (!maxF) {
-        console.log("항목없음");
+        // console.log("항목없음");
         pick = "None";
     } else if (forceData) {
         if (maxF.length == 1) {
@@ -307,12 +313,12 @@ function* mainGame(member) {
 
     var afterList = {};
 
-    let dayOrder = 0;
+    let dayOrder = 1;
 
     var roleArray = [
         ["마피아", "시민", "시민"],
         ["마피아", "시민", "시민", "시민"],
-        ["마피아", "마피아", "시민", "시민", "경찰"],
+        ["마피아", "마피아", "시민", "의사", "경찰"],
         ["마피아", "마피아", "시민", "시민", "의사", "경찰"],
         ["마피아", "마피아", "시민", "시민", "시민", "의사", "경찰"],
         ["마피아", "마피아", "시민", "시민", "시민", "의사", "경찰", "경찰"],
@@ -377,30 +383,30 @@ function* mainGame(member) {
         day: `${dayOrder}`
     };
 
-    console.log("스피커한테 day 보냄");
 
-    // alert("지금부터 역할배정을 시작하겠습니다.");
-    yield "지금부터 역할배정을 시작하겠습니다.";
-    // alert("밤이 되었습니다. 모든 플레이어들은 고개를 숙여주세요.");
-    yield "밤이 되었습니다. 모든 플레이어들은 고개를 숙여주세요.";
-    // alert("지금부터 마피아는 고개를 들어 서로의 얼굴을 확인해주세요.");
-    yield "지금부터 마피아는 고개를 들어 서로의 얼굴을 확인해주세요.";
-    // alert("다시 고개를 숙여주십시오.");
-    yield "다시 고개를 숙여주십시오.";
-    // alert("지금부터 의사는 고개를 들어 서로의 얼굴을 확인해주세요.");
-    yield "지금부터 의사는 고개를 들어 서로의 얼굴을 확인해주세요.";
-    // alert("다시 고개를 숙여주십시오.");
-    yield "다시 고개를 숙여주십시오.";
-    // alert("지금부터 경찰은 고개를 들어 서로의 얼굴을 확인해주세요.");
-    yield "지금부터 경찰은 고개를 들어 서로의 얼굴을 확인해주세요.";
-    // alert("다시 고개를 숙여주십시오.");
-    yield "다시 고개를 숙여주십시오.";
-    // alert("첫째날 아침이 밝았습니다. 플레이어들은 모두 고개를 들어주시고 2분 동안 토의를 진행해주세요. 첫번째 아침은 아무도 사형대에 오르지 않습니다.");
+    // // alert("지금부터 역할배정을 시작하겠습니다.");
+    // yield "지금부터 역할배정을 시작하겠습니다.";
+    // // alert("밤이 되었습니다. 모든 플레이어들은 고개를 숙여주세요.");
+    // yield "밤이 되었습니다. 모든 플레이어들은 고개를 숙여주세요.";
+    // // alert("지금부터 마피아는 고개를 들어 서로의 얼굴을 확인해주세요.");
+    // yield "지금부터 마피아는 고개를 들어 서로의 얼굴을 확인해주세요.";
+    // // alert("다시 고개를 숙여주십시오.");
+    // yield "다시 고개를 숙여주십시오.";
+    // // alert("지금부터 의사는 고개를 들어 서로의 얼굴을 확인해주세요.");
+    // yield "지금부터 의사는 고개를 들어 서로의 얼굴을 확인해주세요.";
+    // // alert("다시 고개를 숙여주십시오.");
+    // yield "다시 고개를 숙여주십시오.";
+    // // alert("지금부터 경찰은 고개를 들어 서로의 얼굴을 확인해주세요.");
+    // yield "지금부터 경찰은 고개를 들어 서로의 얼굴을 확인해주세요.";
+    // // alert("다시 고개를 숙여주십시오.");
+    // yield "다시 고개를 숙여주십시오.";
+    // // alert("첫째날 아침이 밝았습니다. 플레이어들은 모두 고개를 들어주시고 2분 동안 토의를 진행해주세요. 첫번째 아침은 아무도 사형대에 오르지 않습니다.");
     yield "첫째날 아침이 밝았습니다. \
 3분 동안 토의를 진행해주세요. \
 첫번째 아침은 아무도 사형대에 오르지 않습니다.";
     yield {
-        do: "TURN_DAY"
+        do: "TURN_DAY",
+        set: 'DAY'
     };
     yield {
         do: "WAIT_FIRST_NIGHT"
@@ -413,38 +419,43 @@ function* mainGame(member) {
             do: "DAY_TEXT",
             day: `${dayOrder}`
         };
-        console.log("스피커한테 day 보냄");
+        // console.log("스피커한테 day 보냄");
         dayOrder++;
-        // TODO: 작동할걸?????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
 
         // yield {
         //     do: "WAIT_SECOND",
-        //     time: 21.5
-        // };
+        //     time: 1
+        // };x
+        yield "해가 저물고 밤이 되었습니다. 플레이어들은 모두 고개를 숙여주세요.";
         yield {
-            do: "WAIT_SECOND",
-            time: 1
+            do: "TURN_DAY",
+            set: 'NIGHT'
         };
         yield {
-            do: "TURN_DAY"
+            do: "WAIT_SECOND",
+            time: 20
         };
         // alert("해가 저물고 밤이 되었습니다. 플레이어들은 모두 고개를 숙여주세요.");
 
 
-        yield "해가 저물고 밤이 되었습니다. 플레이어들은 모두 고개를 숙여주세요.";
+
 
 
         // alert("지금부터 마피아는 고개를 들어 30초간 토의를 하시고 암살할 플레이어를 지목해주세요.");
-        yield "지금부터 마피아는 고개를 들어 30초간 토의를 하시고 암살할 플레이어를 지목해주세요.";
+        yield "마피아는 고개를 들어 30초간 토의를 하시고 암살할 플레이어를 지목해주세요.";
 
         idOfMapiaPick = 0;
         let tempMapiaPick = [];
 
-        // while (idOfMapiaPick == 0) {
+        // tempMapiaPick = yield {
+        //     do: "Assassinate",
+        //     nameList: Object.keys(memberClass.getLiveAfterList()).filter(o => afterList[o] == "마피아")
+        // };
+
         tempMapiaPick = yield {
             do: "Assassinate",
-            nameList: Object.keys(memberClass.getLiveAfterList()).filter(o => afterList[o] == "마피아")
-        }; // 마피아로부터 암살할 사람 고르라고 함
+            nameList: memberClass.getLiveAfterListByRole(afterList, '마피아')
+        };
 
         mapiaPick = handelDecide(tempMapiaPick, true);
 
@@ -456,27 +467,33 @@ function* mainGame(member) {
 
         // yield {
         //     do: "WAIT_SECOND",
-        //     time: 12
+        //     time: 20
         // };
         yield {
             do: "WAIT_SECOND",
-            time: 1
+            time: 10.5
         };
 
         // alert("다시 고개를 숙여주십시오.");
         yield "다시 고개를 숙여주십시오.";
         // alert("지금부터 의사는 고개를 들어 30초간 토의를 하시고 살릴 플레이어를 지목해주세요.");
-        yield "지금부터 의사는 고개를 들어 30초간 토의를 하시고 살릴 플레이어를 지목해주세요.";
+        yield "의사는 고개를 들어 30초간 토의를 하시고 살릴 플레이어를 지목해주세요.";
         doctorPick = "None";
         let tempDoctorPick = [];
 
         doctorAlive = isThereAnyDoctor(afterList);
         if (doctorAlive == 0) {
             // while (mapiaVSdoctorResult == "Error" || mapiaVSdoctorResult == "None") {
+            // tempDoctorPick = yield {
+            //     do: "Treatment",
+            //     nameList: Object.keys(memberClass.getLiveAfterList()).filter(o => afterList[o] == "의사")
+            // };
             tempDoctorPick = yield {
                 do: "Treatment",
-                nameList: Object.keys(memberClass.getLiveAfterList()).filter(o => afterList[o] == "의사")
+                nameList:  memberClass.getLiveAfterListByRole(afterList, '의사')
             };
+
+            
 
             doctorPick = handelDecide(tempDoctorPick, true);
 
@@ -493,10 +510,10 @@ function* mainGame(member) {
         // mapiaVSdoctorResult = savePlayer(mapiaPick, doctorPick, doctorAlive, afterList, memberClass.memberObj);
         ///////////////////////////////////
 
-        // yield {
-        //     do: "WAIT_SECOND",
-        //     time: 10
-        // };
+        yield {
+            do: "WAIT_SECOND",
+            time: 10
+        };
 
         yield {
             do: "WAIT_SECOND",
@@ -506,7 +523,7 @@ function* mainGame(member) {
         // alert("다시 고개를 숙여주십시오.");
         yield "다시 고개를 숙여주십시오.";
         // alert("지금부터 경찰은 고개를 들어 30초간 토의를 하시고 조사할 플레이어를 지목해주세요.");
-        yield "지금부터 경찰은 고개를 들어 30초간 토의를 하시고 조사할 플레이어를 지목해주세요.";
+        yield "경찰은 고개를 들어 30초간 토의를 하시고 조사할 플레이어를 지목해주세요.";
 
         let tempPolicePick = [];
         policeAlive = isThereAnyPolice(afterList);
@@ -523,12 +540,19 @@ function* mainGame(member) {
             if (idOfPolicePick != "None") { // 경찰이 조사를 하면
 
                 idOfPolicePick = idOfPolicePick == "마피아" ? "마피아" : "시민";
+                // yield {
+                //     name: policePick,
+                //     nameList: Object.keys(memberClass.getLiveAfterList()).filter(o => memberClass.getAfterList()[o] == "경찰"),
+                //     role: idOfPolicePick,
+                //     do: "ResultOfInvestigation"
+                // };
                 yield {
                     name: policePick,
-                    nameList: Object.keys(memberClass.getLiveAfterList()).filter(o => memberClass.getAfterList()[o] == "경찰"),
+                    nameList: memberClass.getLiveAfterListByRole(afterList, '경찰'),
                     role: idOfPolicePick,
                     do: "ResultOfInvestigation"
                 };
+                
             }
             // }
         } else {
@@ -539,7 +563,7 @@ function* mainGame(member) {
         }
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////
-        mapiaVSdoctorResult = savePlayer(mapiaPick, doctorPick, doctorAlive, afterList, memberClass.memberObj);
+        mapiaVSdoctorResult = savePlayer(mapiaPick, doctorPick, doctorAlive, afterList, memberClass);
         //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -575,8 +599,10 @@ function* mainGame(member) {
         };
 
         yield {
-            do: "TURN_DAY"
+            do: "TURN_DAY",
+            set: 'DAY'
         };
+
 
         // alert(mapiaVSdoctorResult);
 
@@ -596,6 +622,16 @@ function* mainGame(member) {
         if (count >= Object.keys(memberClass.getLiveAfterList()).length / 2) {
             // alert("마피아가 승리하였습니다. 모든 player들의 정체를 공개합니다.");
             yield "마피아가 승리하였습니다. 모든 player들의 정체를 공개합니다.";
+            yield {
+                do: "DEATH_UPDATE",
+                nameList: memberClass.memberObj
+            };
+            yield {
+                do: 'GAME_END'
+            }
+            yield {
+                do: "WAIT_CHECK"
+            };
             for (key in initialPlayerNameList) {
                 // document.write("player명 : " + key + " 역할 : " + initialPlayerNameList[key] + "<br />");
             }
@@ -603,6 +639,16 @@ function* mainGame(member) {
         } else if (count == 0) {
             // alert("시민이 승리하였습니다.");
             yield "시민이 승리하였습니다.";
+            yield {
+                do: "DEATH_UPDATE",
+                nameList: memberClass.memberObj
+            };
+            yield {
+                do: 'GAME_END'
+            }
+            yield {
+                do: "WAIT_CHECK"
+            };
             for (key in initialPlayerNameList) {
                 // document.write("player명 : " + key + " 역할 : " + initialPlayerNameList[key] + "<br />");
             }
@@ -611,11 +657,18 @@ function* mainGame(member) {
 
         // alert("플레이어들은 모두 고개를 들어주시고 3분 동안 토의를 진행하여 사형대에 올릴 플레이어를 골라주십시오.");
         yield "플레이어들은 모두 고개를 들어주시고 3분 동안 토의를 진행하여 사형대에 올릴 플레이어를 골라주십시오.";
-
         yield {
             do: "WAIT_SECOND",
-            time: 5
+            time: 190
         };
+        // TODO:위에가 진또배기
+
+
+
+        // yield {
+        //     do: "WAIT_SECOND",
+        //     time: 5
+        // };
         // yield {
         //     do: "WAIT_SECOND",
         //     time: 180
@@ -627,14 +680,14 @@ function* mainGame(member) {
             do: "Vote",
             nameList: memberClass.getLiveList()
         };
-
+        
 
         id = handelDecide(tempId, false);
 
-        console.log(`id : ${id}`);
+        // console.log(`id : ${id}`);
         if (id == "None") { // 사람이 안죽는 경우
             // yield ``;
-            console.log("Logic 아무도 안죽어");
+            // console.log("Logic 아무도 안죽어");
             yield {
                 do: "VOTE_TEXT",
                 text: 'None',
@@ -652,22 +705,23 @@ function* mainGame(member) {
             const goDie = yield {
                 do: "VOTE_CHECK"
             };
-            console.log("goDie");
-            console.log(goDie);
+            // console.log("goDie");
+            // console.log(goDie);
             if (goDie == 'true') {
                 const nameJosa = Josa(`${id}`, '가');
                 yield `${nameJosa} 투표로 죽었습니다.`
                 memberClass.setLive(id, false);
-                afterList = killPlayer(id, afterList, memberClass.memberObj);
+                afterList = killPlayer(id, afterList, memberClass);
             } else {
-                // yield '아무도 안죽음~';
+                const nameJosa = Josa(`${id}`, '가');
+                yield `${nameJosa} 생존했습니다.`
             }
         }
 
         idOfPolicePick = 0; //다음날을 위한 초기화
         mapiaVSdoctorResult = "Error"; //다음날을 위한 초기화 
         count = 0;
-        console.log("투표 처리 완료");
+        // console.log("투표 처리 완료");
         yield {
             do: "DEATH_UPDATE",
             nameList: memberClass.memberObj
@@ -700,14 +754,24 @@ function* mainGame(member) {
             do: "DAY_TEXT",
             day: `${dayOrder}`
         };
-        console.log("다음날 넘어가기 직전");
+        // console.log("다음날 넘어가기 직전");
         yield {
             do: "WAIT_CHECK"
         };
-        console.log("다음날 넘어감");
+        // logger.info("다음날 넘어감");
         if (count >= Object.keys(memberClass.getLiveAfterList()).length / 2) {
             // alert("마피아가 승리하였습니다. 모든 player들의 정체를 공개합니다.");
             yield "마피아가 승리하였습니다. 모든 player들의 정체를 공개합니다.";
+            yield {
+                do: "DEATH_UPDATE",
+                nameList: memberClass.memberObj
+            };
+            yield {
+                do: 'GAME_END'
+            }
+            yield {
+                do: "WAIT_CHECK"
+            };
             for (key in initialPlayerNameList) {
                 // document.write("player명 : " + key + " 역할 : " + initialPlayerNameList[key] + "<br />");
             }
@@ -715,6 +779,16 @@ function* mainGame(member) {
         } else if (count == 0) {
             // alert("시민이 승리하였습니다.");
             yield "시민이 승리하였습니다.";
+            yield {
+                do: "DEATH_UPDATE",
+                nameList: memberClass.memberObj
+            };
+            yield {
+                do: 'GAME_END'
+            }
+            yield {
+                do: "WAIT_CHECK"
+            };
             for (key in initialPlayerNameList) {
                 // document.write("player명 : " + key + " 역할 : " + initialPlayerNameList[key] + "<br />");
             }
@@ -724,7 +798,7 @@ function* mainGame(member) {
     }
 
     // alert("게임이 종료되었습니다. 게임을 다시 시작하시겠습니까?");
-    yield "게임이 종료되었습니다. 게임을 다시 시작하시겠습니까?";
+    // yield "게임이 종료되었습니다. 게임을 다시 시작하시겠습니까?";
 
 }
 // mainGame();
@@ -757,4 +831,8 @@ Josa.get = function (josa, jong) {
     return '**';
 }
 
-module.exports = mainGame;
+function mainGameExport() {
+    return mainGame;
+}
+
+module.exports = mainGameExport;
