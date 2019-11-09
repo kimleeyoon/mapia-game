@@ -503,7 +503,7 @@ io.on('connection', (socket) => { // 사용자 접속 오면
 
 
     socket.on('ROOM_CONNECT', (data) => { // 사용자가 방에 들어오면
-        if (!room.some(x => x.id == data.room)) { // 없는 방이라면
+        if (!room.some(v => v.id == data.room)) { // 없는 방이라면
             logger.warn(`사용자가 없는 방에 접속 시도 : ${data.room}`);
             io.to(socket.id).emit("WRONG_ROOM");
         } else { // 맞는 방이라면
@@ -553,38 +553,38 @@ function grun(g, member, io, inRoom, curDecide, getText, getMember) {
     const it = g(member); // 제너레이터로부터 이터레이터를 얻음
 
     (function iterate(val) {
-        const x = it.next(val);
+        const next = it.next(val);
         member = gameStartInformation[`${inRoom}`].returnMember();
-        if (!x.done) { // 제너레이터 아직 안끝났다면
-            if (x.value instanceof Promise) { // 프라미스 종류라면
-                x.value.then(iterate).catch(err => it.throw(err)); // 프라미스 완료되면 다음 yield 실행
+        if (!next.done) { // 제너레이터 아직 안끝났다면
+            if (next.value instanceof Promise) { // 프라미스 종류라면
+                next.value.then(iterate).catch(err => it.throw(err)); // 프라미스 완료되면 다음 yield 실행
             } else { // 프라미스가 아니라면
 
-                if (x.value instanceof Object) { // Object가 메시지로 왔다며
-                    if (x.value.do === "AnnounceRole") { // 역할 공지라면
-                        io.to(member.find(o => o.name == x.value.name).socket).emit("ROLE_ALERT", `${x.value.role}`);
+                if (next.value instanceof Object) { // Object가 메시지로 왔다며
+                    if (next.value.do === "AnnounceRole") { // 역할 공지라면
+                        io.to(member.find(o => o.name == next.value.name).socket).emit("ROLE_ALERT", `${next.value.role}`);
                         logger.info(`${inRoom}번 방에 역할 공지 완료`);
-                        setTimeout(iterate, 0, x.value);
+                        setTimeout(iterate, 0, next.value);
                         // 모든 사용자에게 역할 공지하고 다음 명령 실행
-                    } else if (x.value.do === "WAIT_FIRST_NIGHT") {
+                    } else if (next.value.do === "WAIT_FIRST_NIGHT") {
                         (function k() {
                             if (gameStartInformation[inRoom].first) {
                                 gameStartInformation[inRoom].first = false;
-                                setTimeout(iterate, 0, x.value);
+                                setTimeout(iterate, 0, next.value);
                             } else {
                                 setTimeout(k, 0.5);
                             }
                         })();
-                    } else if (x.value.do === "WAIT_CHECK") {
+                    } else if (next.value.do === "WAIT_CHECK") {
                         (function k() {
                             if (gameStartInformation[inRoom].first) {
                                 gameStartInformation[inRoom].first = false;
-                                setTimeout(iterate, 0, x.value);
+                                setTimeout(iterate, 0, next.value);
                             } else {
                                 setTimeout(k, 0.5);
                             }
                         })();
-                    } else if (x.value.do === "VOTE_CHECK") {
+                    } else if (next.value.do === "VOTE_CHECK") {
                         (function k() {
                             if (gameStartInformation[inRoom].first) {
                                 gameStartInformation[inRoom].first = false;
@@ -596,57 +596,57 @@ function grun(g, member, io, inRoom, curDecide, getText, getMember) {
                                 setTimeout(k, 0.5);
                             }
                         })();
-                    } else if (x.value.do === "WAIT_SECOND") {
-                        logger.info(`${inRoom}번방 ${x.value.time} 기다리기`);
-                        setTimeout(iterate, x.value.time * 1000, x.value);
-                    } else if (x.value.do === "VOTE_TEXT") {
+                    } else if (next.value.do === "WAIT_SECOND") {
+                        logger.info(`${inRoom}번방 ${next.value.time} 기다리기`);
+                        setTimeout(iterate, next.value.time * 1000, next.value);
+                    } else if (next.value.do === "VOTE_TEXT") {
                         const it = getText(inRoom, 'vote');
-                        logger.info(`${inRoom}에서 VOTE_TEXT app.js에 도착 isDeath : ${x.value.isDeath}`);
+                        logger.info(`${inRoom}에서 VOTE_TEXT app.js에 도착 isDeath : ${next.value.isDeath}`);
                         it.next();
-                        if (x.value.isDeath == 0) { // 죽은 사람이 없는 경우
+                        if (next.value.isDeath == 0) { // 죽은 사람이 없는 경우
                             it.next('None');
                         } else { // 죽은 사람이 있는 경우
-                            it.next(x.value.text);
+                            it.next(next.value.text);
                         }
-                        setTimeout(iterate, 0, x.value);
-                    } else if (x.value.do === "DAY_TEXT") {
+                        setTimeout(iterate, 0, next.value);
+                    } else if (next.value.do === "DAY_TEXT") {
                         const it = getText(inRoom, 'day');
                         it.next();
-                        it.next(x.value.day);
-                        setTimeout(iterate, 0, x.value);
-                    } else if (x.value.do === "ResultOfInvestigation") { // 경찰 조사 결과 전송
-                        for (let name of x.value.nameList) {
+                        it.next(next.value.day);
+                        setTimeout(iterate, 0, next.value);
+                    } else if (next.value.do === "ResultOfInvestigation") { // 경찰 조사 결과 전송
+                        for (let name of next.value.nameList) {
                             io.to(member.find(o => o.name == name).socket).emit("RESULT_OF_INVESTIGATION", {
-                                name: `${x.value.name}`,
-                                role: `${x.value.role}`
+                                name: `${next.value.name}`,
+                                role: `${next.value.role}`
                             });
                         } // 경찰 찾아서 조사 결과 전송
-                        setTimeout(iterate, 0, x.value);
-                    } else if (x.value.do === "AFTER_TEXT") {
+                        setTimeout(iterate, 0, next.value);
+                    } else if (next.value.do === "AFTER_TEXT") {
                         const it = getText(inRoom, 'after');
                         it.next();
                         it.next({
-                            text: x.value.text,
-                            isCitizenWin: x.value.win
+                            text: next.value.text,
+                            isCitizenWin: next.value.win
                         });
-                        setTimeout(iterate, 0, x.value);
-                    } else if (x.value.do === "DEATH_UPDATE") { // 죽은 사람 업데이트
-                        for (let tempMember of x.value.nameList) {
+                        setTimeout(iterate, 0, next.value);
+                    } else if (next.value.do === "DEATH_UPDATE") { // 죽은 사람 업데이트
+                        for (let tempMember of next.value.nameList) {
                             let tempSocket = member.find(o => o.name == tempMember.name);
-                            io.to(tempSocket.socket).emit("UPDATE_LIST", x.value.nameList);
+                            io.to(tempSocket.socket).emit("UPDATE_LIST", next.value.nameList);
                         }
-                        gameStartInformation[inRoom].setList(x.value.nameList);
+                        gameStartInformation[inRoom].setList(next.value.nameList);
                         // 방에 있는 모든 유저에게 살아있는 사람들 목록 전송
                         const it = getText(inRoom, 'allAfterList');
                         it.next();
                         it.next({
-                            list: x.value.nameList
+                            list: next.value.nameList
                         });
-                        setTimeout(iterate, 0, x.value);
-                    } else if (x.value.do === "Assassinate") { // 암살 명령 오면
+                        setTimeout(iterate, 0, next.value);
+                    } else if (next.value.do === "Assassinate") { // 암살 명령 오면
 
                         const c = sendSocket(io, member, x, curDecide) // 해당 명령 보낸 후 Countdown 리턴 받음
-                        for (let name of x.value.nameList) {
+                        for (let name of next.value.nameList) {
                             gameStartInformation[inRoom].setAction(name, 'Assassinate');
                             gameStartInformation[inRoom].setCountdown(name, c)
                         }
@@ -662,10 +662,10 @@ function grun(g, member, io, inRoom, curDecide, getText, getMember) {
                                 setTimeout(iterate, 0, curDecide.decides)
                             });
 
-                    } else if (x.value.do === "Treatment") { // 의사 명령
+                    } else if (next.value.do === "Treatment") { // 의사 명령
 
                         const c = sendSocket(io, member, x, curDecide) // 해당 명령 보낸 후 Countdown 리턴 받음
-                        for (let name of x.value.nameList) {
+                        for (let name of next.value.nameList) {
                             gameStartInformation[inRoom].setAction(name, 'Treatment');
                             gameStartInformation[inRoom].setCountdown(name, c)
                         }
@@ -680,10 +680,10 @@ function grun(g, member, io, inRoom, curDecide, getText, getMember) {
                                 gameStartInformation[inRoom].clearAllMemberAction();
                                 setTimeout(iterate, 0, curDecide.decides)
                             });
-                    } else if (x.value.do === "Investigation") { // 경찰 조사
+                    } else if (next.value.do === "Investigation") { // 경찰 조사
 
                         const c = sendSocket(io, member, x, curDecide) // // 해당 명령 보낸 후 Countdown 리턴 받음
-                        for (let name of x.value.nameList) {
+                        for (let name of next.value.nameList) {
                             gameStartInformation[inRoom].setAction(name, 'Investigation');
                             gameStartInformation[inRoom].setCountdown(name, c)
                         }
@@ -699,10 +699,10 @@ function grun(g, member, io, inRoom, curDecide, getText, getMember) {
                                 setTimeout(iterate, 0, curDecide.decides)
                             });
 
-                    } else if (x.value.do === "Vote") { // 투표 받으면
+                    } else if (next.value.do === "Vote") { // 투표 받으면
 
                         const c = sendSocket(io, member, x, curDecide, 10) // 해당 명령 보낸 후 Countdown 리턴 받음
-                        for (let name of x.value.nameList) {
+                        for (let name of next.value.nameList) {
                             gameStartInformation[inRoom].setAction(name, 'Vote');
                             gameStartInformation[inRoom].setCountdown(name, c)
                         }
@@ -717,11 +717,11 @@ function grun(g, member, io, inRoom, curDecide, getText, getMember) {
                                 gameStartInformation[inRoom].clearAllMemberAction();
                                 setTimeout(iterate, 0, curDecide.decides)
                             });
-                    } else if (x.value.do === "TURN_DAY") {
-                        io.to(inRoom).emit("TURN_DAY", x.value.set);
-                        gameStartInformation[inRoom].setNight(x.value.set);
-                        setTimeout(iterate, 0, x.value);
-                    } else if (x.value.do === 'GAME_END') {
+                    } else if (next.value.do === "TURN_DAY") {
+                        io.to(inRoom).emit("TURN_DAY", next.value.set);
+                        gameStartInformation[inRoom].setNight(next.value.set);
+                        setTimeout(iterate, 0, next.value);
+                    } else if (next.value.do === 'GAME_END') {
                         let index = room.findIndex((o) => o.id == Number(inRoom));
                         logger.info(`${inRoom}번 방에서 Index : ${index}`);
                         if (index) {
@@ -739,12 +739,12 @@ function grun(g, member, io, inRoom, curDecide, getText, getMember) {
                     }
                 } else { // 단순한 메시지 전송용
                     io.to(inRoom).emit("ALERT", {
-                        message: x.value
+                        message: next.value
                     });
-                    gameStartInformation[inRoom].setMg(x.value.message);
-                    setTimeout(iterate, 0, x.value);
+                    gameStartInformation[inRoom].setMg(next.value.message);
+                    setTimeout(iterate, 0, next.value);
                 }
-                // setTimeout(iterate, 0, x.value);
+                // setTimeout(iterate, 0, next.value);
             }
         }
     })();
@@ -763,22 +763,22 @@ class MemberCountdown extends Countdown {
     }
 }
 
-function sendSocket(io, member, x, decide, time = 20) { // 사용자에게 결정 받는 소켓 전송 함수
+function sendSocket(io, member, next, decide, time = 20) { // 사용자에게 결정 받는 소켓 전송 함수
 
-    let num = x.value.nameList.length; // 보낼 사람 수
+    let num = next.value.nameList.length; // 보낼 사람 수
     decide.reset();
     decide.setNum(num)
     // 결정 초기화
     const c = new Countdown(time);
     c.on('tick', (total, i) => { // 작업 진행 바 조절을 위한 tick 이벤트 발생
-        for (let name of x.value.nameList) {
+        for (let name of next.value.nameList) {
             let tempSocket = member.find(o => o.name == name);
             io.to(tempSocket.socket).emit("TICK", total, i);
         }
     })
-    for (let name of x.value.nameList) {
+    for (let name of next.value.nameList) {
         let tempSocket = member.find(o => o.name == name);
-        io.to(tempSocket.socket).emit(x.value.do.toUpperCase());
+        io.to(tempSocket.socket).emit(next.value.do.toUpperCase());
     }
     // 사람들한테 소켓 전송
     return c; // Countdown 반환
