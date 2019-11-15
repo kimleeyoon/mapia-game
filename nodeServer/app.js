@@ -380,7 +380,7 @@ class gameStartInformationClass {
     updateMember(name, socket) {
         logger.info("클래스 내 프린트")
         // logger.info(this.member)
-        this.member.map(o => logger.info(o))
+        this.member.map(o => logger.info(o.socket))
         logger.info(`해당 member 있는지 ${this.member.some(x=> x.name === name)}`)
         logger.info(`소켓 : ${this.member.find((o) => o.name == name).socket } -> ${socket}로 바꾸고싶어요`)
         this.member.find((o) => o.name == name).socket = socket;
