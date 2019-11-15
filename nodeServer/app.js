@@ -498,7 +498,9 @@ io.on('connection', (socket) => { // 사용자 접속 오면
             logger.warn(`${data.room}번 방이 존재하지 않음`)
         }
     })
-
+    socket.on('reconnect', ()=>{
+        logger.info("Reconnection 이벤트")
+    })
     socket.on('disconnect', () => { // 접속 끊기면
 
     });
@@ -579,6 +581,11 @@ function grun(g, member, io, inRoom, curDecide, getText, getMember) {
         member = gameStartInformation[`${inRoom}`].returnMember();
         io = gameStartInformation[`${inRoom}`].getIo();
         member.map(o => logger.info(o.socket))
+        logger.info("아무거나 찍어볼래")
+        logger.info(io.in(inRoom))
+        logger.info(io.adapter.rooms)
+        logger.info("끄읕")
+
         // member.map(o => o.realSocket.join(`${data.room}`, () => {
         //     logger.info(`socket에 Join 성공 하나씩 할거야아ㅏ`)
         //     logger.info(o.name)
