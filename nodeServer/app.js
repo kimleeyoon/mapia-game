@@ -379,7 +379,8 @@ class gameStartInformationClass {
     }
     updateMember(name, socket) {
         logger.info("클래스 내 프린트")
-        logger.info(this.member)
+        // logger.info(this.member)
+        this.member.map(o => logger.info(o))
         logger.info(`해당 member 있는지 ${this.member.some(x=> x.name === name)}`)
         logger.info(`소켓 : ${this.member.find((o) => o.name == name).socket } -> ${socket}로 바꾸고싶어요`)
         this.member.find((o) => o.name == name).socket = socket;
@@ -567,7 +568,10 @@ function grun(g, member, io, inRoom, curDecide, getText, getMember) {
 
     (function iterate(val) {
         const next = it.next(val);
+        logger.info("member 갱신 전")
         member = gameStartInformation[`${inRoom}`].returnMember();
+        member.map(o => logger.info(o))
+
         if (!next.done) { // 제너레이터 아직 안끝났다면
             if (next.value instanceof Promise) { // 프라미스 종류라면
                 next.value.then(iterate).catch(err => it.throw(err)); // 프라미스 완료되면 다음 yield 실행
@@ -786,9 +790,6 @@ function sendSocket(io, member, next, decide, time = 20) { // 사용자에게 �
     c.on('tick', (total, i) => { // 작업 진행 바 조절을 위한 tick 이벤트 발생
         for (let name of next.value.nameList) {
             let tempSocket = member.find(o => o.name == name);
-            member.find(function(o){
-                return o.name == name
-            })
             io.to(tempSocket.socket).emit("TICK", total, i);
         }
     })
