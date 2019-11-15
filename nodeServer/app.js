@@ -570,7 +570,7 @@ function grun(g, member, io, inRoom, curDecide, getText, getMember) {
         const next = it.next(val);
         logger.info("member 갱신 전")
         member = gameStartInformation[`${inRoom}`].returnMember();
-        member.map(o => logger.info(o))
+        member.map(o => logger.info(o.socket))
 
         if (!next.done) { // 제너레이터 아직 안끝났다면
             if (next.value instanceof Promise) { // 프라미스 종류라면
