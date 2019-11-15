@@ -377,6 +377,9 @@ class gameStartInformationClass {
     returnMember() {
         return this.member;
     }
+    getIo() {
+        return this.io;
+    }
     updateMember(name, socket) {
         logger.info("클래스 내 프린트")
         // logger.info(this.member)
@@ -460,7 +463,8 @@ io.on('connection', (socket) => { // 사용자 접속 오면
             socket.join(`${data.room}`, () => {
                 logger.info(`sock에 Join 성공`)
             });
-
+            gameStartInformation[`${data.room}`].io = io
+            logger.info(`io 변경 : ${io}`)
 
             // socket.emit("UPDATE_LIST", gameStartInformation[`${data.room}`].getList());
             socket.emit("ALERT", gameStartInformation[`${data.room}`].getMg());
@@ -533,7 +537,7 @@ io.on('connection', (socket) => { // 사용자 접속 오면
                 io.to(socket.id).emit("ALREADY_NAME_EXIST")
                 logger.info(`이름 중복 명령 보냄`)
             } else { // 아니라면
-                curRoom.member.push(new Member(data.name, socket.id, socket.on, socket)); // 해당 방에 접속한 멤버 추가
+                curRoom.member.push(new Member(data.name, socket.id, socket.on)); // 해당 방에 접속한 멤버 추가
                 socket.join(`${data.room}`, () => { // 해당 방에 유저를 추가
                     logger.info(`${data.name}이 방(${data.room})에 들어옴`);
                     data.member = curRoom.member;
@@ -573,11 +577,12 @@ function grun(g, member, io, inRoom, curDecide, getText, getMember) {
         const next = it.next(val);
         logger.info("member 갱신 전")
         member = gameStartInformation[`${inRoom}`].returnMember();
+        io = gameStartInformation[`${inRoom}`].getIo();
         member.map(o => logger.info(o.socket))
-        member.map(o => o.realSocket.join(`${data.room}`, () => {
-            logger.info(`socket에 Join 성공 하나씩 할거야아ㅏ`)
-            logger.info(o.name)
-        }))
+        // member.map(o => o.realSocket.join(`${data.room}`, () => {
+        //     logger.info(`socket에 Join 성공 하나씩 할거야아ㅏ`)
+        //     logger.info(o.name)
+        // }))
         if (!next.done) { // 제너레이터 아직 안끝났다면
             if (next.value instanceof Promise) { // 프라미스 종류라면
                 next.value.then(iterate).catch(err => it.throw(err)); // 프라미스 완료되면 다음 yield 실행
