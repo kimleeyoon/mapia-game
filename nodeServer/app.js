@@ -445,14 +445,17 @@ io.on('connection', (socket) => { // 사용자 접속 오면
         curRoom = room.find(o => o.id == data.room); // 사용자가 접속중인 현재 방
         curDecide = decides.find(o => `${o.id}` === `${data.room}`); // 사용자가 접속중인 방의 decide
         if (Object.keys(gameStartInformation).indexOf(`${data.room}`) != -1) {
-            logger.info(gameStartInformation[`${data.room}`])
+            // logger.info(gameStartInformation[`${data.room}`])
+            gameStartInformation[`${data.room}`].member.map(o => logger.info(o.socket))
             logger.info(`${data.room}번방 전`)
-            logger.info(gameStartInformation[`${data.room}`].member)
+            // logger.info(gameStartInformation[`${data.room}`].member)
+            gameStartInformation[`${data.room}`].member.map(o => logger.info(o.socket))
             gameStartInformation[`${data.room}`].updateMember(data.name, socket.id);
-            logger.info(gameStartInformation[`${data.room}`].member)
+            // logger.info(gameStartInformation[`${data.room}`].member)
+            gameStartInformation[`${data.room}`].member.map(o => logger.info(o.socket))
             logger.info(`${data.room}번방 후`)
 
-            logger.info(`${gameStartInformation[`${data.room}`].member.find(o => o.name == data.name)} 해당 사람`);
+            logger.info(`${gameStartInformation[`${data.room}`].member.find(o => o.name == data.name).socket} 해당 사람`);
 
             socket.join(`${data.room}`, () => {
                 logger.info(`sock에 Join 성공`)
