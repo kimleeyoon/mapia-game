@@ -378,7 +378,13 @@ class gameStartInformationClass {
         return this.member;
     }
     updateMember(name, socket) {
+        logger.info("클래스 내 프린트")
+        logger.info(this.member)
+        logger.info(`해당 member 있는지 ${this.member.some(x=> x.name === name)}`)
+        logger.info(`소켓 : ${this.member.find((o) => o.name == name).socket } -> ${socket}로 바꾸고싶어요`)
         this.member.find((o) => o.name == name).socket = socket;
+        logger.info(`소켓 : ${this.member.find((o) => o.name == name).socket }로 바뀌었나요?`)
+        logger.info("클래스 메소드 종료")
     }
     setCountdown(name, c) {
         this.member.find(o => o.name == name).setCountdown(c);
@@ -447,7 +453,11 @@ io.on('connection', (socket) => { // 사용자 접속 오면
 
             logger.info(`${gameStartInformation[`${data.room}`].member.find(o => o.name == data.name)} 해당 사람`);
 
-            socket.join(`${data.room}`, () => {});
+            socket.join(`${data.room}`, () => {
+                logger.info(`sock에 Join 성공`)
+            });
+
+
             // socket.emit("UPDATE_LIST", gameStartInformation[`${data.room}`].getList());
             socket.emit("ALERT", gameStartInformation[`${data.room}`].getMg());
             socket.emit("TURN_DAY", gameStartInformation[`${data.room}`].getNight());
@@ -515,7 +525,10 @@ io.on('connection', (socket) => { // 사용자 접속 오면
 
             if (curRoom.size <= curRoom.member.length) { // 방 꽉차면
                 io.to(socket.id).emit("FULL_OF_ROOM");
-            } else { // 방 비어있으면
+            } else if (curRoom.member.some(o => o.name == data.name)) { // 이름 중복
+                io.to(socket.id).emit("ALREADY_NAME_EXIST")
+                logger.info(`이름 중복 명령 보냄`)
+            } else { // 아니라면
                 curRoom.member.push(new Member(data.name, socket.id, socket.on)); // 해당 방에 접속한 멤버 추가
                 socket.join(`${data.room}`, () => { // 해당 방에 유저를 추가
                     logger.info(`${data.name}이 방(${data.room})에 들어옴`);

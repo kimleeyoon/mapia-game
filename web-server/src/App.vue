@@ -369,10 +369,14 @@ export default {
       this.temp += `${this.roomID}번 방은 자리가 없어여어엉`;
       this.onceClick = false;
     });
-    this.socket.on("TURN_DAY", (data) => {
-      if(data == 'NIGHT'){
+    this.socket.on("ALREADY_NAME_EXIST", () => {
+      this.temp += `${this.name}은 이미 방에 존재하는 이름입니다.`;
+      this.onceClick = false;
+    });
+    this.socket.on("TURN_DAY", data => {
+      if (data == "NIGHT") {
         this.isNight = true;
-      }else{
+      } else {
         this.isNight = false;
       }
       // this.isNight = !this.isNight;
@@ -466,9 +470,12 @@ export default {
       this.isVoting = false;
       this.isNowSelect = false;
     });
-    this.socket.on('REQUEST_NAME', () => {
-      if(this.isStartGame){
-        this.socket.emit("RESPONSE_NAME", {name: this.name, room: this.roomID});
+    this.socket.on("REQUEST_NAME", () => {
+      if (this.isStartGame) {
+        this.socket.emit("RESPONSE_NAME", {
+          name: this.name,
+          room: this.roomID
+        });
       }
     });
   }
