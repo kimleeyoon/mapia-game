@@ -555,7 +555,7 @@ io.on('connection', (socket) => { // 사용자 접속 오면
                     let tempSystem = system();
                     gameStartInformation[`${data.room}`] = new gameStartInformationClass(tempSystem, curRoom.member, io, `${data.room}`, curDecide, getT, data);
                     // grun(system, curRoom.member, io, `${data.room}`, curDecide, getT);
-                    io.
+
                     // 게임 메인 프로토콜 실행
                 }
             }
