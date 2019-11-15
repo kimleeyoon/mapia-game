@@ -658,7 +658,7 @@ function grun(g, member, io, inRoom, curDecide, getText, getMember) {
                         setTimeout(iterate, 0, next.value);
                     } else if (next.value.do === "Assassinate") { // 암살 명령 오면
 
-                        const c = sendSocket(io, member, x, curDecide) // 해당 명령 보낸 후 Countdown 리턴 받음
+                        const c = sendSocket(io, member, next, curDecide) // 해당 명령 보낸 후 Countdown 리턴 받음
                         for (let name of next.value.nameList) {
                             gameStartInformation[inRoom].setAction(name, 'Assassinate');
                             gameStartInformation[inRoom].setCountdown(name, c)
@@ -677,7 +677,7 @@ function grun(g, member, io, inRoom, curDecide, getText, getMember) {
 
                     } else if (next.value.do === "Treatment") { // 의사 명령
 
-                        const c = sendSocket(io, member, x, curDecide) // 해당 명령 보낸 후 Countdown 리턴 받음
+                        const c = sendSocket(io, member, next, curDecide) // 해당 명령 보낸 후 Countdown 리턴 받음
                         for (let name of next.value.nameList) {
                             gameStartInformation[inRoom].setAction(name, 'Treatment');
                             gameStartInformation[inRoom].setCountdown(name, c)
@@ -695,7 +695,7 @@ function grun(g, member, io, inRoom, curDecide, getText, getMember) {
                             });
                     } else if (next.value.do === "Investigation") { // 경찰 조사
 
-                        const c = sendSocket(io, member, x, curDecide) // // 해당 명령 보낸 후 Countdown 리턴 받음
+                        const c = sendSocket(io, member, next, curDecide) // // 해당 명령 보낸 후 Countdown 리턴 받음
                         for (let name of next.value.nameList) {
                             gameStartInformation[inRoom].setAction(name, 'Investigation');
                             gameStartInformation[inRoom].setCountdown(name, c)
@@ -714,7 +714,7 @@ function grun(g, member, io, inRoom, curDecide, getText, getMember) {
 
                     } else if (next.value.do === "Vote") { // 투표 받으면
 
-                        const c = sendSocket(io, member, x, curDecide, 10) // 해당 명령 보낸 후 Countdown 리턴 받음
+                        const c = sendSocket(io, member, next, curDecide, 10) // 해당 명령 보낸 후 Countdown 리턴 받음
                         for (let name of next.value.nameList) {
                             gameStartInformation[inRoom].setAction(name, 'Vote');
                             gameStartInformation[inRoom].setCountdown(name, c)
@@ -786,6 +786,9 @@ function sendSocket(io, member, next, decide, time = 20) { // 사용자에게 �
     c.on('tick', (total, i) => { // 작업 진행 바 조절을 위한 tick 이벤트 발생
         for (let name of next.value.nameList) {
             let tempSocket = member.find(o => o.name == name);
+            member.find(function(o){
+                return o.name == name
+            })
             io.to(tempSocket.socket).emit("TICK", total, i);
         }
     })
