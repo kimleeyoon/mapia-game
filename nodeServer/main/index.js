@@ -48,6 +48,9 @@ class Request {
                     break;
                 }
             }
+            case "SorryAction": {
+                break;
+            }
 
             case "StartAndCheckRoleAction": {
                 const number_one = '1';

@@ -54,6 +54,11 @@ router.route('/speaker/nugu/TakePlayerNumAction').post((req, res, next) => {
     console.log("TakePlayerNumAction");
 });
 
+router.route('/speaker/nugu/SorryAction').post((req, res, next) => {
+    nugu(speakerCreateRoom, req, res, setPin, next);
+    console.log("SorryAction");
+});
+
 router.route('/speaker/nugu/StartAndCheckRoleAction').post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
     console.log("StartAndCheckRoleAction");
