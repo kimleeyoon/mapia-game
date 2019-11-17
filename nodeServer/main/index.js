@@ -23,6 +23,7 @@ class Request {
                     if (isNaN(playerNum)) {
                         playerNum = 4;
                     }
+                    logger.info(`playerNum : ${playerNum}`)
 
                     if (playerNum < 3 && playerNum > 10) {
                         response.setParameters({
