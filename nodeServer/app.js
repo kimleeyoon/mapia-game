@@ -499,7 +499,7 @@ io.on("connection", socket => {
             logger.info("이 소켓이 들어가있는 방 출력");
             // logger.info(`${io.sockets.adapter.roomClients[socket.id]}`);
             logger.info("해당 룸에 들어갔있는 클라이언트");
-            logger.info(`${io.sockets.adapter.sids(`${data.room}`)}`);
+            logger.info(`${io.sockets.adapter.sids()}`);
             logger.info("-------------------------------");
 
             // socket.emit("UPDATE_LIST", gameStartInformation[`${data.room}`].getList());
@@ -732,7 +732,7 @@ function grun(g, member, ioBackup, inRoom, curDecide, getText, getMember) {
             io.sockets.connected[o.socket].join(`${inRoom}`);
         });
         logger.info("해당 룸에 들어갔있는 클라이언트");
-        logger.info(`${io.sockets.adapter.sids(`${inRoom}`)}`);
+        logger.info(`${io.sockets.adapter.sids()}`);
         logger.info("-------------------------------");
         // logger.info("아무거나 찍어볼래")
         // logger.info(io.in(inRoom))
