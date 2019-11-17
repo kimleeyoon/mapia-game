@@ -729,10 +729,10 @@ function grun(g, member, ioBackup, inRoom, curDecide, getText, getMember) {
         member.map(o => logger.info(o.socket));
         logger.info("모든 소켓 찾아서 방 join 하도록 수정");
         member.map(o => {
-            logger.info(io.sockets.connected[o.socket])
-            if(io.sockets.connected[o.socket].hasOwnProperty('join')){
-                io.sockets.connected[o.socket].join(`${inRoom}`);
-            }
+            // logger.info(io.sockets.connected[o.socket])
+            // if(io.sockets.connected[o.socket].hasOwnProperty('join')){
+            //     io.sockets.connected[o.socket].join(`${inRoom}`);
+            // }
         });
         logger.info("해당 룸에 들어갔있는 클라이언트");
         logger.info(`${io.sockets.adapter.sids}`);
