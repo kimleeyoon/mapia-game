@@ -38,10 +38,10 @@ class Request {
                             response.setParameters({
                                 numOfPlayer: playerNum,
                                 pinNum: `${pin}`,
-                                pinNum1: `${pin/1000}`,
-                                pinNum22: `${(pin%1000/100)}`,
-                                pinNum3: `${pin%100/10}`,
-                                pinNum4: `${pin%10}`,
+                                pinNum1: `${parseInt(pin/1000)}`,
+                                pinNum22: `${parseInt((pin%1000/100))}`,
+                                pinNum3: `${parseInt(pin%100/10)}`,
+                                pinNum4: `${parseInt(pin%10)}`,
                                 roomExist: '1',
                             }, sendData);
                         }).catch((error) => console.log("방 생성 실패"));
