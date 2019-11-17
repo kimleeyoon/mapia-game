@@ -474,7 +474,7 @@ io.on('connection', (socket) => { // 사용자 접속 오면
             if (sockets[`${data.room}`]) {
                 logger.info("방 존재");
                 let t = [1, 2, 3]
-                sockets[`${data.room}`].find(o => o.id == oldSocketId) = socket;
+                sockets[`${data.room}`][sockets[`${data.room}`].findIndex(o => o.id == oldSocketId)] = socket;
             }
             gameStartInformation[`${data.room}`].io = io
             logger.info(`io 변경 : ${io.in(data.room)}`)
