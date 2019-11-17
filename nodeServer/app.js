@@ -497,7 +497,7 @@ io.on("connection", socket => {
             logger.info("모든 방");
             // logger.info(`${io.sockets.manager.rooms}`);
             logger.info("이 소켓이 들어가있는 방 출력");
-            logger.info(`${io.sockets.manager.roomClients[socket.id]}`);
+            // logger.info(`${io.sockets.manager.roomClients[socket.id]}`);
             logger.info("해당 룸에 들어갔있는 클라이언트");
             logger.info(`${io.sockets.clients(`${data.room}`)}`);
             logger.info("-------------------------------");
@@ -723,7 +723,7 @@ function grun(g, member, ioBackup, inRoom, curDecide, getText, getMember) {
         // logger.info("이 소켓이 들어가있는 방 출력");
         // logger.info(`${io.sockets.manager.roomClients[socket.id]}`);
         logger.info("해당 룸에 들어갔있는 클라이언트");
-        logger.info(`${io.sockets.clients(`${inRoom}`)}`);
+        // logger.info(`${io.sockets.clients(`${inRoom}`)}`);
         logger.info("member에 들어있는 Socket");
         member.map(o => logger.info(o.socket));
         logger.info("모든 소켓 찾아서 방 join 하도록 수정");
