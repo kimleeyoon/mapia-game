@@ -26,11 +26,13 @@ class Request {
                     console.log(`playerNum : ${playerNum}\n`)
 
                     if (playerNum < 3 && playerNum > 10) {
+                        console.log("사람이 부족한 경우");
                         response.setParameters({
                             roomExist: '2',
                         }, sendData);
                         break;
                     }
+                    console.log("사람이 충분한 경우");
 
                     let pin = this.func(playerNum).then(
                         (pin) => {
@@ -467,8 +469,8 @@ class Response {
         this.directives = [];
     }
     setParameters(result, sendData) {
-        // console.log("result :");
-        // console.log(result);
+        console.log("result :");
+        console.log(result);
         this.output = {
             numOfPlayer: result.numOfPlayer,
             pinNum: result.pinNum,
