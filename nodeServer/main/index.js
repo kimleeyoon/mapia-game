@@ -38,6 +38,10 @@ class Request {
                             response.setParameters({
                                 numOfPlayer: playerNum,
                                 pinNum: `${pin}`,
+                                pinNum1: `${pin/1000}`,
+                                pinNum2: `${(pin%1000/100)}`,
+                                pinNum3: `${pin%100/10}`,
+                                pinNum4: `${pin%10}`,
                                 roomExist: '1',
                             }, sendData);
                         }).catch((error) => console.log("방 생성 실패"));
@@ -461,6 +465,10 @@ class Response {
         this.output = {
             numOfPlayer: result.numOfPlayer,
             pinNum: result.pinNum,
+            pinNum1: result.pinNum1,
+            pinNum2: result.pinNum2,
+            pinNum3: result.pinNum3,
+            pinNum4: result.pinNum4,
             roomExist: result.roomExist,
             number1: result.number1,
             tieVoteExist: result.tieVoteExist,
