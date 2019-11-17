@@ -596,7 +596,7 @@ function grun(g, member, io, inRoom, curDecide, getText, getMember) {
         logger.info("member 갱신 전")
         member = gameStartInformation[`${inRoom}`].returnMember();
         io = gameStartInformation[`${inRoom}`].getIo();
-        socket[`${inRoom}`].map(o => o.join(`${data.room}`, () => {
+        sockets[`${inRoom}`].map(o => o.join(`${data.room}`, () => {
             logger.info("Generator에서 socket Join");
         }))
         // member.map(o => logger.info(o.socket))
