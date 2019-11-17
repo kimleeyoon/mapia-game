@@ -735,7 +735,8 @@ function grun(g, member, ioBackup, inRoom, curDecide, getText, getMember) {
             // }
         });
         logger.info("해당 룸에 들어갔있는 클라이언트");
-        logger.info(`${io.sockets.adapter.sids}`);
+        // logger.info(`${io.sockets.adapter.sids}`);
+        io.sockets.adapter.sids.map(o => logger.info(o));
         logger.info("-------------------------------");
         // logger.info("아무거나 찍어볼래")
         // logger.info(io.in(inRoom))
