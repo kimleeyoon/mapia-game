@@ -555,7 +555,7 @@ io.on('connection', (socket) => { // 사용자 접속 오면
                 if (!sockets[`${data.room}`]) {
                     sockets[`${data.room}`] = [];
                 }
-                sockets[`${data.room}`][length(sockets[`${data.room}`])] = socket;
+                sockets[`${data.room}`].push(socket)
                 socket.join(`${data.room}`, () => { // 해당 방에 유저를 추가
                     logger.info(`${data.name}이 방(${data.room})에 들어옴`);
                     data.member = curRoom.member;
