@@ -719,8 +719,8 @@ function grun(g, member, ioBackup, inRoom, curDecide, getText, getMember) {
         logger.info("제너레이터 내 메소드 내 출력");
         logger.info(`io 변경 : ${io.in(inRoom)}`);
         logger.info("모든 방");
-        io.sockets.adapter.rooms.map(o => logger.info(o))
-        // logger.info(`${io.sockets.adapter.rooms}`);
+        // io.sockets.adapter.rooms.map(o => logger.info(o))
+        logger.info(`${JSON.stringify(io.sockets.adapter.rooms)}`);
         // logger.info("이 소켓이 들어가있는 방 출력");
         // logger.info(`${io.sockets.adapter.roomClients[socket.id]}`);
         logger.info("해당 룸에 들어갔있는 클라이언트");
