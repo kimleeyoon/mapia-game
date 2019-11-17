@@ -495,7 +495,7 @@ io.on("connection", socket => {
             logger.info("재접속 메소드 내 출력");
             logger.info(`io 변경 : ${io.in(data.room)}`);
             logger.info("모든 방");
-            logger.info(`${io.sockets.adapter.rooms}`);
+            logger.info(`${JSON.stringify(io.sockets.adapter.rooms)}`);
             logger.info("이 소켓이 들어가있는 방 출력");
             // logger.info(`${io.sockets.adapter.roomClients[socket.id]}`);
             logger.info("해당 룸에 들어갔있는 클라이언트");
@@ -503,7 +503,7 @@ io.on("connection", socket => {
             logger.info("-------------------------------");
 
             // socket.emit("UPDATE_LIST", gameStartInformation[`${data.room}`].getList());
-            socket.emit("REC", nil);
+            // socket.emit("REC", nil);
             socket.emit("ALERT", gameStartInformation[`${data.room}`].getMg());
             socket.emit("TURN_DAY", gameStartInformation[`${data.room}`].getNight());
             if (
