@@ -25,7 +25,7 @@ class Request {
                     }
                     console.log(`playerNum : ${playerNum}\n`)
 
-                    if (playerNum < 3 && playerNum > 10) {
+                    if (playerNum < 3 || playerNum > 10) {
                         console.log("사람이 부족한 경우");
                         response.setParameters({
                             roomExist: '2',
