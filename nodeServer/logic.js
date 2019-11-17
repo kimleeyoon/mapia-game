@@ -383,10 +383,10 @@ function* mainGame(member) {
         day: `${dayOrder}`
     };
 
-    yield {
-        do: "DEATH_UPDATE",
-        nameList: memberClass.memberObj
-    };
+    // yield {
+    //     do: "DEATH_UPDATE",
+    //     nameList: memberClass.memberObj
+    // };
 
 
     // // alert("지금부터 역할배정을 시작하겠습니다.");
