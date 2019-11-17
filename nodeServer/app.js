@@ -386,14 +386,14 @@ class gameStartInformationClass {
         return this.io;
     }
     updateMember(name, socket) {
-        logger.info("클래스 내 프린트")
+        // logger.info("클래스 내 프린트")
         // logger.info(this.member)
-        this.member.map(o => logger.info(o.socket))
-        logger.info(`해당 member 있는지 ${this.member.some(x=> x.name === name)}`)
-        logger.info(`소켓 : ${this.member.find((o) => o.name == name).socket } -> ${socket}로 바꾸고싶어요`)
+        // this.member.map(o => logger.info(o.socket))
+        // logger.info(`해당 member 있는지 ${this.member.some(x=> x.name === name)}`)
+        // logger.info(`소켓 : ${this.member.find((o) => o.name == name).socket } -> ${socket}로 바꾸고싶어요`)
         this.member.find((o) => o.name == name).socket = socket;
-        logger.info(`소켓 : ${this.member.find((o) => o.name == name).socket }로 바뀌었나요?`)
-        logger.info("클래스 메소드 종료")
+        // logger.info(`소켓 : ${this.member.find((o) => o.name == name).socket }로 바뀌었나요?`)
+        // logger.info("클래스 메소드 종료")
     }
     setCountdown(name, c) {
         this.member.find(o => o.name == name).setCountdown(c);
@@ -431,6 +431,8 @@ class gameStartInformationClass {
 
 let room = [];
 
+let sockets = [];
+
 let decides = [];
 
 let gameStartInformation = {};
@@ -454,22 +456,27 @@ io.on('connection', (socket) => { // 사용자 접속 오면
         curDecide = decides.find(o => `${o.id}` === `${data.room}`); // 사용자가 접속중인 방의 decide
         if (Object.keys(gameStartInformation).indexOf(`${data.room}`) != -1) {
             // logger.info(gameStartInformation[`${data.room}`])
-            gameStartInformation[`${data.room}`].member.map(o => logger.info(o.socket))
-            logger.info(`${data.room}번방 전`)
+            // gameStartInformation[`${data.room}`].member.map(o => logger.info(o.socket))
+            // logger.info(`${data.room}번방 전`)
             // logger.info(gameStartInformation[`${data.room}`].member)
-            gameStartInformation[`${data.room}`].member.map(o => logger.info(o.socket))
+            // gameStartInformation[`${data.room}`].member.map(o => logger.info(o.socket))
+            let oldSocketId = gameStartInformation[`${data.room}`].member.find(o => o.name == data.name).socket;
             gameStartInformation[`${data.room}`].updateMember(data.name, socket.id);
             // logger.info(gameStartInformation[`${data.room}`].member)
-            gameStartInformation[`${data.room}`].member.map(o => logger.info(o.socket))
-            logger.info(`${data.room}번방 후`)
+            // gameStartInformation[`${data.room}`].member.map(o => logger.info(o.socket))
+            // logger.info(`${data.room}번방 후`)
 
-            logger.info(`${gameStartInformation[`${data.room}`].member.find(o => o.name == data.name).socket} 해당 사람`);
+            // logger.info(`${gameStartInformation[`${data.room}`].member.find(o => o.name == data.name).socket} 해당 사람`);
 
             socket.join(`${data.room}`, () => {
                 logger.info(`sock에 Join 성공`)
             });
+            if (sockets[`${data.room}`]) {
+                logger.info("방 존재");
+                socket[`${data.room}`].find(o => o.id == oldSocketId) = socket;
+            }
             gameStartInformation[`${data.room}`].io = io
-            logger.info(`io 변경 : ${io}`)
+            logger.info(`io 변경 : ${io.in(data.room)}`)
 
             // socket.emit("UPDATE_LIST", gameStartInformation[`${data.room}`].getList());
             socket.emit("ALERT", gameStartInformation[`${data.room}`].getMg());
@@ -503,7 +510,7 @@ io.on('connection', (socket) => { // 사용자 접속 오면
             logger.warn(`${data.room}번 방이 존재하지 않음`)
         }
     })
-    socket.on('reconnect', ()=>{
+    socket.on('reconnect', () => {
         logger.info("Reconnection 이벤트")
     })
     socket.on('disconnect', () => { // 접속 끊기면
@@ -545,6 +552,10 @@ io.on('connection', (socket) => { // 사용자 접속 오면
                 logger.info(`이름 중복 명령 보냄`)
             } else { // 아니라면
                 curRoom.member.push(new Member(data.name, socket.id, socket.on)); // 해당 방에 접속한 멤버 추가
+                if (!sockets[`${data.room}`]) {
+                    sockets[`${data.room}`] = [];
+                }
+                sockets[`${data.room}`][length(sockets[`${data.room}`])] = socket;
                 socket.join(`${data.room}`, () => { // 해당 방에 유저를 추가
                     logger.info(`${data.name}이 방(${data.room})에 들어옴`);
                     data.member = curRoom.member;
@@ -585,11 +596,14 @@ function grun(g, member, io, inRoom, curDecide, getText, getMember) {
         logger.info("member 갱신 전")
         member = gameStartInformation[`${inRoom}`].returnMember();
         io = gameStartInformation[`${inRoom}`].getIo();
-        member.map(o => logger.info(o.socket))
-        logger.info("아무거나 찍어볼래")
-        logger.info(io.in(inRoom))
-        logger.info(io.adapter.rooms)
-        logger.info("끄읕")
+        socket[`${inRoom}`].map(o => o.join(`${data.room}`, () => {
+            logger.info("Generator에서 socket Join");
+        }))
+        // member.map(o => logger.info(o.socket))
+        // logger.info("아무거나 찍어볼래")
+        // logger.info(io.in(inRoom))
+        // logger.info(io.adapter.rooms)
+        // logger.info("끄읕")
 
         // member.map(o => o.realSocket.join(`${data.room}`, () => {
         //     logger.info(`socket에 Join 성공 하나씩 할거야아ㅏ`)
