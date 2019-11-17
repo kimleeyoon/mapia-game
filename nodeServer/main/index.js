@@ -24,6 +24,13 @@ class Request {
                         playerNum = 4;
                     }
 
+                    if (playerNum < 3 && playerNum > 10) {
+                        response.setParameters({
+                            roomExist: '-1',
+                        }, sendData);
+                        break;
+                    }
+
                     let pin = this.func(playerNum).then(
                         (pin) => {
                             contextId[this.context.session.id] = pin;
