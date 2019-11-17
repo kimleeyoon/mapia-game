@@ -455,6 +455,9 @@ export default {
         this.badge[data]++;
       }
     });
+    this.socket.on("REC", data => {
+      this.temp = "재접속 안내 받음";
+    });
     this.socket.on("UPDATE_LIST", data => {
       this.memberObject = data;
       this.members = this.memberObject

@@ -412,6 +412,7 @@ class gameStartInformationClass {
     }
     setMg(text) {
         this.message = text;
+        logger.info(`gs Message : ${this.message}`);
     }
     getMg() {
         return this.message;
@@ -477,9 +478,18 @@ io.on('connection', (socket) => { // 사용자 접속 오면
                 sockets[`${data.room}`][sockets[`${data.room}`].findIndex(o => o.id == oldSocketId)] = socket;
             }
             gameStartInformation[`${data.room}`].io = io
+            logger.info("재접속 메소드 내 출력")
             logger.info(`io 변경 : ${io.in(data.room)}`)
+            logger.info("모든 방");
+            logger.info(`${io.sockets.managers.rooms}`)
+            logger.info("이 소켓이 들어가있는 방 출력");
+            logger.info(`${io.sockets.manager.roomClients[socket.id]}`);
+            logger.info("해당 룸에 들어갔있는 클라이언트");
+            logger.info(`${io.sockets.clients(`${data.room}`)}`);
+            logger.info("-------------------------------")
 
             // socket.emit("UPDATE_LIST", gameStartInformation[`${data.room}`].getList());
+            socket.emit("REC", nil);
             socket.emit("ALERT", gameStartInformation[`${data.room}`].getMg());
             socket.emit("TURN_DAY", gameStartInformation[`${data.room}`].getNight());
             if (gameStartInformation[`${data.room}`].member.find(o => o.name == data.name).getAction() == "Assassinate") {
@@ -586,7 +596,7 @@ io.on('connection', (socket) => { // 사용자 접속 오면
     });
 });
 
-function grun(g, member, io, inRoom, curDecide, getText, getMember) {
+function grun(g, member, ioBackup, inRoom, curDecide, getText, getMember) {
     // 게임 메인 로직을 실행하기위한 제너레이터 실행 함수
     // 마피아 게임은 이 위에서 돌아감
 
@@ -596,11 +606,21 @@ function grun(g, member, io, inRoom, curDecide, getText, getMember) {
         const next = it.next(val);
         logger.info("member 갱신 전")
         member = gameStartInformation[`${inRoom}`].returnMember();
-        io = gameStartInformation[`${inRoom}`].getIo();
+        // io = gameStartInformation[`${inRoom}`].getIo();
         sockets[`${inRoom}`].map(o => o.join(`${inRoom}`, () => {
-            logger.info("Generator에서 socket Join");
-        }))
-        // member.map(o => logger.info(o.socket))
+            // logger.info("Generator에서 socket Join");
+        }));
+        logger.info("제너레이터 내 메소드 내 출력")
+        logger.info(`io 변경 : ${io.in(data.room)}`)
+        logger.info("모든 방");
+        logger.info(`${io.sockets.managers.rooms}`)
+        // logger.info("이 소켓이 들어가있는 방 출력");
+        // logger.info(`${io.sockets.manager.roomClients[socket.id]}`);
+        logger.info("해당 룸에 들어갔있는 클라이언트");
+        logger.info(`${io.sockets.clients(`${data.room}`)}`);
+        logger.info("member에 들어있는 Socket")
+        member.map(o => logger.info(o.socket))
+        logger.info("-------------------------------")
         // logger.info("아무거나 찍어볼래")
         // logger.info(io.in(inRoom))
         // logger.info(io.adapter.rooms)
@@ -614,7 +634,6 @@ function grun(g, member, io, inRoom, curDecide, getText, getMember) {
             if (next.value instanceof Promise) { // 프라미스 종류라면
                 next.value.then(iterate).catch(err => it.throw(err)); // 프라미스 완료되면 다음 yield 실행
             } else { // 프라미스가 아니라면
-
                 if (next.value instanceof Object) { // Object가 메시지로 왔다며
                     if (next.value.do === "AnnounceRole") { // 역할 공지라면
                         io.to(member.find(o => o.name == next.value.name).socket).emit("ROLE_ALERT", `${next.value.role}`);
