@@ -26,7 +26,7 @@ class Request {
 
                     if (playerNum < 3 && playerNum > 10) {
                         response.setParameters({
-                            roomExist: '-1',
+                            roomExist: '2',
                         }, sendData);
                         break;
                     }
@@ -50,7 +50,7 @@ class Request {
             }
             case "SorryAction": {
                 response.setParameters({
-                    roomExist: '-1',
+                    roomExist: '2',
                 }, sendData);
                 break;
             }
