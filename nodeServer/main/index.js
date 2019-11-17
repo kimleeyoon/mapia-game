@@ -49,6 +49,9 @@ class Request {
                 }
             }
             case "SorryAction": {
+                response.setParameters({
+                    roomExist: '-1',
+                }, sendData);
                 break;
             }
 
