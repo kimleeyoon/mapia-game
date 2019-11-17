@@ -506,10 +506,10 @@ const reqObject = (f, req, res, f2, next) => {
     response = new Response();
     request = new Request(req, f, f2);
     request.actionRequest(response, (r) => {
-        // console.log(r);
+        console.log(r);
         res.send(r)
     });
-    // console.log(`NPKResponse: ${JSON.stringify(response)}`);
+    console.log(`NPKResponse: ${JSON.stringify(response)}`);
 };
 
 module.exports = reqObject;
