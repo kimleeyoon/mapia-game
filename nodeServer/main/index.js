@@ -431,7 +431,12 @@ class Request {
                 }, sendData);
                 break;
             }
-
+            case "ForRepromptAction": {
+                response.setParameters({
+                    number1: number_one,
+                })
+                break;
+            }
         }
     }
 }

@@ -281,6 +281,10 @@ router.route("/speaker/nugu/TurnBackAction").post((req, res, next) => {
     nugu(speakerCreateRoom, req, res, next);
     console.log("TurnBackAction");
 });
+router.route("/speaker/nugu/ForRepromptAction").post((req, res, next) => {
+    nugu(speakerCreateRoom, req, res, next);
+    console.log("TurnBackAction");
+});
 
 app.use("/", router);
 
