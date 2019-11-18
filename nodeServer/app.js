@@ -1,5 +1,5 @@
 const express = require(`express`); // 익스프레스 프레임워크
-const cookieParser = require("cookie-parser");
+// const cookieParser = require("cookie-parser");
 // var session = require("express-session")({
 //     secret: "my-secret",
 //     resave: true,
@@ -498,19 +498,19 @@ io.on("connection", socket => {
                 ] = socket;
             }
             gameStartInformation[`${data.room}`].io = io;
-            logger.info("재접속 메소드 내 출력");
-            logger.info(`io 변경 : ${io.in(data.room)}`);
-            logger.info("모든 방");
-            logger.info(`${JSON.stringify(io.sockets.adapter.rooms)}`);
-            logger.info("이 소켓이 들어가있는 방 출력");
-            // logger.info(`${io.sockets.adapter.roomClients[socket.id]}`);
-            logger.info("해당 룸에 들어갔있는 클라이언트");
-            logger.info(`${io.sockets.adapter.sids}`);
-            logger.info("-------------------------------");
+            // logger.info("재접속 메소드 내 출력");
+            // logger.info(`io 변경 : ${io.in(data.room)}`);
+            // logger.info("모든 방");
+            // logger.info(`${JSON.stringify(io.sockets.adapter.rooms)}`);
+            // logger.info("이 소켓이 들어가있는 방 출력");
+            // // logger.info(`${io.sockets.adapter.roomClients[socket.id]}`);
+            // logger.info("해당 룸에 들어갔있는 클라이언트");
+            // logger.info(`${io.sockets.adapter.sids}`);
+            // logger.info("-------------------------------");
 
             // socket.emit("UPDATE_LIST", gameStartInformation[`${data.room}`].getList());
             // socket.emit("REC", nil);
-            socket.emit("ALERT", gameStartInformation[`${data.room}`].getMg());
+            socket.emit("ALERT", {message: gameStartInformation[`${data.room}`].getMg()});
             socket.emit("TURN_DAY", gameStartInformation[`${data.room}`].getNight());
             if (
                 gameStartInformation[`${data.room}`].member

@@ -25,7 +25,7 @@ class Request {
                     }
                     console.log(`playerNum : ${playerNum}\n`)
 
-                    if (playerNum < 3 || playerNum > 10) {
+                    if (playerNum < 4 || playerNum > 10) {
                         console.log("사람이 부족한 경우");
                         response.setParameters({
                             roomExist: '2',
@@ -469,8 +469,8 @@ class Response {
         this.directives = [];
     }
     setParameters(result, sendData) {
-        console.log("result :");
-        console.log(result);
+        // console.log("result :");
+        // console.log(result);
         this.output = {
             numOfPlayer: result.numOfPlayer,
             pinNum: result.pinNum,
@@ -509,7 +509,7 @@ const reqObject = (f, req, res, f2, next) => {
     response = new Response();
     request = new Request(req, f, f2);
     request.actionRequest(response, (r) => {
-        console.log(r);
+        // console.log(r);
         res.send(r)
     });
     console.log(`NPKResponse: ${JSON.stringify(response)}`);
