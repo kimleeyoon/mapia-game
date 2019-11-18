@@ -442,7 +442,7 @@ class gameStartInformationClass {
         }
     }
     getNight() {
-        return this.isNight;
+        return this.isNight ? "NIGHT" : "DAY";
     }
 }
 
