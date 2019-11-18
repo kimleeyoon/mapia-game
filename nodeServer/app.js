@@ -735,7 +735,7 @@ function grun(g, member, ioBackup, inRoom, curDecide, getText, getMember) {
             // if(emitter.sockets.connected[o.socket].hasOwnProperty('join')){
             //     emitter.sockets.connected[o.socket].join(`${inRoom}`);
             // }
-        });
+        // });
         logger.info("해당 룸에 들어갔있는 클라이언트");
         // logger.info(`${emitter.sockets.adapter.sids}`);
         emitter.sockets.adapter.sids.map(o => logger.info(o));
