@@ -26,12 +26,9 @@ let logger = require("./logger");
 const app = express();
 let router = express.Router();
 const server = http.Server(app); // 익스프레스 사용해서 서버 생성 및 할당
-// const io = require("socket.io")(server); // socket.io 서버 생성
+const io = require("socket.io")(server); // socket.io 서버 생성
 // var io = require('socket.io-emitter')(server);
-const io = require('socket.io-emitter')({
-    host: '127.0.0.1',
-    port: 3000
-});
+var emitter = require('socket.io-emitter')({ host: 'localhost', port: '6379' });
 
 app.use("/", static(path.join(__dirname, "public/dist"))); // public/dist 폴더를 클라이언트가 루트경로로 접근하도록 해줌
 
@@ -721,31 +718,31 @@ function grun(g, member, ioBackup, inRoom, curDecide, getText, getMember) {
                 // logger.info("Generator에서 socket Join");
             })
         );
-        logger.info("제너레이터 내 메소드 내 출력");
-        logger.info(`io 변경 : ${io.in(inRoom)}`);
-        logger.info("모든 방");
-        // io.sockets.adapter.rooms.map(o => logger.info(o))
-        logger.info(`${JSON.stringify(io.sockets.adapter.rooms)}`);
-        // logger.info("이 소켓이 들어가있는 방 출력");
-        // logger.info(`${io.sockets.adapter.roomClients[socket.id]}`);
-        logger.info("해당 룸에 들어갔있는 클라이언트");
-        // logger.info(`${io.sockets.clients(`${inRoom}`)}`);
-        logger.info("member에 들어있는 Socket");
-        member.map(o => logger.info(o.socket));
-        logger.info("모든 소켓 찾아서 방 join 하도록 수정");
-        member.map(o => {
-            // logger.info(io.sockets.connected[o.socket])
-            // if(io.sockets.connected[o.socket].hasOwnProperty('join')){
-            //     io.sockets.connected[o.socket].join(`${inRoom}`);
+        // logger.info("제너레이터 내 메소드 내 출력");
+        // logger.info(`io 변경 : ${emitter.in(inRoom)}`);
+        // logger.info("모든 방");
+        // // emitter.sockets.adapter.rooms.map(o => logger.info(o))
+        // logger.info(`${JSON.stringify(emitter.sockets.adapter.rooms)}`);
+        // // logger.info("이 소켓이 들어가있는 방 출력");
+        // // logger.info(`${emitter.sockets.adapter.roomClients[socket.id]}`);
+        // logger.info("해당 룸에 들어갔있는 클라이언트");
+        // // logger.info(`${emitter.sockets.clients(`${inRoom}`)}`);
+        // logger.info("member에 들어있는 Socket");
+        // member.map(o => logger.info(o.socket));
+        // logger.info("모든 소켓 찾아서 방 join 하도록 수정");
+        // member.map(o => {
+            // logger.info(emitter.sockets.connected[o.socket])
+            // if(emitter.sockets.connected[o.socket].hasOwnProperty('join')){
+            //     emitter.sockets.connected[o.socket].join(`${inRoom}`);
             // }
         });
         logger.info("해당 룸에 들어갔있는 클라이언트");
-        // logger.info(`${io.sockets.adapter.sids}`);
-        io.sockets.adapter.sids.map(o => logger.info(o));
+        // logger.info(`${emitter.sockets.adapter.sids}`);
+        emitter.sockets.adapter.sids.map(o => logger.info(o));
         logger.info("-------------------------------");
         // logger.info("아무거나 찍어볼래")
-        // logger.info(io.in(inRoom))
-        // logger.info(io.adapter.rooms)
+        // logger.info(emitter.in(inRoom))
+        // logger.info(emitter.adapter.rooms)
         // logger.info("끄읕")
 
         // member.map(o => o.realSocket.join(`${data.room}`, () => {
@@ -763,7 +760,7 @@ function grun(g, member, ioBackup, inRoom, curDecide, getText, getMember) {
                     // Object가 메시지로 왔다며
                     if (next.value.do === "AnnounceRole") {
                         // 역할 공지라면
-                        io.to(member.find(o => o.name == next.value.name).socket).emit(
+                        emitter.to(member.find(o => o.name == next.value.name).socket).emit(
                             "ROLE_ALERT",
                             `${next.value.role}`
                         );
@@ -825,7 +822,7 @@ function grun(g, member, ioBackup, inRoom, curDecide, getText, getMember) {
                     } else if (next.value.do === "ResultOfInvestigation") {
                         // 경찰 조사 결과 전송
                         for (let name of next.value.nameList) {
-                            io.to(member.find(o => o.name == name).socket).emit(
+                            emitter.to(member.find(o => o.name == name).socket).emit(
                                 "RESULT_OF_INVESTIGATION", {
                                     name: `${next.value.name}`,
                                     role: `${next.value.role}`
@@ -845,7 +842,7 @@ function grun(g, member, ioBackup, inRoom, curDecide, getText, getMember) {
                         // 죽은 사람 업데이트
                         for (let tempMember of next.value.nameList) {
                             let tempSocket = member.find(o => o.name == tempMember.name);
-                            io.to(tempSocket.socket).emit("UPDATE_LIST", next.value.nameList);
+                            emitter.to(tempSocket.socket).emit("UPDATE_LIST", next.value.nameList);
                         }
                         gameStartInformation[inRoom].setList(next.value.nameList);
                         // 방에 있는 모든 유저에게 살아있는 사람들 목록 전송
@@ -858,7 +855,7 @@ function grun(g, member, ioBackup, inRoom, curDecide, getText, getMember) {
                     } else if (next.value.do === "Assassinate") {
                         // 암살 명령 오면
 
-                        const c = sendSocket(io, member, next, curDecide); // 해당 명령 보낸 후 Countdown 리턴 받음
+                        const c = sendSocket(emitter, member, next, curDecide); // 해당 명령 보낸 후 Countdown 리턴 받음
                         for (let name of next.value.nameList) {
                             gameStartInformation[inRoom].setAction(name, "Assassinate");
                             gameStartInformation[inRoom].setCountdown(name, c);
@@ -866,20 +863,20 @@ function grun(g, member, ioBackup, inRoom, curDecide, getText, getMember) {
                         c.go(curDecide)
                             .then(() => {
                                 // 사용자 결정 다 받으면
-                                io.to(inRoom).emit("END_DECIDE");
+                                emitter.to(inRoom).emit("END_DECIDE");
                                 gameStartInformation[inRoom].clearAllMemberAction();
                                 setTimeout(iterate, 0, curDecide.decides);
                             })
                             .catch(() => {
                                 // 시간 초과
-                                io.to(inRoom).emit("END_DECIDE");
+                                emitter.to(inRoom).emit("END_DECIDE");
                                 gameStartInformation[inRoom].clearAllMemberAction();
                                 setTimeout(iterate, 0, curDecide.decides);
                             });
                     } else if (next.value.do === "Treatment") {
                         // 의사 명령
 
-                        const c = sendSocket(io, member, next, curDecide); // 해당 명령 보낸 후 Countdown 리턴 받음
+                        const c = sendSocket(emitter, member, next, curDecide); // 해당 명령 보낸 후 Countdown 리턴 받음
                         for (let name of next.value.nameList) {
                             gameStartInformation[inRoom].setAction(name, "Treatment");
                             gameStartInformation[inRoom].setCountdown(name, c);
@@ -887,20 +884,20 @@ function grun(g, member, ioBackup, inRoom, curDecide, getText, getMember) {
                         c.go(curDecide)
                             .then(() => {
                                 // 결정 다 받으면
-                                io.to(inRoom).emit("END_DECIDE");
+                                emitter.to(inRoom).emit("END_DECIDE");
                                 gameStartInformation[inRoom].clearAllMemberAction();
                                 setTimeout(iterate, 0, curDecide.decides);
                             })
                             .catch(() => {
                                 // 시간 초과
-                                io.to(inRoom).emit("END_DECIDE");
+                                emitter.to(inRoom).emit("END_DECIDE");
                                 gameStartInformation[inRoom].clearAllMemberAction();
                                 setTimeout(iterate, 0, curDecide.decides);
                             });
                     } else if (next.value.do === "Investigation") {
                         // 경찰 조사
 
-                        const c = sendSocket(io, member, next, curDecide); // // 해당 명령 보낸 후 Countdown 리턴 받음
+                        const c = sendSocket(emitter, member, next, curDecide); // // 해당 명령 보낸 후 Countdown 리턴 받음
                         for (let name of next.value.nameList) {
                             gameStartInformation[inRoom].setAction(name, "Investigation");
                             gameStartInformation[inRoom].setCountdown(name, c);
@@ -908,19 +905,19 @@ function grun(g, member, ioBackup, inRoom, curDecide, getText, getMember) {
                         c.go(curDecide)
                             .then(() => {
                                 // 결정 다 받으면
-                                io.to(inRoom).emit("END_DECIDE");
+                                emitter.to(inRoom).emit("END_DECIDE");
                                 gameStartInformation[inRoom].clearAllMemberAction();
                                 setTimeout(iterate, 0, curDecide.decides);
                             })
                             .catch(() => {
-                                io.to(inRoom).emit("END_DECIDE");
+                                emitter.to(inRoom).emit("END_DECIDE");
                                 gameStartInformation[inRoom].clearAllMemberAction();
                                 setTimeout(iterate, 0, curDecide.decides);
                             });
                     } else if (next.value.do === "Vote") {
                         // 투표 받으면
 
-                        const c = sendSocket(io, member, next, curDecide, 10); // 해당 명령 보낸 후 Countdown 리턴 받음
+                        const c = sendSocket(emitter, member, next, curDecide, 10); // 해당 명령 보낸 후 Countdown 리턴 받음
                         for (let name of next.value.nameList) {
                             gameStartInformation[inRoom].setAction(name, "Vote");
                             gameStartInformation[inRoom].setCountdown(name, c);
@@ -928,18 +925,18 @@ function grun(g, member, ioBackup, inRoom, curDecide, getText, getMember) {
                         c.go(curDecide)
                             .then(() => {
                                 // 다 받으면
-                                io.to(inRoom).emit("END_DECIDE");
+                                emitter.to(inRoom).emit("END_DECIDE");
                                 gameStartInformation[inRoom].clearAllMemberAction();
                                 setTimeout(iterate, 0, curDecide.decides);
                             })
                             .catch(() => {
                                 // 시간 다됨
-                                io.to(inRoom).emit("END_DECIDE");
+                                emitter.to(inRoom).emit("END_DECIDE");
                                 gameStartInformation[inRoom].clearAllMemberAction();
                                 setTimeout(iterate, 0, curDecide.decides);
                             });
                     } else if (next.value.do === "TURN_DAY") {
-                        io.to(inRoom).emit("TURN_DAY", next.value.set);
+                        emitter.to(inRoom).emit("TURN_DAY", next.value.set);
                         gameStartInformation[inRoom].setNight(next.value.set);
                         setTimeout(iterate, 0, next.value);
                     } else if (next.value.do === "GAME_END") {
@@ -964,7 +961,7 @@ function grun(g, member, ioBackup, inRoom, curDecide, getText, getMember) {
                     }
                 } else {
                     // 단순한 메시지 전송용
-                    io.to(inRoom).emit("ALERT", {
+                    emitter.to(inRoom).emit("ALERT", {
                         message: next.value
                     });
                     gameStartInformation[inRoom].setMg(next.value);
