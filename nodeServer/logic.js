@@ -266,7 +266,7 @@ class Members {
         }
         return temp;
     }
-    getLiveAfterListByRole(afterList, role){
+    getLiveAfterListByRole(afterList, role) {
         return Object.keys(this.getLiveAfterList()).filter(o => afterList[o] == `${role}`)
     }
 }
@@ -317,7 +317,7 @@ function* mainGame(member) {
 
     var roleArray = [
         ["마피아", "시민", "시민"],
-        ["마피아", "시민", "시민", "시민"],
+        ["마피아", "시민", "의사", "시민"],
         ["마피아", "마피아", "시민", "의사", "경찰"],
         ["마피아", "마피아", "시민", "시민", "의사", "경찰"],
         ["마피아", "마피아", "시민", "시민", "시민", "의사", "경찰"],
@@ -493,10 +493,10 @@ function* mainGame(member) {
             // };
             tempDoctorPick = yield {
                 do: "Treatment",
-                nameList:  memberClass.getLiveAfterListByRole(afterList, '의사')
+                nameList: memberClass.getLiveAfterListByRole(afterList, '의사')
             };
 
-            
+
 
             doctorPick = handelDecide(tempDoctorPick, true);
 
@@ -555,7 +555,7 @@ function* mainGame(member) {
                     role: idOfPolicePick,
                     do: "ResultOfInvestigation"
                 };
-                
+
             }
             // }
         } else {
@@ -683,7 +683,7 @@ function* mainGame(member) {
             do: "Vote",
             nameList: memberClass.getLiveList()
         };
-        
+
 
         id = handelDecide(tempId, false);
 
