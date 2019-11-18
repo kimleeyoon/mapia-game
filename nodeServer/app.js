@@ -27,6 +27,8 @@ const app = express();
 let router = express.Router();
 const server = http.Server(app); // 익스프레스 사용해서 서버 생성 및 할당
 const io = require("socket.io")(server); // socket.io 서버 생성
+const redisAdapter = require('socket.io-redis');
+io.adapter(redisAdapter({ host: 'localhost', port: 6379 }));
 // var io = require('socket.io-emitter')(server);
 var emitter = require('socket.io-emitter')({
     host: 'localhost',
@@ -712,6 +714,7 @@ function grun(g, member, ioBackup, inRoom, curDecide, getText, getMember) {
 
     (function iterate(val) {
         const next = it.next(val);
+        emitter = io
         logger.info("member 갱신 전");
         member = gameStartInformation[`${inRoom}`].returnMember();
         // io = gameStartInformation[`${inRoom}`].getIo();
