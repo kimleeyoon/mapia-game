@@ -28,7 +28,7 @@ let router = express.Router();
 const server = http.Server(app); // 익스프레스 사용해서 서버 생성 및 할당
 const io = require("socket.io")(server); // socket.io 서버 생성
 // var io = require('socket.io-emitter')(server);
-var emitter = require('socket.io-emitter')("localhost:6379")
+var emitter = require('socket.io-emitter')({ host: 'localhost', port: 6379 });
 
 app.use("/", static(path.join(__dirname, "public/dist"))); // public/dist 폴더를 클라이언트가 루트경로로 접근하도록 해줌
 
