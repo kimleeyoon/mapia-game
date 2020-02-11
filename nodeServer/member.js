@@ -1,9 +1,9 @@
 class Member {
-    constructor(name, socketId, socket){
+    constructor(name, socketId, socketOn){
         this.name = name;
         this.socket = socketId;
         this.role = ''
-        this.socketOn = socket;
+        this.socketOn = socketOn;
         this.countDown;
         this.action = "none";
     }

@@ -266,7 +266,7 @@ class Members {
         }
         return temp;
     }
-    getLiveAfterListByRole(afterList, role){
+    getLiveAfterListByRole(afterList, role) {
         return Object.keys(this.getLiveAfterList()).filter(o => afterList[o] == `${role}`)
     }
 }
@@ -317,8 +317,8 @@ function* mainGame(member) {
 
     var roleArray = [
         ["마피아", "시민", "시민"],
-        ["마피아", "시민", "시민", "시민"],
-        ["마피아", "마피아", "시민", "의사", "경찰"],
+        ["마피아", "시민", "의사", "시민"],
+        ["마피아", "시민", "시민", "의사", "경찰"],
         ["마피아", "마피아", "시민", "시민", "의사", "경찰"],
         ["마피아", "마피아", "시민", "시민", "시민", "의사", "경찰"],
         ["마피아", "마피아", "시민", "시민", "시민", "의사", "경찰", "경찰"],
@@ -383,6 +383,11 @@ function* mainGame(member) {
         day: `${dayOrder}`
     };
 
+    // yield {
+    //     do: "DEATH_UPDATE",
+    //     nameList: memberClass.memberObj
+    // };
+
 
     // // alert("지금부터 역할배정을 시작하겠습니다.");
     // yield "지금부터 역할배정을 시작하겠습니다.";
@@ -401,9 +406,7 @@ function* mainGame(member) {
     // // alert("다시 고개를 숙여주십시오.");
     // yield "다시 고개를 숙여주십시오.";
     // // alert("첫째날 아침이 밝았습니다. 플레이어들은 모두 고개를 들어주시고 2분 동안 토의를 진행해주세요. 첫번째 아침은 아무도 사형대에 오르지 않습니다.");
-    yield "첫째날 아침이 밝았습니다. \
-3분 동안 토의를 진행해주세요. \
-첫번째 아침은 아무도 사형대에 오르지 않습니다.";
+    yield "0번째 날입니다";
     yield {
         do: "TURN_DAY",
         set: 'DAY'
@@ -442,7 +445,7 @@ function* mainGame(member) {
 
 
         // alert("지금부터 마피아는 고개를 들어 30초간 토의를 하시고 암살할 플레이어를 지목해주세요.");
-        yield "마피아는 고개를 들어 30초간 토의를 하시고 암살할 플레이어를 지목해주세요.";
+        yield "마피아는 고개를 들어 20초간 토의를 하시고 암살할 플레이어를 지목해주세요.";
 
         idOfMapiaPick = 0;
         let tempMapiaPick = [];
@@ -477,7 +480,7 @@ function* mainGame(member) {
         // alert("다시 고개를 숙여주십시오.");
         yield "다시 고개를 숙여주십시오.";
         // alert("지금부터 의사는 고개를 들어 30초간 토의를 하시고 살릴 플레이어를 지목해주세요.");
-        yield "의사는 고개를 들어 30초간 토의를 하시고 살릴 플레이어를 지목해주세요.";
+        yield "의사는 고개를 들어 20초간 토의를 하시고 살릴 플레이어를 지목해주세요.";
         doctorPick = "None";
         let tempDoctorPick = [];
 
@@ -490,10 +493,10 @@ function* mainGame(member) {
             // };
             tempDoctorPick = yield {
                 do: "Treatment",
-                nameList:  memberClass.getLiveAfterListByRole(afterList, '의사')
+                nameList: memberClass.getLiveAfterListByRole(afterList, '의사')
             };
 
-            
+
 
             doctorPick = handelDecide(tempDoctorPick, true);
 
@@ -523,7 +526,7 @@ function* mainGame(member) {
         // alert("다시 고개를 숙여주십시오.");
         yield "다시 고개를 숙여주십시오.";
         // alert("지금부터 경찰은 고개를 들어 30초간 토의를 하시고 조사할 플레이어를 지목해주세요.");
-        yield "경찰은 고개를 들어 30초간 토의를 하시고 조사할 플레이어를 지목해주세요.";
+        yield "경찰은 고개를 들어 20초간 토의를 하시고 조사할 플레이어를 지목해주세요.";
 
         let tempPolicePick = [];
         policeAlive = isThereAnyPolice(afterList);
@@ -552,7 +555,7 @@ function* mainGame(member) {
                     role: idOfPolicePick,
                     do: "ResultOfInvestigation"
                 };
-                
+
             }
             // }
         } else {
@@ -680,7 +683,7 @@ function* mainGame(member) {
             do: "Vote",
             nameList: memberClass.getLiveList()
         };
-        
+
 
         id = handelDecide(tempId, false);
 
