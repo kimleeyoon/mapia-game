@@ -28,7 +28,10 @@ let router = express.Router();
 const server = http.Server(app); // 익스프레스 사용해서 서버 생성 및 할당
 const io = require("socket.io")(server); // socket.io 서버 생성
 const redisAdapter = require('socket.io-redis');
-io.adapter(redisAdapter({ host: 'localhost', port: 6379 }));
+io.adapter(redisAdapter({
+    host: 'localhost',
+    port: 6379
+}));
 // var io = require('socket.io-emitter')(server);
 var emitter = require('socket.io-emitter')({
     host: 'localhost',
@@ -514,7 +517,9 @@ io.on("connection", socket => {
 
             // socket.emit("UPDATE_LIST", gameStartInformation[`${data.room}`].getList());
             // socket.emit("REC", nil);
-            socket.emit("ALERT", {message: gameStartInformation[`${data.room}`].getMg()});
+            socket.emit("ALERT", {
+                message: gameStartInformation[`${data.room}`].getMg()
+            });
             socket.emit("TURN_DAY", gameStartInformation[`${data.room}`].getNight());
             if (
                 gameStartInformation[`${data.room}`].member
@@ -1045,8 +1050,29 @@ function createRoom(rooms, size) {
     logger.info("================");
     logger.info(room.map(o => o.id));
     logger.info("================");
-
+    setTimeout(deleteRoom(id), 1000 * 60 * 1);
     return id;
+}
+
+function deleteRoom(inRoom) {
+    let index = room.findIndex(o => o.id == Number(inRoom));
+    logger.info(`${inRoom}번 방에서 Index : ${index}`);
+    if (index) {
+        room.splice(index, 1);
+    } else {
+        logger.error(
+            `${inRoom}번방 Room 삭제 실패 : ${inRoom} index : ${index}`
+        );
+        logger.error(room);
+    }
+    if (gameStartInformation.hasOwnProperty(`${inRoom}`)) {
+        delete gameStartInformation[inRoom];
+    } else {
+        logger.error(
+            `${inRoom}번방 gameStartInformation 삭제 실패 : ${inRoom} index : ${index}`
+        );
+        logger.error(gameStartInformation);
+    }
 }
 
 module.exports = speakerCreateRoom;
