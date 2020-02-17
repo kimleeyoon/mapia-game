@@ -23,6 +23,16 @@ class Request {
                     if (isNaN(playerNum)) {
                         playerNum = 4;
                     }
+                    console.log(`playerNum : ${playerNum}\n`)
+
+                    if (playerNum < 4 || playerNum > 10) {
+                        console.log("사람이 부족한 경우");
+                        response.setParameters({
+                            roomExist: '2',
+                        }, sendData);
+                        break;
+                    }
+                    console.log("사람이 충분한 경우");
 
                     let pin = this.func(playerNum).then(
                         (pin) => {
@@ -31,11 +41,21 @@ class Request {
                             response.setParameters({
                                 numOfPlayer: playerNum,
                                 pinNum: `${pin}`,
+                                pinNum1: `${parseInt(pin/1000)}`,
+                                pinNum22: `${parseInt((pin%1000/100))}`,
+                                pinNum3: `${parseInt(pin%100/10)}`,
+                                pinNum4: `${parseInt(pin%10)}`,
                                 roomExist: '1',
                             }, sendData);
                         }).catch((error) => console.log("방 생성 실패"));
                     break;
                 }
+            }
+            case "SorryAction": {
+                response.setParameters({
+                    roomExist: '2',
+                }, sendData);
+                break;
             }
 
             case "StartAndCheckRoleAction": {
@@ -411,7 +431,12 @@ class Request {
                 }, sendData);
                 break;
             }
-
+            case "ForRepromptAction": {
+                response.setParameters({
+                    number1: number_one,
+                })
+                break;
+            }
         }
     }
 }
@@ -454,6 +479,10 @@ class Response {
         this.output = {
             numOfPlayer: result.numOfPlayer,
             pinNum: result.pinNum,
+            pinNum1: result.pinNum1,
+            pinNum22: result.pinNum22,
+            pinNum3: result.pinNum3,
+            pinNum4: result.pinNum4,
             roomExist: result.roomExist,
             number1: result.number1,
             tieVoteExist: result.tieVoteExist,
@@ -488,7 +517,7 @@ const reqObject = (f, req, res, f2, next) => {
         // console.log(r);
         res.send(r)
     });
-    // console.log(`NPKResponse: ${JSON.stringify(response)}`);
+    console.log(`NPKResponse: ${JSON.stringify(response)}`);
 };
 
 module.exports = reqObject;

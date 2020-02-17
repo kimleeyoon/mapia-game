@@ -1058,7 +1058,6 @@ function createRoom(rooms, size) {
 }
 
 function deleteRoom(inRoom) {
-  logger.info("삭제 메소드 호출");
   let index = room.findIndex(o => o.id == Number(inRoom));
   logger.info(`${inRoom}번 방에서 Index : ${index}`);
   if (index != -1) {
