@@ -956,7 +956,7 @@ function grun(g, member, ioBackup, inRoom, curDecide, getText, getMember) {
                     } else if (next.value.do === "GAME_END") {
                         let index = room.findIndex(o => o.id == Number(inRoom));
                         logger.info(`${inRoom}번 방에서 Index : ${index}`);
-                        if (index) {
+                        if (index != -1) {
                             room.splice(index, 1);
                         } else {
                             logger.error(
@@ -1055,10 +1055,10 @@ function createRoom(rooms, size) {
 }
 
 function deleteRoom(inRoom) {
-    console.log("삭제 메소드 호출");
+    logger.info("삭제 메소드 호출");
     let index = room.findIndex(o => o.id == Number(inRoom));
     logger.info(`${inRoom}번 방에서 Index : ${index}`);
-    if (index) {
+    if (index != -1) {
         room.splice(index, 1);
     } else {
         logger.error(
