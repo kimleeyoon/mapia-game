@@ -1053,7 +1053,7 @@ function createRoom(rooms, size) {
   logger.info("================");
   logger.info(room.map(o => o.id));
   logger.info("================");
-  setTimeout(deleteRoom, 1000 * 60 * 1, id);
+  setTimeout(deleteRoom, 1000 * 60 * 120, id);
   return id;
 }
 
