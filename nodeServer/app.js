@@ -290,6 +290,10 @@ router.route("/speaker/nugu/ForRepromptAction").post((req, res, next) => {
   nugu(speakerCreateRoom, req, res, next);
   console.log("TurnBackAction");
 });
+router.route("/speaker/nugu/plzAction1").post((req, res, next) => {
+  nugu(speakerCreateRoom, req, res, next);
+  console.log("plzAction1");
+});
 
 app.use("/", router);
 
@@ -311,10 +315,10 @@ class Countdown extends EventEmitter {
   go(decide) {
     const countdown = this;
     const timeoutIds = [];
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
       for (let i = countdown.seconds; i >= 0; i -= 0.5) {
         timeoutIds.push(
-          setTimeout(function() {
+          setTimeout(function () {
             if (decide.isEnd()) {
               // 사람들로부터 투표 다 받았으면
               timeoutIds.forEach(clearTimeout); // 지정된 setTimeout 초기화
@@ -525,8 +529,8 @@ io.on("connection", socket => {
       socket.emit("TURN_DAY", gameStartInformation[`${data.room}`].getNight());
       if (
         gameStartInformation[`${data.room}`].member
-          .find(o => o.name == data.name)
-          .getAction() == "Assassinate"
+        .find(o => o.name == data.name)
+        .getAction() == "Assassinate"
       ) {
         gameStartInformation[`${data.room}`].member
           .find(o => o.name == data.name)
@@ -536,9 +540,9 @@ io.on("connection", socket => {
           });
         socket.emit(
           gameStartInformation[`${data.room}`].member
-            .find(o => o.name == data.name)
-            .getAction()
-            .toUpperCase()
+          .find(o => o.name == data.name)
+          .getAction()
+          .toUpperCase()
         );
         logger.info(
           `${data.name}에 ${gameStartInformation[`${data.room}`].member
@@ -548,8 +552,8 @@ io.on("connection", socket => {
         );
       } else if (
         gameStartInformation[`${data.room}`].member
-          .find(o => o.name == data.name)
-          .getAction() == "Treatment"
+        .find(o => o.name == data.name)
+        .getAction() == "Treatment"
       ) {
         gameStartInformation[`${data.room}`].member
           .find(o => o.name == data.name)
@@ -559,9 +563,9 @@ io.on("connection", socket => {
           });
         socket.emit(
           gameStartInformation[`${data.room}`].member
-            .find(o => o.name == data.name)
-            .getAction()
-            .toUpperCase()
+          .find(o => o.name == data.name)
+          .getAction()
+          .toUpperCase()
         );
         logger.info(
           `${data.name}에 ${gameStartInformation[`${data.room}`].member
@@ -571,8 +575,8 @@ io.on("connection", socket => {
         );
       } else if (
         gameStartInformation[`${data.room}`].member
-          .find(o => o.name == data.name)
-          .getAction() == "Investigation"
+        .find(o => o.name == data.name)
+        .getAction() == "Investigation"
       ) {
         gameStartInformation[`${data.room}`].member
           .find(o => o.name == data.name)
@@ -582,9 +586,9 @@ io.on("connection", socket => {
           });
         socket.emit(
           gameStartInformation[`${data.room}`].member
-            .find(o => o.name == data.name)
-            .getAction()
-            .toUpperCase()
+          .find(o => o.name == data.name)
+          .getAction()
+          .toUpperCase()
         );
         logger.info(
           `${data.name}에 ${gameStartInformation[`${data.room}`].member
@@ -594,8 +598,8 @@ io.on("connection", socket => {
         );
       } else if (
         gameStartInformation[`${data.room}`].member
-          .find(o => o.name == data.name)
-          .getAction() == "Vote"
+        .find(o => o.name == data.name)
+        .getAction() == "Vote"
       ) {
         gameStartInformation[`${data.room}`].member
           .find(o => o.name == data.name)
@@ -605,9 +609,9 @@ io.on("connection", socket => {
           });
         socket.emit(
           gameStartInformation[`${data.room}`].member
-            .find(o => o.name == data.name)
-            .getAction()
-            .toUpperCase()
+          .find(o => o.name == data.name)
+          .getAction()
+          .toUpperCase()
         );
         logger.info(
           `${data.name}에 ${gameStartInformation[`${data.room}`].member

@@ -437,6 +437,12 @@ class Request {
                 })
                 break;
             }
+            case "plzAction1":
+                response.setParameters({
+                    number1: 1,
+                }, sendData)
+                break;
+                break;
         }
     }
 }
