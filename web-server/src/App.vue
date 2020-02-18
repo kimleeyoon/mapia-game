@@ -69,7 +69,7 @@
           </ul>
           <button type="button" class="buttonWithTransparent" v-if="false">test</button>
           <div class="start">
-            <h2>Mapia</h2>
+            <h2>Mafia</h2>
             <form>
               <input
                 type="text"
