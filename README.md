@@ -24,5 +24,5 @@
 
 게임 참여를 위해서는 스피커와 연동되는 Web 링크가 필요하며, 스피커의 안내에 따라 아래 링크를 모두 접속한 상태로 게임을 진행해야 합니다.
 
-http://mapia.ga:3000/ or https://hoy.kr/HiQ6x
+http://nugumafia.games
 
